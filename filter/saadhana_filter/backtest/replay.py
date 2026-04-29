@@ -126,6 +126,7 @@ def run_backtest(
     ohlcv: Mapping[str, pd.DataFrame],
     nifty_df: pd.DataFrame,
     fundamentals_passed: set[str] | None = None,
+    progress_every: int | None = 50,
 ) -> BacktestResult:
     """Replay the §5 v2 engine day-by-day across ``config.universe``.
 
@@ -158,11 +159,19 @@ def run_backtest(
     # Build a master calendar from the index — every bar with a Nifty
     # close is a candidate scan day; intersect with the replay window.
     calendar = nifty_df.index[
-        (nifty_df.index.date >= config.start_date)
-        & (nifty_df.index.date <= config.end_date)
+        (nifty_df.index.date >= config.start_date) & (nifty_df.index.date <= config.end_date)
     ]
 
-    for scan_ts in calendar:
+    for i, scan_ts in enumerate(calendar):
+        if progress_every and i and i % progress_every == 0:
+            import sys
+
+            print(
+                f"  [replay] day {i}/{len(calendar)} {scan_ts.date().isoformat()} "
+                f"open={len(open_positions)} closed_trades={len(trades)}",
+                file=sys.stderr,
+                flush=True,
+            )
         scan_date = scan_ts.date()
         sliced_index = _slice_to_date(nifty_df, scan_ts)
         if len(sliced_index) < 200:  # not enough lookback for §12
@@ -186,10 +195,8 @@ def run_backtest(
 
             # Track when T1 first hits — even partials count as "first
             # +5% reached" for the §11 ``avg days to T1`` metric.
-            if (
-                book["days_to_t1"] is None
-                and float(last_bar["close"])
-                >= position.entry_price * (1 + 0.05)
+            if book["days_to_t1"] is None and float(last_bar["close"]) >= position.entry_price * (
+                1 + 0.05
             ):
                 book["days_to_t1"] = (scan_date - position.entry_date).days
 
@@ -302,9 +309,7 @@ def run_backtest(
         if df.empty:
             continue
         last_bar = df.iloc[-1]
-        residual_return = (
-            float(last_bar["close"]) - position.entry_price
-        ) / position.entry_price
+        residual_return = (float(last_bar["close"]) - position.entry_price) / position.entry_price
         book = bookkeeping[symbol]
         remaining_fraction = 1.0
         if position.t1_hit:

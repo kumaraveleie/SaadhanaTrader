@@ -5,8 +5,6 @@ from __future__ import annotations
 
 from datetime import date
 
-import numpy as np
-import pandas as pd
 import pytest
 
 from saadhana_filter.backtest.metrics import compute_metrics
@@ -56,9 +54,7 @@ class TestReplayDeterminism:
         nifty_df = make_ohlcv(geometric_close(15_000.0, 0.001, 320))
         ohlcv = {"AAA": make_ohlcv(geometric_close(100.0, 0.0015, 320))}
         cfg = self._basic_config(("AAA",))
-        result = run_backtest(
-            cfg, ohlcv=ohlcv, nifty_df=nifty_df, fundamentals_passed=set()
-        )
+        result = run_backtest(cfg, ohlcv=ohlcv, nifty_df=nifty_df, fundamentals_passed=set())
         assert result.trades == []
 
     def test_max_concurrent_positions_respected(self) -> None:
@@ -69,10 +65,7 @@ class TestReplayDeterminism:
             end_date=date(2026, 4, 29),
             max_concurrent_positions=3,
         )
-        ohlcv = {
-            f"S{i}": make_ohlcv(geometric_close(100.0 + i, 0.0015, 320))
-            for i in range(50)
-        }
+        ohlcv = {f"S{i}": make_ohlcv(geometric_close(100.0 + i, 0.0015, 320)) for i in range(50)}
         result = run_backtest(cfg, ohlcv=ohlcv, nifty_df=nifty_df)
         # Whatever the synthetic data resolves to, the cap must hold.
         assert len(result.open_positions_at_end) <= cfg.max_concurrent_positions
@@ -113,10 +106,14 @@ class TestMetricsAggregation:
     def test_clean_pass_synthetic(self) -> None:
         # 7 wins × +12% (T1 in 15 days) + 3 losses × -2% → all metrics pass
         trades = [
-            _trade(return_pct=0.12, days_to_t1=15, outcome="T2_HIT", entry_date=date(2026, 1, i + 1))
+            _trade(
+                return_pct=0.12, days_to_t1=15, outcome="T2_HIT", entry_date=date(2026, 1, i + 1)
+            )
             for i in range(7)
         ] + [
-            _trade(return_pct=-0.02, outcome="STOP_HIT", days_held=8, entry_date=date(2026, 2, i + 1))
+            _trade(
+                return_pct=-0.02, outcome="STOP_HIT", days_held=8, entry_date=date(2026, 2, i + 1)
+            )
             for i in range(3)
         ]
         m = compute_metrics(trades)
@@ -132,18 +129,15 @@ class TestMetricsAggregation:
 
     def test_failure_path(self) -> None:
         # Hit rate too low + losses too big
-        trades = (
-            [_trade(return_pct=0.06, days_to_t1=22, entry_date=date(2026, 1, 1))]
-            + [
-                _trade(
-                    return_pct=-0.05,
-                    outcome="STOP_HIT",
-                    days_held=5,
-                    entry_date=date(2026, 1, i + 2),
-                )
-                for i in range(9)
-            ]
-        )
+        trades = [_trade(return_pct=0.06, days_to_t1=22, entry_date=date(2026, 1, 1))] + [
+            _trade(
+                return_pct=-0.05,
+                outcome="STOP_HIT",
+                days_held=5,
+                entry_date=date(2026, 1, i + 2),
+            )
+            for i in range(9)
+        ]
         m = compute_metrics(trades)
         assert not m.hit_rate_passes
         assert not m.avg_loss_passes

@@ -125,20 +125,14 @@ def compute_metrics(trades: list[SimulatedTrade]) -> BacktestMetrics:
     hit_rate = (n_t1_reached / len(closed) * 100.0) if closed else 0.0
 
     days_to_t1_values = [t.days_to_t1 for t in closed if t.days_to_t1 is not None]
-    avg_days_to_t1 = (
-        float(np.mean(days_to_t1_values)) if days_to_t1_values else None
-    )
+    avg_days_to_t1 = float(np.mean(days_to_t1_values)) if days_to_t1_values else None
 
     avg_win = float(np.mean([t.return_pct for t in wins]) * 100.0) if wins else 0.0
-    avg_loss = (
-        float(np.mean([t.return_pct for t in losses]) * 100.0) if losses else 0.0
-    )
+    avg_loss = float(np.mean([t.return_pct for t in losses]) * 100.0) if losses else 0.0
 
     max_consec_losses = _max_consecutive_losses(closed)
 
-    win_loss = (
-        (avg_win / abs(avg_loss)) if losses and avg_loss != 0.0 else float("inf")
-    )
+    win_loss = (avg_win / abs(avg_loss)) if losses and avg_loss != 0.0 else float("inf")
 
     sharpe = _annualized_sharpe(closed)
 
@@ -147,15 +141,11 @@ def compute_metrics(trades: list[SimulatedTrade]) -> BacktestMetrics:
     best_trade = float(max(returns)) * 100.0 if returns else 0.0
     worst_trade = float(min(returns)) * 100.0 if returns else 0.0
     win_rate = len(wins) / len(closed) if closed else 0.0
-    expectancy = (
-        win_rate * avg_win + (1 - win_rate) * avg_loss if closed else 0.0
-    )
+    expectancy = win_rate * avg_win + (1 - win_rate) * avg_loss if closed else 0.0
 
     # Per-metric pass / fail bools
     hit_rate_passes = hit_rate >= 60.0
-    days_to_t1_passes = (
-        avg_days_to_t1 is not None and avg_days_to_t1 <= 25.0
-    )
+    days_to_t1_passes = avg_days_to_t1 is not None and avg_days_to_t1 <= 25.0
     avg_win_passes = avg_win >= 8.0
     avg_loss_passes = avg_loss >= -2.5  # avg_loss is negative; "≤ -2.5%" means abs ≤ 2.5%
     consecutive_losses_passes = max_consec_losses <= 5

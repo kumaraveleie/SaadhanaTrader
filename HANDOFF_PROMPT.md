@@ -113,5 +113,8 @@ Begin.
   Approval is your job — never delegate that to the LLM.
 - Vercel deploy will auto-trigger on push to main. Configure the GitHub
   → Vercel integration once at the start.
-- Phase G (backtest validator) is the GO/NO-GO gate. Do not put a single
-  rupee of real capital behind this system until §11 passes.
+- Phase G is split: **G1** is a diagnostic technical-only backtest
+  (no catalyst, no conviction tier — confirms the §5 v2 layer has
+  edge before D/E/F sit on top of it). **G2** is the official
+  GO/NO-GO gate per §11 — do not put a single rupee of real capital
+  behind this system until G2 passes.
