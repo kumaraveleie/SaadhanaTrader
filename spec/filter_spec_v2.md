@@ -238,7 +238,14 @@ generated, measure these. **Must pass to ship.**
 | Average loss | ≤ −2.5% | Tighten stop logic |
 | Max consecutive losses | ≤ 5 | Add regime filter |
 | Win/loss ratio | ≥ 2.0 | Re-tune ladder |
+| **Profit Factor** | **≥ 1.8** | **Re-tune ladder or stop logic** |
 | Sharpe (annualized) | ≥ 1.5 | Re-evaluate edge |
+
+**Profit Factor** = gross profits / gross losses (sum of positive trade
+returns ÷ absolute sum of negative trade returns). Hit rate and
+win/loss ratio are *count-based* — they ignore magnitude. PF catches
+the case where most trades win but a few oversized losers wipe out
+the gains. Industry threshold: ≥ 1.8 acceptable, ≥ 2.0 good.
 
 If any **must-pass** metric fails, system does NOT ship. Rules are revised,
 validator re-runs, decision is documented.
@@ -582,11 +589,20 @@ alongside real ones.
 
 ### 19.2 Promotion gate (shadow → pending_approval)
 
-A shadow rule is promoted to pending_approval if:
+A shadow rule is promoted to pending_approval if **all** of:
 - ≥ 30 days in shadow
 - ≥ 20 phantom decisions made
-- Hit rate improvement ≥ 5 percentage points OR loss reduction ≥ 15%
-- No degradation of Sharpe or max consecutive losses
+- **Composite improvement gate** — `Δ(P&L) × Δ(Win Rate) × Δ(Profit Factor)`
+  must be **> 0 across all three dimensions**
+- **No single metric** (Sharpe, max consecutive losses, avg loss) may
+  degrade by more than 5%
+
+Rationale: chasing a single metric (hit-rate alone, or P&L alone) is
+the standard way rule systems over-fit to the in-sample window. The
+composite gate forces a candidate rule to demonstrate it improves
+**count, magnitude, and consistency** simultaneously — much harder to
+satisfy by accident, and aligned with how the §11 backtest gate
+combines hit rate, win/loss, and Profit Factor.
 
 ### 19.3 User approval (pending_approval → live)
 
