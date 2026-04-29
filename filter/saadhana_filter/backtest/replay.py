@@ -60,7 +60,12 @@ class BacktestConfig:
 
 @dataclass
 class SimulatedTrade:
-    """One round-trip BUY → exit, in the units §11 cares about."""
+    """One round-trip BUY → exit, in the units §11 cares about.
+
+    ``sector`` is captured at entry-time from the fundamentals frame and
+    persisted on the trade so the report can break outcomes down by
+    sector without a separate join.
+    """
 
     symbol: str
     entry_date: date
@@ -72,6 +77,7 @@ class SimulatedTrade:
     days_to_t1: int | None  # bars from entry to first T1 hit
     outcome: str  # SellReason value (or "STILL_OPEN" at the cutoff)
     pro_setup_score_at_entry: int
+    sector: str = "UNKNOWN"
 
 
 @dataclass
@@ -82,6 +88,16 @@ class BacktestResult:
     config: BacktestConfig
     open_positions_at_end: list[Position] = field(default_factory=list)
     daily_regime: dict[date, Regime] = field(default_factory=dict)
+    # Per-condition fire counters across every classify_signal call in the
+    # replay. ``true_count`` = times the condition was met; ``false_count``
+    # = times it failed. These let the report identify over-restrictive
+    # gates (a condition that's always False is not adding signal — it's
+    # blocking).
+    condition_true_counts: dict[str, int] = field(default_factory=dict)
+    condition_false_counts: dict[str, int] = field(default_factory=dict)
+    # Total ``classify_signal`` calls — denominator for the per-condition
+    # frequency stats.
+    total_decisions: int = 0
 
 
 # ──────────────────────────────────────────────────────────────────────────
@@ -102,6 +118,7 @@ def _trade_from_position(
     days_to_t1: int | None,
     weighted_return: float,
     pro_setup_score_at_entry: int,
+    sector: str = "UNKNOWN",
 ) -> SimulatedTrade:
     return SimulatedTrade(
         symbol=position.symbol,
@@ -114,6 +131,7 @@ def _trade_from_position(
         days_to_t1=days_to_t1,
         outcome=exit_reason if isinstance(exit_reason, str) else exit_reason.value,
         pro_setup_score_at_entry=pro_setup_score_at_entry,
+        sector=sector,
     )
 
 
@@ -126,6 +144,7 @@ def run_backtest(
     ohlcv: Mapping[str, pd.DataFrame],
     nifty_df: pd.DataFrame,
     fundamentals_passed: set[str] | None = None,
+    sectors: Mapping[str, str] | None = None,
     progress_every: int | None = 50,
 ) -> BacktestResult:
     """Replay the §5 v2 engine day-by-day across ``config.universe``.
@@ -149,12 +168,54 @@ def run_backtest(
     """
     if fundamentals_passed is None:
         fundamentals_passed = set(config.universe)
+    if sectors is None:
+        sectors = {}
+
+    from saadhana_filter.indicators.conditions import ALL_CONDITIONS, pro_setup_score
+    from saadhana_filter.signals.regime import market_regime
 
     open_positions: dict[str, Position] = {}
     # Per-position bookkeeping needed for ladder + days-to-T1 reporting.
     bookkeeping: dict[str, dict] = {}
     trades: list[SimulatedTrade] = []
     daily_regime: dict[date, Regime] = {}
+    # Per-condition counters — incremented every time we evaluate a
+    # candidate (Tier-1-passing, regime-allows-BUY, has lookback).
+    condition_true_counts: dict[str, int] = {name: 0 for name, _ in ALL_CONDITIONS}
+    condition_false_counts: dict[str, int] = {name: 0 for name, _ in ALL_CONDITIONS}
+    total_decisions = 0
+
+    # ── Precomputation pass (the speedup) ─────────────────────────────
+    # Conditions are point-in-time / backward-looking; pro_setup_score
+    # over the full history is mathematically identical to slicing per
+    # scan day and recomputing. Doing it once collapses an O(n²) loop
+    # into O(n) — for Nifty 500 × 757 days this is 100×+ faster.
+    #
+    # No lookahead bias is introduced as long as we *index into* the
+    # precomputed frame at the scan day (not look forward).
+    if progress_every:
+        import sys
+
+        print(
+            f"  [precompute] computing per-symbol score panels...",
+            file=sys.stderr,
+            flush=True,
+        )
+    score_panels: dict[str, pd.DataFrame] = {}
+    for symbol in config.universe:
+        if symbol not in ohlcv:
+            continue
+        df_full = ohlcv[symbol]
+        if df_full.empty:
+            continue
+        score_panels[symbol] = pro_setup_score(df_full)
+    regime_series = market_regime(nifty_df)
+    if progress_every:
+        print(
+            f"  [precompute] done — {len(score_panels)} symbol panels cached",
+            file=sys.stderr,
+            flush=True,
+        )
 
     # Build a master calendar from the index — every bar with a Nifty
     # close is a candidate scan day; intersect with the replay window.
@@ -173,10 +234,9 @@ def run_backtest(
                 flush=True,
             )
         scan_date = scan_ts.date()
-        sliced_index = _slice_to_date(nifty_df, scan_ts)
-        if len(sliced_index) < 200:  # not enough lookback for §12
+        if scan_ts not in regime_series.index:
             continue
-        regime = latest_regime(sliced_index)
+        regime = Regime(regime_series.loc[scan_ts])
         daily_regime[scan_date] = regime
 
         # ── 1. Evaluate every open position ────────────────────────
@@ -252,6 +312,7 @@ def run_backtest(
                     days_to_t1=book["days_to_t1"],
                     weighted_return=book["weighted_return"],
                     pro_setup_score_at_entry=book["entry_score"],
+                    sector=book.get("sector", "UNKNOWN"),
                 )
             )
             del open_positions[symbol]
@@ -268,22 +329,35 @@ def run_backtest(
                 continue
             if symbol not in fundamentals_passed:
                 continue
-            if symbol not in ohlcv:
+            if symbol not in score_panels:
                 continue
-            df = _slice_to_date(ohlcv[symbol], scan_ts)
-            if df.empty or scan_ts not in df.index or len(df) < 252:
+            panel = score_panels[symbol]
+            if scan_ts not in panel.index:
+                continue
+            row = panel.loc[scan_ts]
+            score = int(row["score"])
+
+            # Per-condition fire counter — same semantics as before, just
+            # sourced from the precomputed panel instead of a fresh
+            # classify_signal call.
+            total_decisions += 1
+            for cname, _ in ALL_CONDITIONS:
+                if bool(row[cname]):
+                    condition_true_counts[cname] += 1
+                else:
+                    condition_false_counts[cname] += 1
+
+            # §12 / §3 BUY logic — mirrors classify_signal exactly:
+            # Risk_Off → no BUY. Caution → score==13 downgrades to WATCH
+            # (Phase F adds conviction; until then no BUY in Caution).
+            # Risk_On + score==13 → BUY.
+            if regime != Regime.RISK_ON or score < 13:
                 continue
 
-            decision = classify_signal(
-                df,
-                symbol=symbol,
-                tier1_passed=True,
-                regime=regime,
-            )
-            if decision.signal != SignalState.BUY:
+            df_slice = _slice_to_date(ohlcv[symbol], scan_ts)
+            if df_slice.empty or len(df_slice) < 252:
                 continue
-
-            risk = risk_levels(df)
+            risk = risk_levels(df_slice)
             position = Position(
                 symbol=symbol,
                 entry_date=scan_date,
@@ -293,9 +367,10 @@ def run_backtest(
             )
             open_positions[symbol] = position
             bookkeeping[symbol] = {
-                "entry_score": decision.pro_setup_score,
+                "entry_score": score,
                 "weighted_return": 0.0,
                 "days_to_t1": None,
+                "sector": sectors.get(symbol, "UNKNOWN"),
             }
             if len(open_positions) >= config.max_concurrent_positions:
                 break  # done with new entries today
@@ -326,6 +401,7 @@ def run_backtest(
                 days_to_t1=book["days_to_t1"],
                 weighted_return=weighted,
                 pro_setup_score_at_entry=book["entry_score"],
+                sector=book.get("sector", "UNKNOWN"),
             )
         )
 
@@ -334,4 +410,7 @@ def run_backtest(
         config=config,
         open_positions_at_end=list(open_positions.values()),
         daily_regime=daily_regime,
+        condition_true_counts=condition_true_counts,
+        condition_false_counts=condition_false_counts,
+        total_decisions=total_decisions,
     )

@@ -1,14 +1,18 @@
 """Phase G1 — technical-only backtest runner.
 
-Replays the §5 v2 system on the bundled Nifty 50 over the most recent
-3 years using whatever OHLCV the local cache holds. Writes the report
-to ``spec/samples/backtest_report_g1.md`` and prints the §11 metric
-banner to stderr.
+Replays the §5 v2 system on a configurable universe (default: Nifty 50)
+over the most recent 3 years using whatever OHLCV the local cache
+holds. Writes the report to ``spec/samples/backtest_report_g1*.md`` and
+prints the §11 metric banner to stderr.
 
-The replay universe defaults to NIFTY_50 — Nifty 500 is gated on a
-production cron pulling the broader universe (the spec says G1 should
-run on Nifty 500; this script is the framework, just point ``--universe``
-at a 500-name list once it's bundled).
+For Nifty 500 runs, pass:
+    --fundamentals data/fundamentals_nifty500.parquet
+    --report spec/samples/backtest_report_g1_nifty500.md
+    --metrics-json spec/samples/backtest_g1_nifty500_metrics.json
+
+…the universe symbols and sectors are derived from the fundamentals
+frame's index + ``sector`` column, so the script doesn't need a separate
+universe argument when fundamentals are passed.
 """
 
 from __future__ import annotations
@@ -74,7 +78,15 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--end", type=lambda s: date.fromisoformat(s), default=date.today()
     )
-    parser.add_argument("--universe", nargs="*", default=list(NIFTY_50))
+    parser.add_argument("--universe", nargs="*", default=None)
+    parser.add_argument(
+        "--fundamentals",
+        type=Path,
+        default=None,
+        help="Optional Parquet at data/fundamentals_<scope>.parquet. When "
+        "provided, the universe is derived from its index and the §4 "
+        "Tier 1 gate is applied.",
+    )
     parser.add_argument(
         "--report",
         type=Path,
@@ -90,24 +102,50 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
+    # Derive universe + sectors + tier1-passing set from fundamentals
+    # when provided; otherwise fall back to bundled Nifty 50 with the
+    # legacy "all pass" assumption (matches the original Phase G1 run).
+    sectors: dict[str, str] = {}
+    fundamentals_passed: set[str] | None = None
+    if args.fundamentals is not None:
+        from saadhana_filter.signals.tier1 import tier1_filter
+
+        fund = pd.read_parquet(args.fundamentals)
+        if "symbol" in fund.columns:
+            fund = fund.set_index("symbol")
+        universe = tuple(args.universe or fund.index.tolist())
+        sectors = fund["sector"].astype(str).to_dict()
+        # Apply §4 gate up-front; only passing symbols can enter trades.
+        fundamentals_passed = set(tier1_filter(fund).index.astype(str))
+        print(
+            f"  Tier 1 gate: {len(fundamentals_passed)}/{len(universe)} symbols pass",
+            file=sys.stderr,
+        )
+    else:
+        universe = tuple(args.universe or NIFTY_50)
+
     end = args.end
     start = args.start or (end - timedelta(days=365 * 3 + 30))
 
     print(
-        f"Replaying {start} -> {end} on {len(args.universe)} symbols...",
+        f"Replaying {start} -> {end} on {len(universe)} symbols...",
         file=sys.stderr,
     )
     nifty_df = _load_index()
-    ohlcv = _load_ohlcv_dict(
-        list(args.universe), refresh=args.refresh, start=start, end=end
-    )
+    ohlcv = _load_ohlcv_dict(list(universe), refresh=args.refresh, start=start, end=end)
 
     config = BacktestConfig(
-        universe=tuple(args.universe),
+        universe=universe,
         start_date=start,
         end_date=end,
     )
-    result = run_backtest(config, ohlcv=ohlcv, nifty_df=nifty_df)
+    result = run_backtest(
+        config,
+        ohlcv=ohlcv,
+        nifty_df=nifty_df,
+        fundamentals_passed=fundamentals_passed,
+        sectors=sectors,
+    )
     metrics = compute_metrics(result.trades)
 
     args.report.parent.mkdir(parents=True, exist_ok=True)

@@ -87,6 +87,67 @@ def render_markdown_report(
         f"**Closed:** {metrics.n_wins + metrics.n_losses} ({metrics.n_wins} wins, {metrics.n_losses} losses)",
         f"**Still open at cutoff:** {metrics.n_still_open}",
         "",
+    ]
+
+    # ── Per-condition fire frequency ────────────────────────────────
+    if result.total_decisions > 0:
+        lines += [
+            "## Per-Condition Fire Frequency",
+            "",
+            f"Computed across **{result.total_decisions:,}** ``classify_signal`` calls",
+            "in the replay window. A condition that's almost always False is gating",
+            "the system with little discrimination — that's the over-restrictive",
+            "candidate to investigate.",
+            "",
+            "| Condition | True | False | True % |",
+            "|---|---:|---:|---:|",
+        ]
+        for cname, true_count in sorted(
+            result.condition_true_counts.items(),
+            key=lambda kv: kv[1],
+        ):
+            false_count = result.condition_false_counts.get(cname, 0)
+            total = true_count + false_count
+            pct = (true_count / total * 100.0) if total else 0.0
+            lines.append(f"| `{cname}` | {true_count:,} | {false_count:,} | {pct:.1f}% |")
+        lines.append("")
+
+    # ── Sector breakdown of trades + outcomes ───────────────────────
+    if result.trades:
+        from collections import defaultdict
+
+        bucket: dict[str, dict] = defaultdict(
+            lambda: {"trades": 0, "wins": 0, "losses": 0, "ret_sum": 0.0}
+        )
+        for t in result.trades:
+            b = bucket[t.sector]
+            b["trades"] += 1
+            b["ret_sum"] += t.return_pct
+            if t.outcome == "STILL_OPEN":
+                continue
+            if t.return_pct > 0:
+                b["wins"] += 1
+            else:
+                b["losses"] += 1
+
+        lines += [
+            "## Sector Breakdown",
+            "",
+            "| Sector | Trades | Wins | Losses | Avg Return | Hit Rate |",
+            "|---|---:|---:|---:|---:|---:|",
+        ]
+        for sector in sorted(bucket.keys(), key=lambda s: -bucket[s]["trades"]):
+            b = bucket[sector]
+            n_closed = b["wins"] + b["losses"]
+            avg_ret = (b["ret_sum"] / b["trades"]) * 100 if b["trades"] else 0
+            hit_rate = (b["wins"] / n_closed * 100) if n_closed else 0
+            lines.append(
+                f"| `{sector}` | {b['trades']} | {b['wins']} | "
+                f"{b['losses']} | {avg_ret:+.2f}% | {hit_rate:.1f}% |"
+            )
+        lines.append("")
+
+    lines += [
         "## Diagnostic Extras",
         "",
         f"- Median trade return: {_fmt_pct(metrics.median_return_pct)}",
