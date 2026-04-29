@@ -202,9 +202,16 @@ build-time env var differs; the codebase is one.
 - **The contract:** `spec/filter_spec_v2.md`
 - **The visual contract:** `spec/design_system.md`
 - **What to build next:** §23 of the spec lists phases A through N
-- **Existing Pine reference:** `pine/saadhana_pro_setups.pine` and
-  `pine/saadhana_volume_v2.pine` — the conditions are correct here, port
-  them faithfully to Python and TypeScript
+- **Pine scripts (chart-side visual checklist — NOT a Python mirror):**
+  `pine/saadhana_pro_setups.pine` and `pine/saadhana_volume_v2.pine`.
+  These compute a **different** 13-condition set inherited from
+  Mashrani Pro-Setups (Ichimoku cloud, DCR/WCR, U/D ratio, ATH proximity,
+  IV-day tracking). Pine and Python are **intentionally not 1:1** — see
+  the explanatory note at the top of spec §5. Do **not** "fix" one to
+  match the other; they are separate systems serving different purposes
+  (Pine = what a human eyeballs on a TradingView chart, Python = what
+  the signal engine decides). The Pine-only signals are parked as future
+  shadow-mode candidates per §19.5.
 - **Optaur source files (parent design reference):**
   `C:\Kumaravel\AIBuilder\Saadhana\freelance-bids\options-trading-platform\optaur-demo\`
   — read `app/components/theme.tsx`, `app/components/nav.tsx`,

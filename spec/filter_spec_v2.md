@@ -95,37 +95,53 @@ If `sector ∈ {BANK, NBFC, FINANCIAL_SERVICES}`:
 
 ## 5. BUY entry logic — 13 technical conditions
 
+> **Why these 13 (and not the Pine ones).** These 13 conditions are the
+> system-grade signal gates — chosen for their measurable risk math
+> (ATR stop, R/R ≥ 2:1, target distance) which is required by §10
+> position sizing and §11 backtest validation. The Pine script in
+> `pine/` is a complementary chart-side visual checklist using a
+> different (chart-eyeball) 13-condition set inherited from Mashrani
+> Pro-Setups; the two systems intentionally do **not** 1:1 mirror each
+> other. Drift between Python and TypeScript is enforced by §16 parity
+> tests; Pine is no longer in scope for that.
+
 A stock receives a BUY signal **only if ALL 13 conditions are true** on
 the most recent closed daily bar AND the Tier 1 gate is passed AND market
 regime allows BUYs (§12).
 
+The snake_case key in backticks after each condition is the **canonical
+identifier** — used as the Python `cond_<key>` function name, the
+TypeScript mirror name, and the field name in the §17 ledger schema.
+Renaming a key is a spec change.
+
 ### 5.1 Trend qualification
-1. **Stage 2** (Weinstein) — close > 30W SMA AND 30W SMA rising
-2. **Price > 50 EMA AND Price > 200 EMA**
-3. **5-EMA > 20-EMA AND 5-EMA rising bar-over-bar**
-4. **Higher highs / higher lows** structure on weekly chart, last 8 weeks
+1. **Stage 2** (Weinstein) — `stage_2` — close > 30W SMA AND 30W SMA rising
+2. **Price > 50 EMA AND Price > 200 EMA** — `above_50_and_200_ema`
+3. **5-EMA > 20-EMA AND 5-EMA rising bar-over-bar** — `5ema_above_20ema_rising`
+4. **Higher highs / higher lows** structure on weekly chart, last 8 weeks — `weekly_hh_hl`
 
 ### 5.2 Momentum qualification
-5. **RSI(14) between 50 and 70** (relaxable to 50–75 if forensics shows benefit)
-6. **MACD histogram > 0 AND rising** (momentum building, not peaking)
+5. **RSI(14) between 50 and 70** — `rsi_50_70` (relaxable to 50–75 if forensics shows benefit)
+6. **MACD histogram > 0 AND rising** — `macd_hist_rising` (momentum building, not peaking)
 
 ### 5.3 Volume / accumulation qualification
-7. **Institutional Buy or Heavy Buy** in the last 5 trading days
+7. **Institutional Buy or Heavy Buy** in the last 5 trading days — `institutional_flow`
    (RVOL ≥ 1.5x with up-bar at least once; institutional = RVOL ≥ 2.5x)
-8. **30-bar Inst. Flow Score > 0** (net accumulation, not distribution)
+8. **30-bar Inst. Flow Score > 0** — `inst_flow_score` (net accumulation, not distribution)
    - Score = (count of inst./heavy BUY bars) − (count of inst./heavy SELL bars)
 
 ### 5.4 Risk qualification
-9. **Distance to entry stop ≤ 3%** (stop = max of 20-EMA OR 5-bar low − ATR×0.5)
-10. **ATR-projected upside to nearest resistance ≥ 5%**
+9. **Distance to entry stop ≤ 3%** — `distance_to_stop_le_3pct`
+   (stop = max of 20-EMA OR 5-bar low − ATR×0.5)
+10. **ATR-projected upside to nearest resistance ≥ 5%** — `atr_upside_ge_5pct`
     - Resistance = recent pivot high or 52-week high
     - Projection = current ATR(14) × expected days-to-target (default 20)
-11. **Risk-Reward ratio ≥ 2:1** (target distance ≥ 2× stop distance)
+11. **Risk-Reward ratio ≥ 2:1** — `rr_ge_2` (target distance ≥ 2× stop distance)
 
 ### 5.5 Not-extended qualification
-12. **NOT within 2% of 52-week high** unless fresh breakout from a base ≥ 5 weeks
-13. **Bollinger Band Width > 30-bar median** (avoid dead consolidation)
-    OR price has just broken out of consolidation in last 3 bars
+12. **NOT within 2% of 52-week high** unless fresh breakout from a base ≥ 5 weeks — `not_extended`
+13. **Bollinger Band Width > 30-bar median** OR price has just broken out
+    of consolidation in last 3 bars — `bb_width_alive`
 
 **Pro-Setup Score** = sum of conditions met, range 0..13. Score 13 = BUY
 candidate. Score 10–12 = WATCH (displayed but not actionable). <10 = WAIT.
@@ -435,22 +451,22 @@ financial ledger.
   "regime": "Risk_On",
   "sector": "PHARMA",
 
-  // §5 — technical
+  // §5 — technical (keys match §5 canonical names exactly)
   "pro_setup_score": 13,
   "conditions": {
-    "5dema_above_20ema_rising": {"met": true, "value": [6189, 6051]},
-    "rsi_50_70": {"met": true, "value": 64.2},
-    "above_50ema": {"met": true, "value": [6234, 5832]},
-    "above_200ema": {"met": true, "value": [6234, 5410]},
-    "blue_cloud_above_red": {"met": true},
-    "within_10pct_52wh": {"met": true, "value": -3.2},
-    "beyond_10pct_52wl": {"met": true, "value": 42.6},
-    "bb_gap": {"met": true, "value": 5.8},
-    "bars_since_iv": {"met": true, "value": 18},
-    "away_from_iv": {"met": true, "value": 4.1},
-    "away_from_custom_emas": {"met": true},
-    "macd_hist_rising": {"met": true},
-    "weekly_hh_hl": {"met": true}
+    "stage_2":                   {"met": true, "value": {"close": 6234.50, "sma_30w": 5612}},
+    "above_50_and_200_ema":      {"met": true, "value": {"ema_50": 5832, "ema_200": 5410}},
+    "5ema_above_20ema_rising":   {"met": true, "value": {"ema_5": 6189, "ema_20": 6051}},
+    "weekly_hh_hl":              {"met": true},
+    "rsi_50_70":                 {"met": true, "value": 64.2},
+    "macd_hist_rising":          {"met": true, "value": 18.4},
+    "institutional_flow":        {"met": true, "value": {"last_5d_buy_bars": 2, "max_rvol": 2.6}},
+    "inst_flow_score":           {"met": true, "value": 12},
+    "distance_to_stop_le_3pct":  {"met": true, "value": 0.0256},
+    "atr_upside_ge_5pct":        {"met": true, "value": 0.0500},
+    "rr_ge_2":                   {"met": true, "value": 2.05},
+    "not_extended":              {"met": true, "value": {"dist_52wh_pct": -3.2, "fresh_breakout": false}},
+    "bb_width_alive":            {"met": true, "value": {"bbw_pct": 5.8, "median_30b": 4.2}}
   },
   "stage": "Stage_2",
   "rvol_today": 2.6,
@@ -593,6 +609,31 @@ trust_score(R) = (win_rate_when_R_fires − win_rate_when_R_quiet) ×
 
 Rules with negative trust_score for 90+ days are flagged for retirement.
 Rules with high trust_score get heavier weight in conviction calculation.
+
+### 19.5 Known external candidate rules (parked)
+
+The Pine chart-side checklist (`pine/saadhana_pro_setups.pine`,
+`pine/saadhana_volume_v2.pine`) computes signals that are deliberately
+**not** part of the §5 v2 system rules but are obvious candidates for
+forensics to propose via shadow mode (§19.1) once the system is live
+and has 90+ days of closed signals. These are **parked, not adopted**
+— the engine may surface them as `proposed` rules; user approval (§19.3)
+remains the only path to `live`.
+
+| Candidate | Pine source | Rationale to consider |
+|---|---|---|
+| `dcr_ge_70` | Daily Closing Range ≥ 70% | Strong intra-day demand on the entry bar |
+| `wcr_ge_70` | Weekly Closing Range ≥ 70% | Weekly close near weekly high — institutional buying tape |
+| `ud_ratio_ge_1` | 21-bar up/down day ratio ≥ 1 | Net up-day pressure independent of volume |
+| `ichimoku_cloud_bull` | Senkou A > Senkou B | Trend confirmation orthogonal to EMA stack |
+| `near_ath` | Within 10% of all-time high | Long-term breakout candidates |
+| `pvs_up` | Vol > 2.5× avg with close in top 30% of bar | Institutional accumulation tighter than §5.3 |
+
+If any of these reach the §19.2 promotion gate (≥ 30 days shadow,
+≥ 20 phantom decisions, hit-rate Δ ≥ 5pp), the user-approval flow in
+§19.3 elevates them to `live`. Until then they exist only here, in this
+list, as a known menu of options the engine may offer — not as latent
+spec text waiting to be turned on.
 
 ---
 
@@ -743,10 +784,13 @@ research-analyst safe harbor. File the letter.
 | **K** | Next.js Trader app on Vercel + auth | Public scanner + stock detail live |
 | **L** | /learning page + approval workflow | Personal-only forensics dashboard live |
 | **M** | GitHub Actions cron + Vercel Postgres wired | Full nightly pipeline runs unattended |
-| **N** | Pine parity script update | Pine mirror reflects spec v2 conditions |
+| **N** | Pine-side overlay of v2 risk-leg metrics (optional) | ATR stop, R/R targets, target-T1/T2 levels render as chart annotations on the Pine `saadhana_pro_setups` script; Pine condition checklist stays unchanged (Mashrani 13, see §5 note) |
 
 Each phase is independently shippable. Phase G is the go/no-go gate
-for live (paper) trading.
+for live (paper) trading. Phase N is **optional** — the system is fully
+functional without Pine parity since §5 v2 is the canonical gate; the
+overlay only exists to make on-chart eyeballing match the Python-computed
+risk levels.
 
 ---
 
