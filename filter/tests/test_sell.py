@@ -1,0 +1,132 @@
+"""§8 — SELL exit trigger tests."""
+
+from __future__ import annotations
+
+from datetime import date
+
+import numpy as np
+
+from saadhana_filter.signals.sell import (
+    Position,
+    SellReason,
+    evaluate_sell,
+)
+from tests.builders import geometric_close, make_ohlcv
+
+
+def _position(entry_price: float, current_stop: float, **kw) -> Position:
+    return Position(
+        symbol="TEST",
+        entry_date=date(2026, 1, 1),
+        entry_price=entry_price,
+        initial_stop=current_stop,
+        current_stop=current_stop,
+        **kw,
+    )
+
+
+# ──────────────────────────────────────────────────────────────────────────
+# §8.1 hard stops
+# ──────────────────────────────────────────────────────────────────────────
+class TestHardStops:
+    def test_close_at_or_below_stop_fires_stop_hit(self) -> None:
+        # Long flat, last bar drops below stop
+        n = 220
+        close = np.concatenate([np.full(n - 1, 100.0), [94.0]])
+        df = make_ohlcv(close)
+        pos = _position(entry_price=100.0, current_stop=95.0)
+        assert evaluate_sell(df, pos) == SellReason.STOP_HIT
+
+    def test_catastrophic_break_fires(self) -> None:
+        # Strong uptrend, then a sharp -10% close on heavy volume
+        n = 250
+        up = geometric_close(80.0, 0.003, n - 1)
+        crashed = np.append(up, up[-1] * 0.88)
+        vol = np.full(n, 1_000_000.0)
+        vol[-1] = 3_000_000.0
+        df = make_ohlcv(crashed, volume=vol)
+        # Stop is well below the crash level so STOP_HIT does not pre-empt
+        pos = _position(entry_price=up[-1], current_stop=up[-1] * 0.7)
+        assert evaluate_sell(df, pos) == SellReason.CATASTROPHIC_BREAK
+
+
+# ──────────────────────────────────────────────────────────────────────────
+# §8.2 profit ladder
+# ──────────────────────────────────────────────────────────────────────────
+class TestProfitLadder:
+    def test_t1_hit_fires_first(self) -> None:
+        n = 220
+        close = np.concatenate([np.full(n - 1, 100.0), [105.5]])
+        df = make_ohlcv(close)
+        pos = _position(entry_price=100.0, current_stop=95.0)
+        assert evaluate_sell(df, pos) == SellReason.T1_HIT
+
+    def test_t2_hit_when_already_t1(self) -> None:
+        n = 220
+        close = np.concatenate([np.full(n - 1, 100.0), [110.5]])
+        df = make_ohlcv(close)
+        pos = _position(entry_price=100.0, current_stop=100.0, t1_hit=True)
+        # T2 takes precedence over T1 in this branch ordering
+        assert evaluate_sell(df, pos) == SellReason.T2_HIT
+
+    def test_t3_trail_break_after_t2(self) -> None:
+        # Long uptrend then a small dip below 20-EMA — final 33% exits
+        n = 220
+        up = geometric_close(100.0, 0.003, n - 1)
+        # last bar dips below 20-EMA
+        last = up[-1] * 0.95
+        df = make_ohlcv(np.append(up, last))
+        pos = _position(
+            entry_price=up[0],
+            current_stop=up[0] * 0.95,
+            t1_hit=True,
+            t2_hit=True,
+        )
+        assert evaluate_sell(df, pos) == SellReason.T3_TRAIL_BREAK
+
+
+# ──────────────────────────────────────────────────────────────────────────
+# §8.3 trend deterioration
+# ──────────────────────────────────────────────────────────────────────────
+class TestTrendDeterioration:
+    def test_stage_shift_fires(self) -> None:
+        # 30W SMA flat or falling AND close below it — stage shift
+        n = 280
+        rising = geometric_close(100.0, 0.0015, n - 80)
+        falling = rising[-1] * np.power(1 - 0.005, np.arange(1, 81))
+        df = make_ohlcv(np.concatenate([rising, falling]))
+        pos = _position(entry_price=rising[0], current_stop=rising[0] * 0.5)
+        assert evaluate_sell(df, pos) == SellReason.STAGE_SHIFT_EXIT
+
+    def test_score_collapse_fires(self) -> None:
+        # 200 rising bars then 80 flat — keeps Stage 2 alive (SMA still
+        # rising, close above SMA) so STAGE_SHIFT does NOT pre-empt, but
+        # the 5/20 EMA stack stops rising, momentum dies, and most §5
+        # conditions fail → score ≤ 5 for the last 2 bars.
+        # Entry at 200 keeps T1/T2/STOP all out of the way; the 25%
+        # drawdown vs entry also pushes the path well outside the ±2%
+        # TIME_EXIT band so SCORE_COLLAPSE wins cleanly.
+        rising = geometric_close(100.0, 0.002, 200)
+        flat = np.full(80, rising[-1])
+        df = make_ohlcv(np.concatenate([rising, flat]))
+        pos = _position(entry_price=200.0, current_stop=100.0)
+        assert evaluate_sell(df, pos) == SellReason.SCORE_COLLAPSE_EXIT
+
+
+# ──────────────────────────────────────────────────────────────────────────
+# §8 — no trigger fires
+# ──────────────────────────────────────────────────────────────────────────
+class TestNoTriggerFires:
+    def test_clean_uptrend_no_sell(self) -> None:
+        df = make_ohlcv(geometric_close(100.0, 0.0008, 220))
+        pos = _position(
+            entry_price=100.0,
+            current_stop=70.0,  # well below close
+        )
+        # Need to construct a case where score doesn't collapse, no stop hit,
+        # no T1 hit (close < 5% above entry), no stage shift, no inst sells.
+        # 0.0008 drift over 220 bars = 100 * (1.0008)^219 ≈ 119, > 105 so T1 fires.
+        # Use a flatter drift instead.
+        df = make_ohlcv(geometric_close(100.0, 0.0001, 220))
+        pos = _position(entry_price=100.0, current_stop=70.0)
+        assert evaluate_sell(df, pos) is None
