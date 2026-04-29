@@ -35,8 +35,16 @@ def cache_path(symbol: str) -> Path:
 
 
 def _normalize(df: pd.DataFrame) -> pd.DataFrame:
-    """Lower-case columns, keep only OHLCV, sort by date, drop dupes."""
-    df = df.rename(columns=str.lower).copy()
+    """Lower-case columns, keep only OHLCV, sort by date, drop dupes.
+
+    Handles the MultiIndex column layout that yfinance ≥ 0.2.40 returns
+    even for single-ticker downloads (``[(field, ticker), ...]``) by
+    flattening to the field level before renaming.
+    """
+    df = df.copy()
+    if isinstance(df.columns, pd.MultiIndex):
+        df.columns = df.columns.get_level_values(0)
+    df = df.rename(columns=str.lower)
     if "adj close" in df.columns and "close" not in df.columns:
         df["close"] = df["adj close"]
     missing = [c for c in OHLCV_COLUMNS if c not in df.columns]

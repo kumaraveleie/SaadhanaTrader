@@ -60,3 +60,7 @@ logs/
 # Forensics outputs (regenerated, not committed)
 reviews/*.md
 !reviews/.gitkeep
+
+# Daily scan outputs (regenerated nightly, not committed)
+signals/*.json
+!signals/.gitkeep

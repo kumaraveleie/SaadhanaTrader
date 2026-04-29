@@ -43,15 +43,18 @@ def _build_provider(refresh: bool) -> callable:
 
 def _load_index(refresh: bool) -> pd.DataFrame:
     """Pull the Nifty 50 index frame separately — yfinance treats the
-    index ticker (``^NSEI``) outside the ``.NS`` convention."""
+    index ticker (``^NSEI``) outside the ``.NS`` convention. Uses
+    ``Ticker.history`` which always returns flat columns (unlike
+    ``yf.download`` which returns MultiIndex on recent versions)."""
     import yfinance as yf
 
-    df = yf.download(NIFTY_INDEX_TICKER, period="2y", progress=False, auto_adjust=False)
+    df = yf.Ticker(NIFTY_INDEX_TICKER).history(period="2y", auto_adjust=False)
     if df.empty:
         raise RuntimeError(f"yfinance returned no data for {NIFTY_INDEX_TICKER}")
     df = df.rename(columns=str.lower)
     if "adj close" in df.columns and "close" not in df.columns:
         df["close"] = df["adj close"]
+    df.index = pd.to_datetime(df.index).tz_localize(None)
     return df[["open", "high", "low", "close", "volume"]]
 
 
