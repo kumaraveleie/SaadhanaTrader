@@ -1,0 +1,250 @@
+//@version=6
+// =====================================================================
+// Saadhana Pro-Setups (Pine v6) — composite trend + volume + closing-range scanner
+// 13-condition checklist · volume metrics table · closing-range
+// stage tape · PVS markers · alerts.
+// =====================================================================
+indicator("Saadhana Pro-Setups", overlay=true, max_labels_count=500)
+
+// ============ INPUTS ============
+ema5_len   = input.int(5,   "5 EMA length",  group="EMAs")
+ema20_len  = input.int(20,  "20 EMA length", group="EMAs")
+ema50_len  = input.int(50,  "50 EMA length", group="EMAs")
+ema100_len = input.int(100, "100 EMA length",group="EMAs")
+ema200_len = input.int(200, "200 EMA length",group="EMAs")
+volMA_len  = input.int(50,  "Volume MA length", group="Volume")
+udBars     = input.int(21,  "U/D ratio bars", group="Range")
+ppBars     = input.int(21,  "Pivot Point count bars", group="Range")
+showCloud  = input.bool(true, "Show Ichimoku Cloud")
+showStage  = input.bool(true, "Show Stage Tape (background)")
+
+// ============ EMAs ============
+ema5   = ta.ema(close, ema5_len)
+ema20  = ta.ema(close, ema20_len)
+ema50  = ta.ema(close, ema50_len)
+ema100 = ta.ema(close, ema100_len)
+ema200 = ta.ema(close, ema200_len)
+
+plot(ema50,  color=color.new(color.orange, 0), title="50 EMA",  linewidth=2)
+plot(ema200, color=color.new(color.black, 0),  title="200 EMA", linewidth=2)
+
+// ============ ICHIMOKU CLOUD ============
+tenkan   = (ta.highest(high, 9)  + ta.lowest(low, 9))  / 2
+kijun    = (ta.highest(high, 26) + ta.lowest(low, 26)) / 2
+senkou_a = (tenkan + kijun) / 2
+senkou_b = (ta.highest(high, 52) + ta.lowest(low, 52)) / 2
+
+p_a = plot(showCloud ? senkou_a : na, color=color.new(color.blue, 60), offset=26, title="Senkou A")
+p_b = plot(showCloud ? senkou_b : na, color=color.new(color.red, 60),  offset=26, title="Senkou B")
+fill(p_a, p_b, color=senkou_a > senkou_b ? color.new(color.blue, 85) : color.new(color.red, 85))
+
+// ============ KEY LEVELS & DISTANCES ============
+high_52w = ta.highest(high, 252)
+low_52w  = ta.lowest(low, 252)
+high_ath = ta.highest(high, 5000)
+
+dist_50   = (close - ema50)   / ema50   * 100
+dist_200  = (close - ema200)  / ema200  * 100
+dist_5    = (close - ema5)    / ema5    * 100
+dist_20   = (close - ema20)   / ema20   * 100
+dist_100  = (close - ema100)  / ema100  * 100
+dist_52wh = (close - high_52w)/ high_52w* 100
+dist_52wl = (close - low_52w) / low_52w * 100
+dist_ath  = (close - high_ath)/ high_ath* 100
+
+// ============ THE 9 BINARY CONDITIONS ============
+c1 = ema5 > ema20 and ema20 > ema20[1]
+c2 = ema5 > ema5[1]
+c3 = close > ema50
+c4 = close > ema200
+c5 = ema5 > ema20
+c6 = senkou_a > senkou_b
+c7 = math.abs(dist_52wh) <= 10
+c8 = dist_52wl >= 10
+c9 = math.abs(dist_ath)  <= 10
+
+// ============ BOLLINGER BAND GAP ============
+bb_basis = ta.sma(close, 20)
+bb_dev   = 2 * ta.stdev(close, 20)
+bb_upper = bb_basis + bb_dev
+bb_lower = bb_basis - bb_dev
+bb_gap   = (bb_upper - bb_lower) / bb_basis * 100
+
+// ============ INSIDE DAY (IV) TRACKING ============
+isIV = high <= high[1] and low >= low[1]
+var int   barsSinceIV = 0
+var float lastIVHigh  = na
+barsSinceIV := isIV ? 0 : barsSinceIV + 1
+if isIV
+    lastIVHigh := high
+away_iv = na(lastIVHigh) ? 0.0 : (close - lastIVHigh) / lastIVHigh * 100
+
+// ============ VOLUME METRICS ============
+avgVol      = ta.sma(volume, volMA_len)
+rvol        = volume / avgVol * 100
+adr         = ta.sma((high - low) / close * 100, volMA_len)
+turnover_cr = volume * close / 10000000
+avgTO_cr    = ta.sma(turnover_cr, volMA_len)
+
+
+// ============ PRICE VOLUME SPURT (PVS) DETECTION ============
+// Institutional buying/selling signals based on volume + price action
+isPVSUp   = volume > avgVol * 2.5 and close > close[1] and (close - low) / (high - low) > 0.7
+isPVSDown = volume > avgVol * 2.5 and close < close[1] and (close - low) / (high - low) < 0.3
+
+plotshape(isPVSUp,   title="PVS Up (institutional buy)",  location=location.belowbar, style=shape.triangleup,   size=size.small, color=color.new(color.green, 0), text="PVS↑", textcolor=color.green)
+plotshape(isPVSDown, title="PVS Down (institutional sell)", location=location.abovebar, style=shape.triangledown, size=size.small, color=color.new(color.red, 0),   text="PVS↓", textcolor=color.red)
+
+// ============ U/D RATIO ============
+upCount   = math.sum(close > close[1] ? 1 : 0, udBars)
+downCount = math.sum(close < close[1] ? 1 : 0, udBars)
+ud_ratio  = downCount > 0 ? upCount / downCount : math.max(upCount, 0.0)
+
+// ============ PIVOT POINT COUNT ============
+ph = ta.pivothigh(high, 2, 2)
+pl = ta.pivotlow(low,  2, 2)
+pp_count = math.sum(not na(ph) ? 1 : 0, ppBars) + math.sum(not na(pl) ? 1 : 0, ppBars)
+
+// ============ CLOSING RANGES ============
+dayRange = high - low
+dcr = dayRange > 0 ? (close - low) / dayRange * 100 : 50.0
+
+weeklyHigh = request.security(syminfo.tickerid, "W", high, lookahead=barmerge.lookahead_off)
+weeklyLow  = request.security(syminfo.tickerid, "W", low,  lookahead=barmerge.lookahead_off)
+weeklyRange = weeklyHigh - weeklyLow
+wcr = weeklyRange > 0 ? (close - weeklyLow) / weeklyRange * 100 : 50.0
+
+// ============ COMPOSITE SCORE ============
+score = (c1?1:0)+(c2?1:0)+(c3?1:0)+(c4?1:0)+(c5?1:0)+(c6?1:0)+(c7?1:0)+(c8?1:0)+(c9?1:0)+(rvol>=100?1:0)+(ud_ratio>=1?1:0)+(dcr>=70?1:0)+(wcr>=70?1:0)
+
+// ============ STAGE CLASSIFIER (function form, v6-clean) ============
+ema200_slope_up = ema200 > ema200[20]
+
+classifyStage(c, e, slopeUp) =>
+    result = 3
+    if c > e and slopeUp
+        result := 2
+    else if c > e
+        result := 1
+    else if c < e and not slopeUp
+        result := 4
+    result
+
+stage = classifyStage(close, ema200, ema200_slope_up)
+
+getStageColor(showIt, st) =>
+    result = color.new(color.red, 96)
+    if not showIt
+        result := color.new(color.white, 100)
+    else if st == 2
+        result := color.new(color.green, 96)
+    else if st == 1
+        result := color.new(color.yellow, 96)
+    else if st == 3
+        result := color.new(color.orange, 96)
+    result
+
+stageColor = getStageColor(showStage, stage)
+bgcolor(stageColor, title="Stage Tape")
+
+// ============ HELPERS ============
+f_dot(b) => b ? "🟢" : "🔴"
+f_pct(v) => str.tostring(math.round(v * 10) / 10) + "%"
+f_int(v) => str.tostring(math.round(v))
+
+// ============ TABLE 1 — PRO-SETUPS CHECKLIST ============
+var table tPS = table.new(position.top_left, 2, 18, border_width=1, border_color=color.gray)
+
+if barstate.islast
+    bg = color.new(color.blue, 20)   // solid blue body, white text on top
+    pad = color.new(color.gray, 90)
+    for i = 0 to 3
+        table.cell(tPS, 0, i, " ", bgcolor=pad, text_size=size.normal)
+        table.cell(tPS, 1, i, " ", bgcolor=pad, text_size=size.normal)
+    table.cell(tPS, 0, 4, "Saadhana Pro-Setups", text_color=color.white, bgcolor=color.navy, text_size=size.small)
+    table.cell(tPS, 1, 4, "", bgcolor=color.navy)
+    table.cell(tPS, 0, 5, "5DEMA>20EMA on Rising 20DMA", text_color=color.white, bgcolor=bg, text_size=size.normal)
+    table.cell(tPS, 1, 5, f_dot(c1), bgcolor=bg)
+    table.cell(tPS, 0, 6, "Rising 5DEMA", text_color=color.white, bgcolor=bg, text_size=size.normal)
+    table.cell(tPS, 1, 6, f_dot(c2), bgcolor=bg)
+    table.cell(tPS, 0, 7, "Price > 50EMA (" + f_pct(dist_50) + ")", text_color=color.white, bgcolor=bg, text_size=size.normal)
+    table.cell(tPS, 1, 7, f_dot(c3), bgcolor=bg)
+    table.cell(tPS, 0, 8, "Price > 200EMA (" + f_pct(dist_200) + ")", text_color=color.white, bgcolor=bg, text_size=size.normal)
+    table.cell(tPS, 1, 8, f_dot(c4), bgcolor=bg)
+    table.cell(tPS, 0, 9, "5DEMA > 20DEMA", text_color=color.white, bgcolor=bg, text_size=size.normal)
+    table.cell(tPS, 1, 9, f_dot(c5), bgcolor=bg)
+    table.cell(tPS, 0, 10, "Blue cloud above Red cloud", text_color=color.white, bgcolor=bg, text_size=size.normal)
+    table.cell(tPS, 1, 10, f_dot(c6), bgcolor=bg)
+    table.cell(tPS, 0, 11, "Within 10% of 52WH (" + f_pct(math.abs(dist_52wh)) + ")", text_color=color.white, bgcolor=bg, text_size=size.normal)
+    table.cell(tPS, 1, 11, f_dot(c7), bgcolor=bg)
+    table.cell(tPS, 0, 12, "Beyond 10% from 52WL (" + f_pct(dist_52wl) + ")", text_color=color.white, bgcolor=bg, text_size=size.normal)
+    table.cell(tPS, 1, 12, f_dot(c8), bgcolor=bg)
+    table.cell(tPS, 0, 13, "Within 10% of ATH (" + f_pct(math.abs(dist_ath)) + ")", text_color=color.white, bgcolor=bg, text_size=size.normal)
+    table.cell(tPS, 1, 13, f_dot(c9), bgcolor=bg)
+    table.cell(tPS, 0, 14, "BB Gap: " + f_pct(bb_gap), text_color=color.white, bgcolor=bg, text_size=size.normal)
+    table.cell(tPS, 1, 14, "", bgcolor=bg)
+    table.cell(tPS, 0, 15, "Bars since last IV", text_color=color.white, bgcolor=bg, text_size=size.normal)
+    table.cell(tPS, 1, 15, str.tostring(barsSinceIV) + " bars", bgcolor=bg, text_size=size.normal)
+    table.cell(tPS, 0, 16, "Away from IV Day High", text_color=color.white, bgcolor=bg, text_size=size.normal)
+    table.cell(tPS, 1, 16, f_pct(away_iv), bgcolor=bg, text_size=size.normal)
+    table.cell(tPS, 0, 17, "Away from Custom EMA", text_color=color.white, bgcolor=bg, text_size=size.normal)
+    table.cell(tPS, 1, 17, "5: " + f_pct(dist_5) + " | 20: " + f_pct(dist_20) + " | 100: " + f_pct(dist_100), bgcolor=bg, text_size=size.normal)
+
+// ============ TABLE 2 — PRO-SETUPS VOLUME ============
+var table tV = table.new(position.top_right, 9, 10, border_width=1, border_color=color.gray)
+
+if barstate.islast
+    hb = color.navy
+    padV = color.new(color.gray, 90)
+    for j = 0 to 7
+        for c = 0 to 8
+            table.cell(tV, c, j, " ", bgcolor=padV, text_size=size.normal)
+    table.cell(tV, 0, 8, "Volume",            text_color=color.white, bgcolor=hb, text_size=size.small)
+    table.cell(tV, 1, 8, "50 bars Avg. Vol",  text_color=color.white, bgcolor=hb, text_size=size.small)
+    table.cell(tV, 2, 8, "50 bars RVOL",      text_color=color.white, bgcolor=hb, text_size=size.small)
+    table.cell(tV, 3, 8, "50 bars Avg. TO",   text_color=color.white, bgcolor=hb, text_size=size.small)
+    table.cell(tV, 4, 8, "50 bars ADR",       text_color=color.white, bgcolor=hb, text_size=size.small)
+    table.cell(tV, 5, 8, "21 bars U/D ratio", text_color=color.white, bgcolor=hb, text_size=size.small)
+    table.cell(tV, 6, 8, "21 bars PP count",  text_color=color.white, bgcolor=hb, text_size=size.small)
+    table.cell(tV, 7, 8, "Closing Range",     text_color=color.white, bgcolor=hb, text_size=size.small)
+    table.cell(tV, 8, 8, "Note",              text_color=color.white, bgcolor=hb, text_size=size.small)
+
+    vbg = color.new(color.blue, 20)
+    table.cell(tV, 0, 9, str.tostring(volume / 1000, "0.000") + "K", text_color=color.white, bgcolor=vbg, text_size=size.normal)
+    table.cell(tV, 1, 9, str.tostring(avgVol / 1000, "0.000") + "K", text_color=color.white, bgcolor=vbg, text_size=size.normal)
+    table.cell(tV, 2, 9, f_int(rvol) + "%", text_color=color.white, bgcolor=vbg, text_size=size.normal)
+    table.cell(tV, 3, 9, "INR " + f_int(avgTO_cr) + " cr", text_color=color.white, bgcolor=vbg, text_size=size.normal)
+    table.cell(tV, 4, 9, f_int(adr) + "%", text_color=color.white, bgcolor=vbg, text_size=size.normal)
+    table.cell(tV, 5, 9, str.tostring(ud_ratio, "0.0"), text_color=color.white, bgcolor=vbg, text_size=size.normal)
+    table.cell(tV, 6, 9, f_int(pp_count), text_color=color.white, bgcolor=vbg, text_size=size.normal)
+    table.cell(tV, 7, 9, "WCR: " + f_int(wcr) + "%; DCR: " + f_int(dcr) + "%", text_color=color.yellow, bgcolor=vbg, text_size=size.normal)
+    table.cell(tV, 8, 9, "", bgcolor=vbg, text_size=size.normal)
+
+// ============ SCORE LABEL ============
+getScoreColor(s) =>
+    result = color.new(color.gray, 30)
+    if s >= 11
+        result := color.new(color.green, 0)
+    else if s >= 8
+        result := color.new(color.orange, 0)
+    result
+
+if barstate.islast
+    scoreColor = getScoreColor(score)
+    label.new(bar_index, high * 1.03,
+              "Pro-Setup Score: " + str.tostring(score) + "/13",
+              style=label.style_label_down,
+              color=scoreColor,
+              textcolor=color.white,
+              size=size.small)
+
+// ============ ALERTS ============
+alertcondition(score >= 11 and dcr >= 70 and wcr >= 70,
+               "Pro-Setup Confirmed",
+               "Saadhana Pro-Setup confirmed: high-conviction setup detected")
+alertcondition(c1 and c2 and c3 and c4 and c5 and c6 and c7,
+               "All Trend Conditions Green",
+               "All trend/position checks passed")
+alertcondition(rvol > 250 and close > close[1],
+               "Price Volume Spurt UP",
+               "Heavy volume on up day — institutional accumulation hint")

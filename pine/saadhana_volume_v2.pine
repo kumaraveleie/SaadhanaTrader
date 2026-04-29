@@ -1,0 +1,102 @@
+//@version=6
+// =====================================================================
+// Saadhana Volume — institutional vs retail volume highlighter
+// Add this as a SECOND indicator (it shows in a sub-pane below price)
+// =====================================================================
+indicator("Saadhana Volume", overlay=false, format=format.volume)
+
+// ============ INPUTS ============
+volMA_len   = input.int(50, "Volume MA length")
+spurtMult   = input.float(2.5, "Volume Spurt multiplier (institutional threshold)", minval=1.5, step=0.1)
+heavyMult   = input.float(1.5, "Heavy volume threshold", minval=1.0, step=0.1)
+
+// ============ CALCULATIONS ============
+avgVol = ta.sma(volume, volMA_len)
+rvol   = volume / avgVol
+
+isUp   = close > close[1]
+isDown = close < close[1]
+
+isInstitutionalUp   = rvol >= spurtMult and isUp
+isInstitutionalDown = rvol >= spurtMult and isDown
+isHeavyUp           = rvol >= heavyMult and rvol < spurtMult and isUp
+isHeavyDown         = rvol >= heavyMult and rvol < spurtMult and isDown
+
+// ============ COLOR LOGIC ============
+getVolColor() =>
+    result = color.new(color.gray, 50)
+    if isInstitutionalUp
+        result := color.new(color.blue, 0)            // bright blue = institutional buying
+    else if isInstitutionalDown
+        result := color.new(color.fuchsia, 0)         // magenta = institutional selling
+    else if isHeavyUp
+        result := color.new(color.green, 30)          // strong green = heavy buying
+    else if isHeavyDown
+        result := color.new(color.red, 30)            // strong red = heavy selling
+    else if isUp
+        result := color.new(color.green, 70)          // pale green = normal up
+    else
+        result := color.new(color.red, 70)            // pale red = normal down
+    result
+
+volColor = getVolColor()
+
+// ============ PLOTS ============
+plot(volume, title="Volume", style=plot.style_columns, color=volColor, linewidth=2)
+plot(avgVol, title="50-bar Avg Volume", color=color.new(color.orange, 0), linewidth=2)
+
+// Highlight institutional bars with a marker
+plotshape(isInstitutionalUp,   title="Institutional Buy",  location=location.top, style=shape.triangleup,   color=color.new(color.blue, 0),    size=size.tiny)
+plotshape(isInstitutionalDown, title="Institutional Sell", location=location.top, style=shape.triangledown, color=color.new(color.fuchsia, 0), size=size.tiny)
+
+// ============ STATS TABLE — horizontal at TOP-LEFT of volume pane ============
+// 5 columns x 3 rows: row 0 = invisible padding (pushes the table a bit lower so it
+// doesn't kiss the price/volume divider), row 1 = headers, row 2 = values.
+var table tStats = table.new(position.top_left, 5, 3, border_width=1, border_color=color.gray)
+
+getStatusText() =>
+    isInstitutionalUp   ? "INST. BUY" :
+     isInstitutionalDown ? "INST. SELL" :
+     isHeavyUp           ? "Heavy buy" :
+     isHeavyDown         ? "Heavy sell" :
+     isUp                ? "Normal up" :
+                           "Normal dn"
+
+getStatusColor() =>
+    result = color.gray
+    if isInstitutionalUp
+        result := color.new(color.blue, 0)
+    else if isInstitutionalDown
+        result := color.new(color.fuchsia, 0)
+    else if isHeavyUp
+        result := color.new(color.green, 0)
+    else if isHeavyDown
+        result := color.new(color.red, 0)
+    result
+
+if barstate.islast
+    hdr = color.navy
+    bdy = color.new(color.blue, 30)
+    pad = color.new(color.gray, 90)   // 10% opacity – forces row to render with visible space
+    // Row 0 — padding (pushes the visible table down ~1 row height)
+    table.cell(tStats, 0, 0, "  ", bgcolor=pad, text_size=size.small)
+    table.cell(tStats, 1, 0, "  ", bgcolor=pad, text_size=size.small)
+    table.cell(tStats, 2, 0, "  ", bgcolor=pad, text_size=size.small)
+    table.cell(tStats, 3, 0, "  ", bgcolor=pad, text_size=size.small)
+    table.cell(tStats, 4, 0, "  ", bgcolor=pad, text_size=size.small)
+    // Row 1 — header labels
+    table.cell(tStats, 0, 1, "RVOL",      text_color=color.white, bgcolor=hdr, text_size=size.small)
+    table.cell(tStats, 1, 1, "Status",    text_color=color.white, bgcolor=hdr, text_size=size.small)
+    table.cell(tStats, 2, 1, "Today Vol", text_color=color.white, bgcolor=hdr, text_size=size.small)
+    table.cell(tStats, 3, 1, "Avg Vol",   text_color=color.white, bgcolor=hdr, text_size=size.small)
+    table.cell(tStats, 4, 1, "Indicator", text_color=color.white, bgcolor=hdr, text_size=size.small)
+    // Row 2 — values
+    table.cell(tStats, 0, 2, str.tostring(rvol, "0.00") + "x", text_color=color.white, bgcolor=bdy, text_size=size.small)
+    table.cell(tStats, 1, 2, getStatusText(), text_color=getStatusColor(), bgcolor=bdy, text_size=size.small)
+    table.cell(tStats, 2, 2, str.tostring(volume / 1000, "0.0") + "K", text_color=color.white, bgcolor=bdy, text_size=size.small)
+    table.cell(tStats, 3, 2, str.tostring(avgVol / 1000, "0.0") + "K", text_color=color.white, bgcolor=bdy, text_size=size.small)
+    table.cell(tStats, 4, 2, "Saadhana Vol", text_color=color.white, bgcolor=bdy, text_size=size.small)
+
+// ============ ALERTS ============
+alertcondition(isInstitutionalUp,   "Institutional Buying",  "Volume spurt: institutional accumulation detected")
+alertcondition(isInstitutionalDown, "Institutional Selling", "Volume spurt: institutional distribution detected")
