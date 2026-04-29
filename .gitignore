@@ -1,0 +1,62 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+.pytest_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+*.egg-info/
+build/
+dist/
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+.vercel/
+*.tsbuildinfo
+next-env.d.ts
+
+# Local data caches (never commit market data)
+**/.saadhana/data/
+**/eod/*.parquet
+**/*.parquet
+**/*.csv
+!filter/tests/fixtures/*.csv
+
+# Secrets
+.env
+.env.local
+.env*.local
+.env.production
+*.pem
+
+# IDE / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Build artifacts
+*.tsbuildinfo
+.turbo/
+
+# Streamlit cache
+.streamlit/
+
+# Forensics outputs (regenerated, not committed)
+reviews/*.md
+!reviews/.gitkeep
