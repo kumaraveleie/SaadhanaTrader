@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Read",
+      "Glob",
+      "Grep",
+      "Edit",
+      "Write",
+      "NotebookEdit",
+      "WebFetch",
+      "WebSearch",
+      "TodoWrite",
+      "Task",
+      "Bash"
+    ],
+    "deny": [
+      "Bash(rm -rf /:*)",
+      "Bash(rm -rf ~:*)",
+      "Bash(rm -rf .:*)",
+      "Bash(rm -rf .git:*)",
+      "Bash(rm -rf .env:*)",
+      "Bash(rm -rf signals:*)",
+      "Bash(rm -rf reviews:*)",
+      "Bash(git push --force origin main:*)",
+      "Bash(git push -f origin main:*)",
+      "Bash(git reset --hard origin/main:*)",
+      "Bash(git branch -D main:*)",
+      "Bash(git commit --no-verify:*)",
+      "Bash(git commit --no-gpg-sign:*)"
+    ]
+  }
+}
