@@ -49,6 +49,7 @@ ATR_TARGET_DAYS = 20
 MIN_UPSIDE_PCT = 0.05
 MIN_RR_RATIO = 2.0
 EXTENDED_NEAR_52WH_PCT = 0.02
+RECENT_STRENGTH_LOOKBACK_DAYS = 60  # v2.1 §5.5 #12 — Goldilocks recency leg
 BASE_LOOKBACK_BARS = 25  # ≈ 5 weeks of trading days
 BASE_TIGHTNESS_PCT = 0.10
 BREAKOUT_LOOKBACK = 3
@@ -261,14 +262,38 @@ def _fresh_breakout(df: pd.DataFrame) -> pd.Series:
     return candle_break.rolling(BREAKOUT_LOOKBACK, min_periods=1).max().astype(bool)
 
 
-def cond_not_extended(df: pd.DataFrame) -> pd.Series:
-    """§5.5 #12 — NOT within 2% of 52-week high, **unless** a fresh
-    breakout from a base of ≥ 5 weeks happened in the last 3 bars."""
+def cond_recent_strength_not_extended(df: pd.DataFrame) -> pd.Series:
+    """§5.5 #12 (v2.1) — Goldilocks zone.
+
+    Both legs required (AND, not OR):
+    1. **Recent strength** — last 52-week-high touch was within
+       ``RECENT_STRENGTH_LOOKBACK_DAYS`` (60 calendar days). Excludes
+       the "mid-fade" cluster A4 identified — stocks that haven't
+       printed a new high in 2+ months.
+    2. **Not extended** — close is not within 2% of the 52WH, *unless*
+       a fresh breakout from a ≥ 5-week tight base happened in the
+       last 3 bars.
+
+    Renamed from ``cond_not_extended`` per v2.1 amendment; the v2.0
+    canonical key ``not_extended`` is retired.
+    """
     close = df["close"]
     high52 = df["high"].rolling(252, min_periods=60).max()
+
+    # Leg 1 — recency of strength. Mark every bar where the high
+    # touched (within 0.1%) the trailing 252-bar maximum, ffill the
+    # date forward, and ask whether the gap is ≤ 60 calendar days.
+    is_at_52wh = df["high"] >= high52 * 0.999
+    last_touch_date = df.index.to_series().where(is_at_52wh).ffill()
+    days_since_52wh = (df.index.to_series() - last_touch_date).dt.days
+    recent_strength = days_since_52wh <= RECENT_STRENGTH_LOOKBACK_DAYS
+
+    # Leg 2 — original "not extended" logic.
     near_top = close >= (1 - EXTENDED_NEAR_52WH_PCT) * high52
     breakout = _fresh_breakout(df)
-    return ((~near_top) | breakout).fillna(False)
+    not_extended = (~near_top) | breakout
+
+    return (recent_strength & not_extended).fillna(False)
 
 
 def cond_bb_width_alive(df: pd.DataFrame) -> pd.Series:
@@ -296,7 +321,7 @@ ALL_CONDITIONS: tuple[tuple[str, Callable[[pd.DataFrame], pd.Series]], ...] = (
     ("distance_to_stop_le_3pct", cond_distance_to_stop_le_3pct),
     ("atr_upside_ge_5pct", cond_atr_upside_ge_5pct),
     ("rr_ge_2", cond_rr_ge_2),
-    ("not_extended", cond_not_extended),
+    ("recent_strength_not_extended", cond_recent_strength_not_extended),
     ("bb_width_alive", cond_bb_width_alive),
 )
 """(name, function) pairs in spec order — used by the score aggregator,

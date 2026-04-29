@@ -9,7 +9,7 @@ from saadhana_filter.indicators.conditions import (
     cond_inst_flow_score,
     cond_institutional_flow,
     cond_macd_hist_rising,
-    cond_not_extended,
+    cond_recent_strength_not_extended,
     cond_rr_ge_2,
     cond_rsi_50_70,
     cond_stage_2,
@@ -51,7 +51,7 @@ __all__ = [
     "cond_distance_to_stop_le_3pct",
     "cond_atr_upside_ge_5pct",
     "cond_rr_ge_2",
-    "cond_not_extended",
+    "cond_recent_strength_not_extended",
     "cond_bb_width_alive",
     # aggregator
     "pro_setup_score",

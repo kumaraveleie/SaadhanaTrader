@@ -19,7 +19,7 @@ from saadhana_filter.indicators.conditions import (
     cond_inst_flow_score,
     cond_institutional_flow,
     cond_macd_hist_rising,
-    cond_not_extended,
+    cond_recent_strength_not_extended,
     cond_rr_ge_2,
     cond_rsi_50_70,
     cond_stage_2,
@@ -345,34 +345,46 @@ class TestCondRrGe2:
 
 
 # ──────────────────────────────────────────────────────────────────────────
-# §5.5 #12 — Not-extended (≥ 2% from 52WH unless fresh breakout)
+# §5.5 #12 (v2.1) — Goldilocks: recent strength AND not extended
 # ──────────────────────────────────────────────────────────────────────────
-class TestCondNotExtended:
-    def test_well_below_52wh_true(self) -> None:
-        # Long uptrend then 8% pullback — close 8% below 52WH
+class TestCondRecentStrengthNotExtended:
+    def test_recent_pullback_passes(self) -> None:
+        # 270 bars rising, 10 bars pullback (~14 calendar days). Both legs
+        # of the v2.1 condition pass: 52WH was ~14 days ago (≤ 60), and
+        # close is 8% below 52WH (not extended).
         up = geometric_close(100.0, 0.002, 270)
         pullback = up[-1] * np.power(1 - 0.008, np.arange(1, 11))
         df = make_ohlcv(np.concatenate([up, pullback]))
-        assert bool(cond_not_extended(df).iloc[-1])
+        assert bool(cond_recent_strength_not_extended(df).iloc[-1])
 
     def test_glued_to_52wh_false(self) -> None:
-        # Uptrend steep enough that the trailing 25-bar range exceeds the
-        # 10% "tight base" envelope → no breakout exception, and close
-        # sits at the 52-week high → extended.
+        # Steep uptrend, close at 52WH. Recency passes (just touched),
+        # but the not-extended leg fails (within 2% of 52WH, no fresh
+        # breakout from a tight base) → AND = False.
         df = make_ohlcv(geometric_close(100.0, 0.005, 280))
-        assert not bool(cond_not_extended(df).iloc[-1])
+        assert not bool(cond_recent_strength_not_extended(df).iloc[-1])
 
-    def test_fresh_breakout_from_base_overrides(self) -> None:
-        # 25 bars of tight base around 100, then a 3% breakout candle.
-        # That breakout is right at a new 52-week high, but the base
-        # qualifies → condition True via the breakout exception.
-        n = 280
-        base_n = n - 1
-        base = flat_close(100.0, base_n, jitter_pct=0.005, seed=7)
-        # ensure tight: max-min < 10%
+    def test_fresh_breakout_from_base_overrides_extended(self) -> None:
+        # 279 flat bars + 1 breakout candle. Recency passes (the high
+        # touched 52WH on the breakout bar), AND the breakout exception
+        # in the not-extended leg fires → AND = True.
+        base = flat_close(100.0, 279, jitter_pct=0.005, seed=7)
         df_close = np.concatenate([base, [104.0]])
         df = make_ohlcv(df_close, intrabar_pct=0.008)
-        assert bool(cond_not_extended(df).iloc[-1])
+        assert bool(cond_recent_strength_not_extended(df).iloc[-1])
+
+    def test_mid_fade_old_strength_fails_v2_1(self) -> None:
+        # The v2.1 reason-for-existing test: 52WH was > 60 calendar days
+        # ago, close is well below 52WH (legacy not_extended TRUE), but
+        # the new recency leg fails → AND = False. Without the recency
+        # leg this would have qualified for BUY in v2.0.
+        # Path: 200 rising bars peaking at bar 200, then 80 flat bars at
+        # 90% of peak. days_since_52WH ≈ 112 calendar days.
+        up = geometric_close(100.0, 0.003, 200)
+        peak = up[-1]
+        plateau = np.full(80, peak * 0.90)
+        df = make_ohlcv(np.concatenate([up, plateau]))
+        assert not bool(cond_recent_strength_not_extended(df).iloc[-1])
 
 
 # ──────────────────────────────────────────────────────────────────────────
