@@ -159,6 +159,34 @@ def main(argv: list[str] | None = None) -> int:
         ),
         encoding="utf-8",
     )
+    # Serialize the trade list alongside the metrics + report. Audit
+    # scripts (A4) consume this JSON to recompute per-trade features
+    # without re-running the replay.
+    trades_path = args.metrics_json.with_name(
+        args.metrics_json.stem.replace("_metrics", "_trades") + ".json"
+    )
+    trades_path.write_text(
+        json.dumps(
+            [
+                {
+                    "symbol": t.symbol,
+                    "entry_date": t.entry_date.isoformat(),
+                    "entry_price": t.entry_price,
+                    "exit_date": t.exit_date.isoformat(),
+                    "exit_price": t.exit_price,
+                    "return_pct": t.return_pct,
+                    "days_held": t.days_held,
+                    "days_to_t1": t.days_to_t1,
+                    "outcome": t.outcome,
+                    "pro_setup_score_at_entry": t.pro_setup_score_at_entry,
+                    "sector": t.sector,
+                }
+                for t in result.trades
+            ],
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
     args.metrics_json.write_text(
         json.dumps(metrics_to_dict(metrics), indent=2, default=str),
         encoding="utf-8",
