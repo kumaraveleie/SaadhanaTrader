@@ -71,6 +71,7 @@ def render_markdown_report(
         f"| Avg loss | ≤ −2.5% | {_fmt_pct(metrics.avg_loss_pct)} | {_yes_no(metrics.avg_loss_passes)} |",
         f"| Max consecutive losses | ≤ 5 | {metrics.max_consecutive_losses} | {_yes_no(metrics.consecutive_losses_passes)} |",
         f"| Win/loss ratio | ≥ 2.0 | {metrics.win_loss_ratio:.2f} | {_yes_no(metrics.win_loss_passes)} |",
+        f"| Profit Factor | ≥ 1.8 | {metrics.profit_factor:.2f} | {_yes_no(metrics.profit_factor_passes)} |",
         f"| Sharpe (annualized) | ≥ 1.5 | {metrics.sharpe_annualized:.2f} | {_yes_no(metrics.sharpe_passes)} |",
         "",
         "## Trade Outcome Distribution",

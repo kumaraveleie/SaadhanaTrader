@@ -64,3 +64,6 @@ reviews/*.md
 # Daily scan outputs (regenerated nightly, not committed)
 signals/*.json
 !signals/.gitkeep
+
+# Claude Code runtime artifacts
+.claude/scheduled_tasks.lock

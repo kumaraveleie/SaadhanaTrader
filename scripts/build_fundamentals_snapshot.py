@@ -74,7 +74,11 @@ PER_SYMBOL_OVERRIDES: dict[str, dict] = {
 
 def _row_for(symbol: str) -> dict:
     sector = SECTOR_MAP.get(symbol, DEFAULT_SECTOR)
-    base = BANK_NBFC_DEFAULTS if sector in {"BANK", "NBFC", "FINANCIAL_SERVICES"} else PASSING_DEFAULTS
+    base = (
+        BANK_NBFC_DEFAULTS
+        if sector in {"BANK", "NBFC", "FINANCIAL_SERVICES"}
+        else PASSING_DEFAULTS
+    )
     row = {"symbol": symbol, "sector": sector, **base}
     row.update(PER_SYMBOL_OVERRIDES.get(symbol, {}))
     return row

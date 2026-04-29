@@ -14,7 +14,13 @@ Spec §11 thresholds:
 | Average loss                 | ≤ −2.5% |
 | Max consecutive losses       | ≤ 5     |
 | Win/loss ratio               | ≥ 2.0   |
+| Profit Factor                | ≥ 1.8   |
 | Sharpe (annualized)          | ≥ 1.5   |
+
+Profit Factor = Σ(positive returns) / |Σ(negative returns)|. Catches
+the case where hit rate is high but a few oversized losers wipe out
+many small winners — count-based metrics (hit rate, win/loss ratio)
+miss this; PF is magnitude-weighted.
 """
 
 from __future__ import annotations
@@ -54,6 +60,9 @@ class BacktestMetrics:
 
     win_loss_ratio: float
     win_loss_passes: bool
+
+    profit_factor: float  # gross profit / |gross loss| per §11
+    profit_factor_passes: bool
 
     sharpe_annualized: float
     sharpe_passes: bool
@@ -134,6 +143,11 @@ def compute_metrics(trades: list[SimulatedTrade]) -> BacktestMetrics:
 
     win_loss = (avg_win / abs(avg_loss)) if losses and avg_loss != 0.0 else float("inf")
 
+    # §11 Profit Factor — magnitude-weighted, not count-weighted
+    gross_profit = float(sum(t.return_pct for t in wins))
+    gross_loss = float(abs(sum(t.return_pct for t in losses)))
+    profit_factor = gross_profit / gross_loss if gross_loss > 0 else float("inf")
+
     sharpe = _annualized_sharpe(closed)
 
     returns = [t.return_pct for t in closed]
@@ -150,6 +164,7 @@ def compute_metrics(trades: list[SimulatedTrade]) -> BacktestMetrics:
     avg_loss_passes = avg_loss >= -2.5  # avg_loss is negative; "≤ -2.5%" means abs ≤ 2.5%
     consecutive_losses_passes = max_consec_losses <= 5
     win_loss_passes = win_loss >= 2.0
+    profit_factor_passes = profit_factor >= 1.8
     sharpe_passes = sharpe >= 1.5
 
     overall = all(
@@ -160,6 +175,7 @@ def compute_metrics(trades: list[SimulatedTrade]) -> BacktestMetrics:
             avg_loss_passes,
             consecutive_losses_passes,
             win_loss_passes,
+            profit_factor_passes,
             sharpe_passes,
         ]
     )
@@ -181,6 +197,8 @@ def compute_metrics(trades: list[SimulatedTrade]) -> BacktestMetrics:
         consecutive_losses_passes=consecutive_losses_passes,
         win_loss_ratio=win_loss,
         win_loss_passes=win_loss_passes,
+        profit_factor=profit_factor,
+        profit_factor_passes=profit_factor_passes,
         sharpe_annualized=sharpe,
         sharpe_passes=sharpe_passes,
         overall_passes=overall,

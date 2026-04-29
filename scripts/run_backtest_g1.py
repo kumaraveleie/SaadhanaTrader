@@ -53,7 +53,9 @@ def _load_ohlcv_dict(
     """Load each symbol's OHLCV slice. Forces a deep history pull when
     the cache holds fewer than the replay window's bars."""
     out: dict[str, pd.DataFrame] = {}
-    needed_start = pd.Timestamp(start) - pd.Timedelta(days=400)  # buffer for 252-bar lookback
+    needed_start = pd.Timestamp(start) - pd.Timedelta(
+        days=400
+    )  # buffer for 252-bar lookback
     for s in symbols:
         try:
             df = load_eod(s, start=needed_start, end=end, refresh=refresh)
@@ -69,7 +71,9 @@ def _load_ohlcv_dict(
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Phase G1 — technical-only backtest")
     parser.add_argument("--start", type=lambda s: date.fromisoformat(s))
-    parser.add_argument("--end", type=lambda s: date.fromisoformat(s), default=date.today())
+    parser.add_argument(
+        "--end", type=lambda s: date.fromisoformat(s), default=date.today()
+    )
     parser.add_argument("--universe", nargs="*", default=list(NIFTY_50))
     parser.add_argument(
         "--report",
@@ -81,13 +85,18 @@ def main(argv: list[str] | None = None) -> int:
         type=Path,
         default=Path("spec/samples/backtest_g1_metrics.json"),
     )
-    parser.add_argument("--refresh", action="store_true", help="bypass cache, re-pull from yfinance")
+    parser.add_argument(
+        "--refresh", action="store_true", help="bypass cache, re-pull from yfinance"
+    )
     args = parser.parse_args(argv)
 
     end = args.end
     start = args.start or (end - timedelta(days=365 * 3 + 30))
 
-    print(f"Replaying {start} -> {end} on {len(args.universe)} symbols...", file=sys.stderr)
+    print(
+        f"Replaying {start} -> {end} on {len(args.universe)} symbols...",
+        file=sys.stderr,
+    )
     nifty_df = _load_index()
     ohlcv = _load_ohlcv_dict(
         list(args.universe), refresh=args.refresh, start=start, end=end
@@ -131,6 +140,7 @@ def main(argv: list[str] | None = None) -> int:
                 "avg_win_pct": round(metrics.avg_win_pct, 2),
                 "avg_loss_pct": round(metrics.avg_loss_pct, 2),
                 "win_loss_ratio": round(metrics.win_loss_ratio, 2),
+                "profit_factor": round(metrics.profit_factor, 2),
                 "sharpe": round(metrics.sharpe_annualized, 2),
                 "max_consec_losses": metrics.max_consecutive_losses,
             },

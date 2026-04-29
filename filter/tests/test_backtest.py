@@ -104,7 +104,9 @@ class TestMetricsAggregation:
         assert not m.overall_passes
 
     def test_clean_pass_synthetic(self) -> None:
-        # 7 wins × +12% (T1 in 15 days) + 3 losses × -2% → all metrics pass
+        # 7 wins × +12% (T1 in 15 days) + 3 losses × -2% → all metrics pass.
+        # Gross profit = 7 * 0.12 = 0.84; gross loss = |3 * -0.02| = 0.06
+        # → Profit Factor = 14.0 (well above 1.8).
         trades = [
             _trade(
                 return_pct=0.12, days_to_t1=15, outcome="T2_HIT", entry_date=date(2026, 1, i + 1)
@@ -125,6 +127,8 @@ class TestMetricsAggregation:
         assert m.avg_loss_passes
         assert m.win_loss_ratio == pytest.approx(6.0)
         assert m.win_loss_passes
+        assert m.profit_factor == pytest.approx(14.0)
+        assert m.profit_factor_passes
         assert m.consecutive_losses_passes  # 3 in a row, ≤ 5
 
     def test_failure_path(self) -> None:
@@ -153,6 +157,37 @@ class TestMetricsAggregation:
         assert m.n_still_open == 1
         assert m.n_wins == 1
         assert m.n_losses == 0
+
+    def test_profit_factor_catches_oversized_loss(self) -> None:
+        """High hit rate (8/10 win) but a few large losers can drag PF
+        below 1.8 — the count-based metrics miss this; PF should not."""
+        trades = [
+            _trade(
+                return_pct=0.04, days_to_t1=20, outcome="T1_HIT", entry_date=date(2026, 1, i + 1)
+            )
+            for i in range(8)
+        ] + [
+            _trade(return_pct=-0.18, outcome="STOP_HIT", entry_date=date(2026, 2, i + 1))
+            for i in range(2)
+        ]
+        m = compute_metrics(trades)
+        # 8 wins × 4% = 32%; 2 losses × 18% = 36%
+        # PF = 32/36 = 0.89, well below 1.8 → fail
+        assert m.profit_factor == pytest.approx(32 / 36)
+        assert not m.profit_factor_passes
+        # The hit-rate / win-loss-ratio metrics would NOT catch this:
+        assert (
+            m.hit_rate_pct >= 60
+        )  # 8/10 reached +5% threshold? actually no — return_pct=0.04 is below the 5% T1 threshold
+        # (days_to_t1 is what marks T1 reached; we set it explicitly)
+        assert m.n_wins == 8
+        assert m.n_losses == 2
+
+    def test_profit_factor_no_losses_returns_inf(self) -> None:
+        trades = [_trade(return_pct=0.10, days_to_t1=15, outcome="T2_HIT")]
+        m = compute_metrics(trades)
+        assert m.profit_factor == float("inf")
+        assert m.profit_factor_passes
 
 
 # ──────────────────────────────────────────────────────────────────────────
