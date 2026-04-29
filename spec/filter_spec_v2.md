@@ -777,7 +777,8 @@ research-analyst safe harbor. File the letter.
 | **D** | Catalyst engine v1 (deterministic sources) | Catalyst tags appear in scan output |
 | **E** | LLM news classification on HF Space | News headlines tagged with confidence |
 | **F** | Convergence scoring + sizing tiers | Conviction tier in output, sizing computed |
-| **G** | Backtest validator | §11 gate evaluated and reported |
+| **G1** | Backtest validator — **technical-only** | Replay 3 years on Nifty 500 using §5 v2 13 conditions only (no catalyst, no conviction tier, standard 0.5% sizing); §11 metrics reported. **Diagnostic gate** — confirms the technical layer alone has predictive value before catalyst / conviction sit on top of it. |
+| **G2** | Backtest validator — **full system** (official GO/NO-GO) | Same 3-year replay with §13 catalyst weighting + §14 conviction tiers + §10 risk-tier sizing. **Capital deployment gate per spec §11.** |
 | **H** | Signal Ledger + Outcome Tracker | Every BUY logged, outcomes resolved nightly |
 | **I** | Forensics engine + weekly review | First weekly review generated |
 | **J** | Rule promotion pipeline + shadow mode | Proposed rule runs in shadow, evidence accrues |
@@ -786,11 +787,17 @@ research-analyst safe harbor. File the letter.
 | **M** | GitHub Actions cron + Vercel Postgres wired | Full nightly pipeline runs unattended |
 | **N** | Pine-side overlay of v2 risk-leg metrics (optional) | ATR stop, R/R targets, target-T1/T2 levels render as chart annotations on the Pine `saadhana_pro_setups` script; Pine condition checklist stays unchanged (Mashrani 13, see §5 note) |
 
-Each phase is independently shippable. Phase G is the go/no-go gate
-for live (paper) trading. Phase N is **optional** — the system is fully
-functional without Pine parity since §5 v2 is the canonical gate; the
-overlay only exists to make on-chart eyeballing match the Python-computed
-risk levels.
+Each phase is independently shippable. **Phase G2 is the official
+go/no-go gate** for live (paper) trading per §11. Phase G1 is a
+diagnostic split: it validates the §5 v2 technical layer in isolation
+(no catalyst, no conviction tier) so we know whether the catalyst
+work in phases D/E and the conviction tiers in phase F are improving
+a system that already has edge, or papering over a broken core. If
+G1 fails its §11 thresholds, tighten §5 rules before doing any of D/E/F.
+
+Phase N is **optional** — the system is fully functional without Pine
+parity since §5 v2 is the canonical gate; the overlay only exists to
+make on-chart eyeballing match the Python-computed risk levels.
 
 ---
 
