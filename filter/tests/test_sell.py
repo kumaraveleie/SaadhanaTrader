@@ -5,13 +5,14 @@ from __future__ import annotations
 from datetime import date
 
 import numpy as np
+import pandas as pd
 
 from saadhana_filter.signals.sell import (
     Position,
     SellReason,
     evaluate_sell,
 )
-from tests.builders import geometric_close, make_ohlcv
+from tests.builders import flat_close, geometric_close, make_ohlcv
 
 
 def _position(entry_price: float, current_stop: float, **kw) -> Position:
@@ -118,15 +119,166 @@ class TestTrendDeterioration:
 # ──────────────────────────────────────────────────────────────────────────
 class TestNoTriggerFires:
     def test_clean_uptrend_no_sell(self) -> None:
-        df = make_ohlcv(geometric_close(100.0, 0.0008, 220))
-        pos = _position(
-            entry_price=100.0,
-            current_stop=70.0,  # well below close
-        )
-        # Need to construct a case where score doesn't collapse, no stop hit,
-        # no T1 hit (close < 5% above entry), no stage shift, no inst sells.
-        # 0.0008 drift over 220 bars = 100 * (1.0008)^219 ≈ 119, > 105 so T1 fires.
-        # Use a flatter drift instead.
+        # Flat path so score stays mid-range (no SCORE_COLLAPSE), no T1
+        # hit (gain < 5%), no stop hit (stop = 70 vs close ≈ 100), no
+        # stage shift (SMA still essentially flat), and no inst sells.
         df = make_ohlcv(geometric_close(100.0, 0.0001, 220))
         pos = _position(entry_price=100.0, current_stop=70.0)
         assert evaluate_sell(df, pos) is None
+
+
+# ──────────────────────────────────────────────────────────────────────────
+# §8 — defensive guards (NaN, short history, helper edge cases)
+# ──────────────────────────────────────────────────────────────────────────
+class TestDefensiveGuards:
+    def test_inst_sell_exit_fires_with_distribution_volume(self) -> None:
+        # Two heavy-volume DOWN days in last 5 on a clean Stage-2 path.
+        # Entry well above current price keeps T2/T1 from pre-empting.
+        n = 220
+        up = geometric_close(100.0, 0.001, n - 1)
+        close = np.append(up, up[-1] * 0.99)
+        vol = np.full(n, 1_000_000.0)
+        vol[-1] = 2_500_000.0
+        close[-3] = close[-3] * 0.985
+        vol[-3] = 2_500_000.0
+        df = make_ohlcv(close, volume=vol)
+        # Entry sits 2× current close so T1/T2/STOP cannot fire before §8.3
+        last_close = float(close[-1])
+        pos = _position(entry_price=last_close * 2.0, current_stop=last_close * 0.5)
+        assert evaluate_sell(df, pos) == SellReason.INST_SELL_EXIT
+
+    def test_short_history_no_stage_shift_pre_empts(self) -> None:
+        # < 150 bars → 30W SMA undefined → STAGE_SHIFT branch is skipped.
+        # Path is built so SCORE_COLLAPSE catches it instead. STOP_HIT
+        # avoided by setting stop far below close.
+        df = make_ohlcv(flat_close(100.0, 100, jitter_pct=0.001, seed=1))
+        pos = _position(entry_price=100.0, current_stop=50.0)
+        # Result must be SOMETHING other than STAGE_SHIFT (which depends
+        # on the SMA being defined). Validates the line-128 NaN branch.
+        result = evaluate_sell(df, pos)
+        assert result != SellReason.STAGE_SHIFT_EXIT
+
+    def test_close_below_sma_but_sma_rising_no_stage_shift(self) -> None:
+        # 200 rising bars then a small dip below 30W SMA. SMA is still
+        # rising on the last bar, so STAGE_SHIFT (which requires SMA
+        # flat or falling) does not fire. Validates the 134->139 branch.
+        rising = geometric_close(100.0, 0.001, 250)
+        dipped = np.append(rising, rising[-1] * 0.95)
+        df = make_ohlcv(dipped)
+        pos = _position(entry_price=rising[0], current_stop=rising[0] * 0.5)
+        # Either SCORE_COLLAPSE or T2_HIT or none of the §8.3 exits — but
+        # crucially not STAGE_SHIFT.
+        assert evaluate_sell(df, pos) != SellReason.STAGE_SHIFT_EXIT
+
+
+# ──────────────────────────────────────────────────────────────────────────
+# §8 — RSI divergence helper edge cases
+# ──────────────────────────────────────────────────────────────────────────
+class TestRsiDivergence:
+    def test_rsi_below_threshold_no_divergence(self) -> None:
+        # Mild uptrend → RSI ~60, well under 80 → divergence path skipped
+        df = make_ohlcv(geometric_close(100.0, 0.0008, 220))
+        pos = _position(entry_price=100.0, current_stop=70.0)
+        result = evaluate_sell(df, pos)
+        assert result != SellReason.RSI_DIVERGENCE_EXIT
+
+    def test_short_df_no_divergence(self) -> None:
+        # < 14 bars → divergence helper returns False on length guard.
+        df = make_ohlcv(geometric_close(100.0, 0.005, 12))
+        pos = _position(entry_price=100.0, current_stop=70.0)
+        result = evaluate_sell(df, pos)
+        assert result != SellReason.RSI_DIVERGENCE_EXIT
+
+
+# ──────────────────────────────────────────────────────────────────────────
+# §8.4 — TIME_EXIT specifics
+# ──────────────────────────────────────────────────────────────────────────
+class TestTimeExit:
+    def test_time_exit_helper_fires_directly(self) -> None:
+        # Test the §8.4 helper in isolation so we can hit lines 188-192
+        # without fighting the spec-order priority of §8.1-§8.3 triggers.
+        from saadhana_filter.signals.sell import _time_exit
+
+        df = make_ohlcv(flat_close(100.0, 280, jitter_pct=0.002, seed=4))
+        pos = _position(entry_price=100.0, current_stop=70.0)
+        # Synthesize a strictly-declining score series so polyfit slope < 0
+        score = pd.Series(
+            np.linspace(13, 0, len(df)).astype(int),
+            index=df.index,
+            dtype="int64",
+        )
+        assert _time_exit(df, pos, score) is True
+
+    def test_time_exit_helper_returns_false_when_score_rising(self) -> None:
+        from saadhana_filter.signals.sell import _time_exit
+
+        df = make_ohlcv(flat_close(100.0, 280, jitter_pct=0.002, seed=4))
+        pos = _position(entry_price=100.0, current_stop=70.0)
+        score = pd.Series(
+            np.linspace(0, 13, len(df)).astype(int),
+            index=df.index,
+            dtype="int64",
+        )
+        assert _time_exit(df, pos, score) is False
+
+    def test_time_exit_helper_returns_false_when_out_of_band(self) -> None:
+        from saadhana_filter.signals.sell import _time_exit
+
+        df = make_ohlcv(geometric_close(100.0, 0.0008, 280))  # drifts way off entry
+        pos = _position(entry_price=100.0, current_stop=70.0)
+        score = pd.Series(
+            np.linspace(13, 0, len(df)).astype(int),
+            index=df.index,
+            dtype="int64",
+        )
+        assert _time_exit(df, pos, score) is False
+
+    def test_time_exit_helper_returns_false_with_short_score_series(self) -> None:
+        from saadhana_filter.signals.sell import _time_exit
+
+        df = make_ohlcv(flat_close(100.0, 35, jitter_pct=0.002, seed=4))
+        pos = _position(entry_price=100.0, current_stop=70.0)
+        score = pd.Series(
+            np.zeros(20, dtype="int64"),
+            index=df.index[-20:],
+        )
+        # score has < 30 values → guard returns False (line 188)
+        assert _time_exit(df, pos, score) is False
+
+    def test_recent_entry_blocks_time_exit(self) -> None:
+        # entry_date set to *yesterday* — days_since_entry < 30
+        df = make_ohlcv(flat_close(100.0, 220, jitter_pct=0.001, seed=2))
+        pos = Position(
+            symbol="TEST",
+            entry_date=df.index[-2].date(),
+            entry_price=100.0,
+            initial_stop=70.0,
+            current_stop=70.0,
+        )
+        result = evaluate_sell(df, pos)
+        assert result != SellReason.TIME_EXIT
+
+
+# ──────────────────────────────────────────────────────────────────────────
+# Helpers — _is_partial classifier
+# ──────────────────────────────────────────────────────────────────────────
+class TestIsPartial:
+    def test_partial_reasons(self) -> None:
+        from saadhana_filter.signals.sell import _is_partial
+
+        for reason in (SellReason.T1_HIT, SellReason.T2_HIT, SellReason.T3_TRAIL_BREAK):
+            assert _is_partial(reason)
+
+    def test_full_close_reasons(self) -> None:
+        from saadhana_filter.signals.sell import _is_partial
+
+        for reason in (
+            SellReason.STOP_HIT,
+            SellReason.CATASTROPHIC_BREAK,
+            SellReason.STAGE_SHIFT_EXIT,
+            SellReason.SCORE_COLLAPSE_EXIT,
+            SellReason.INST_SELL_EXIT,
+            SellReason.RSI_DIVERGENCE_EXIT,
+            SellReason.TIME_EXIT,
+        ):
+            assert not _is_partial(reason)
