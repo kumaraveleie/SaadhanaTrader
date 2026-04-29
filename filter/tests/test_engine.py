@@ -48,18 +48,59 @@ class TestUnheldBranch:
         assert d.signal == SignalState.WAIT
         assert d.pro_setup_score < 10
 
-    def test_caution_regime_buy_carries_phase_f_note(self) -> None:
-        # Score won't reach 13 on a synthetic uptrend (RSI runs hot), but the
-        # Caution-regime note logic kicks in only when score==13. We test the
-        # decision path by constructing a path where score==13 is plausible
-        # AND regime is Caution. Since score==13 is hard to engineer, we
-        # instead verify the *structure*: the engine never down-grades a
-        # WATCH below WATCH_MIN_SCORE in Caution.
+    def test_caution_regime_never_emits_buy(self) -> None:
+        """Until §14 conviction-tier logic lands (Phase F), Caution-regime
+        decisions can never resolve BUY — they downgrade to WATCH and
+        carry the explanatory note for the ledger. Validated by patching
+        ``pro_setup_score`` to force a perfect 13/13 score frame."""
+        from unittest.mock import patch
+
+        import pandas as pd
+
+        from saadhana_filter.indicators.conditions import ALL_CONDITIONS
+
         df = make_ohlcv(geometric_close(100.0, 0.0015, 280))
+        cond_cols = {name: True for name, _ in ALL_CONDITIONS}
+        synthetic = pd.DataFrame({**cond_cols, "score": 13}, index=df.index)
+        synthetic["score"] = synthetic["score"].astype("int64")
+        with patch(
+            "saadhana_filter.signals.engine.pro_setup_score",
+            return_value=synthetic,
+        ):
+            d = classify_signal(df, symbol="X", tier1_passed=True, regime=Regime.CAUTION)
+        assert d.signal == SignalState.WATCH
+        assert d.pro_setup_score == 13
+        assert "caution_regime_buy_downgraded_pending_§14" in d.notes
+        # The downgrade does not emit risk levels — that's a BUY-only payload.
+        assert d.risk is None
+
+    def test_caution_regime_low_score_still_wait(self) -> None:
+        """Caution regime + low score still resolves WAIT (the downgrade
+        only applies when score reaches the BUY threshold)."""
+        df = make_ohlcv(flat_close(100.0, 280, jitter_pct=0.002, seed=3))
         d = classify_signal(df, symbol="X", tier1_passed=True, regime=Regime.CAUTION)
-        # Anything not BUY in Caution should not carry the §14 note.
-        if d.signal != SignalState.BUY:
-            assert "caution_regime_buy_pending_§14_conviction_check" not in d.notes
+        assert d.signal == SignalState.WAIT
+        assert "caution_regime_buy_downgraded_pending_§14" not in d.notes
+
+    def test_risk_on_score_13_emits_buy(self) -> None:
+        """Sanity check the other branch: Risk_On + score 13 still BUYs."""
+        from unittest.mock import patch
+
+        import pandas as pd
+
+        from saadhana_filter.indicators.conditions import ALL_CONDITIONS
+
+        df = make_ohlcv(geometric_close(100.0, 0.0015, 280))
+        cond_cols = {name: True for name, _ in ALL_CONDITIONS}
+        synthetic = pd.DataFrame({**cond_cols, "score": 13}, index=df.index)
+        synthetic["score"] = synthetic["score"].astype("int64")
+        with patch(
+            "saadhana_filter.signals.engine.pro_setup_score",
+            return_value=synthetic,
+        ):
+            d = classify_signal(df, symbol="X", tier1_passed=True, regime=Regime.RISK_ON)
+        assert d.signal == SignalState.BUY
+        assert d.risk is not None
 
 
 # ──────────────────────────────────────────────────────────────────────────

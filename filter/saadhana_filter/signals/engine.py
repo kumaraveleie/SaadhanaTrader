@@ -125,17 +125,21 @@ def classify_signal(
 
     can_buy = tier1_passed and regime != Regime.RISK_OFF
     # §12 Caution regime — only Score 13 + HIGH conviction qualifies.
-    # HIGH conviction is §14 (Phase F); for Phase C, Caution allows BUY
-    # at score == 13 and surfaces a note so Phase F can tighten it.
+    # HIGH conviction is §14 (Phase F); until that lands the safe move
+    # is to *downgrade* a Caution-regime BUY to WATCH so we never put
+    # capital behind incomplete tier discrimination. The downgrade is
+    # surfaced via a note for the ledger / forensics.
     min_score_for_buy = CAUTION_MIN_SCORE if regime == Regime.CAUTION else BUY_SCORE
 
     risk: RiskLevels | None = None
     state: SignalState
     if can_buy and score >= min_score_for_buy:
-        state = SignalState.BUY
-        risk = risk_levels(df)
         if regime == Regime.CAUTION:
-            notes.append("caution_regime_buy_pending_§14_conviction_check")
+            state = SignalState.WATCH
+            notes.append("caution_regime_buy_downgraded_pending_§14")
+        else:
+            state = SignalState.BUY
+            risk = risk_levels(df)
     elif can_buy and WATCH_MIN_SCORE <= score < BUY_SCORE:
         state = SignalState.WATCH
     else:
