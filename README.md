@@ -1,5 +1,9 @@
 # Saadhana Trader
 
+**Repository:** https://github.com/kumaraveleie/SaadhanaTrader
+**Live (target):** https://saadhana-trader.vercel.app
+**Visual family:** Optaur (https://optaur-demo.vercel.app/)
+
 Indian cash-equity stock filtering and signal system. Surfaces
 high-probability long candidates with paired entry, stop, and target
 levels — and learns from its own losses via a forensics + shadow-mode
@@ -28,6 +32,7 @@ rule promotion loop.
 See `CLAUDE.md` for the full layout. Top-level:
 
 - `spec/filter_spec_v2.md` — the canonical contract
+- `spec/design_system.md` — the visual contract (colors, type, components)
 - `filter/` — Python brain (indicators, signals, forensics, backtest)
 - `trader/` — Next.js app (public scanner + personal dashboard)
 - `pine/` — TradingView Pine Script mirrors

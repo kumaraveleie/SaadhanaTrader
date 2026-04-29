@@ -12,15 +12,28 @@ follow these orientation steps in order:
    contract. Every line of code you write must trace back to a section
    in this spec.
 
-2. Read `CLAUDE.md` for repo conventions, tech stack, layout, and
+2. Read `spec/design_system.md` cover to cover. This is the visual
+   contract — colors, typography, layout primitives, component
+   patterns, brand-mark construction. Saadhana Trader looks and feels
+   like Optaur (https://optaur-demo.vercel.app/) — same product family.
+
+3. Read `CLAUDE.md` for repo conventions, tech stack, layout, and
    the public/personal mode split.
 
-3. Read the existing Pine scripts at `pine/saadhana_pro_setups.pine`
+4. Read the existing Pine scripts at `pine/saadhana_pro_setups.pine`
    and `pine/saadhana_volume_v2.pine`. These are the working reference
    for the 13 technical conditions and the institutional flow logic.
    Port them faithfully to Python and TypeScript.
 
-4. Look at `git log --oneline` to see what's been committed so far.
+5. Read the Optaur source files (parent design reference) at
+   `C:\Kumaravel\AIBuilder\Saadhana\freelance-bids\options-trading-platform\optaur-demo\`:
+   - `app/components/theme.tsx` — color tokens (carry 1:1 to Saadhana)
+   - `app/components/nav.tsx` — sticky nav construction
+   - `app/components/brand-mark.tsx` — brand mark construction pattern
+   - `app/globals.css` — animation keyframes, responsive breakpoints
+   - `app/layout.tsx` — font loading, metadata, ThemeProvider wiring
+
+6. Look at `git log --oneline` to see what's been committed so far.
 
 Then check spec §23 (build phases A–N). The phases that are NOT yet
 complete in the repo are your work queue. Start with the earliest

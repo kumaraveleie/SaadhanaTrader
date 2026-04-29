@@ -3,6 +3,12 @@
 This file is the orientation document every Claude Code session inherits.
 Read it first, every time, before touching the codebase.
 
+**GitHub:** https://github.com/kumaraveleie/SaadhanaTrader
+**Vercel target:** `saadhana-trader.vercel.app` (public) and a separate
+private deploy for Personal mode
+**Visual reference:** Optaur (https://optaur-demo.vercel.app/) — Saadhana
+Trader belongs to the same product family. See `spec/design_system.md`.
+
 ## Project mission
 
 Build an Indian cash-equity stock filtering and signal system that:
@@ -15,6 +21,12 @@ Build an Indian cash-equity stock filtering and signal system that:
 **The single source of truth is `spec/filter_spec_v2.md`.** Read it end to
 end before writing code. Every commit message references the section number
 it implements (e.g., "feat(§5.3): institutional flow score").
+
+**The visual contract is `spec/design_system.md`.** Saadhana Trader looks
+and feels like Optaur — same dark theme, same neon-green accent, same
+typography, same brand-mark construction. Different glyph, same DNA.
+Visual drift is a bug — propagate design changes to all components in
+the same PR.
 
 ## Architecture in one screen
 
@@ -188,13 +200,17 @@ build-time env var differs; the codebase is one.
 ## Where to find things
 
 - **The contract:** `spec/filter_spec_v2.md`
+- **The visual contract:** `spec/design_system.md`
 - **What to build next:** §23 of the spec lists phases A through N
 - **Existing Pine reference:** `pine/saadhana_pro_setups.pine` and
   `pine/saadhana_volume_v2.pine` — the conditions are correct here, port
   them faithfully to Python and TypeScript
-- **Optaur design tokens:** copy from `C:\Kumaravel\AIBuilder\Saadhana\
-  freelance-bids\options-trading-platform\optaur-demo\app\globals.css` and
-  `app/components/` — same dark theme, same Inter font, same gradient accents
+- **Optaur source files (parent design reference):**
+  `C:\Kumaravel\AIBuilder\Saadhana\freelance-bids\options-trading-platform\optaur-demo\`
+  — read `app/components/theme.tsx`, `app/components/nav.tsx`,
+  `app/components/brand-mark.tsx`, `app/globals.css`, `app/layout.tsx`
+  to understand the construction patterns. Then mirror them in
+  `trader/app/` per `spec/design_system.md` §8
 
 ## How to start work in a fresh Claude Code session
 
