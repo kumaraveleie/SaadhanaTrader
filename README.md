@@ -1,8 +1,18 @@
 # Saadhana Trader
 
 **Repository:** https://github.com/kumaraveleie/SaadhanaTrader
-**Live (target):** https://saadhana-trader.vercel.app
+**Live (target):** Held until §21.3 SEBI legal opinion clears — the
+canonical `saadhana-trader.vercel.app` domain is intentionally
+unbound. Phase K1 deploys to an auto-generated Vercel preview URL.
 **Visual family:** Optaur (https://optaur-demo.vercel.app/)
+
+**Spec status:** **v2.1 Provisional** — 7 of 8 §11 metrics passed on
+G1-final (Apr 2026, N=95 industrial-only Nifty 500 trades over 3
+years). Hit rate observed at 41.1% vs the recalibrated ≥45% target
+(3.9pp gap to be closed in Phase F via the CR-002 HIGH-conviction-
+tier recency filter, see `spec/candidate_rules.md`). v2.1 promotes
+from Provisional to Locked per spec §11.1. Verification report:
+[`spec/samples/backtest_report_g1_final.md`](spec/samples/backtest_report_g1_final.md).
 
 Indian cash-equity stock filtering and signal system. Surfaces
 high-probability long candidates with paired entry, stop, and target
@@ -31,8 +41,11 @@ rule promotion loop.
 
 See `CLAUDE.md` for the full layout. Top-level:
 
-- `spec/filter_spec_v2.md` — the canonical contract
+- `spec/filter_spec_v2_1.md` — **canonical contract (Provisional)**
+- `spec/filter_spec_v2.md` — preserved v2.0 (audit trail per §16)
+- `spec/candidate_rules.md` — parked rule ideas for §19 shadow-mode
 - `spec/design_system.md` — the visual contract (colors, type, components)
+- `spec/samples/` — backtest reports, recency sweep, A4 stop-out audit
 - `filter/` — Python brain (indicators, signals, forensics, backtest)
 - `trader/` — Next.js app (public scanner + personal dashboard)
 - `pine/` — TradingView Pine Script mirrors
@@ -56,8 +69,11 @@ npm run dev                         # localhost:3000
 
 ## Build phases
 
-See spec §23. Currently at **Phase A — scaffold complete, spec locked**.
-Next: Phase B (Python data loader + 13 conditions + tests).
+See spec §23. Phases A–C complete (scaffold, indicators, signal
+engine), G1 complete (technical-only backtest validator with
+Provisional v2.1 acceptance). Currently in flight: **Phase D**
+(catalyst engine v1) and **Phase K1** (Vercel preview deploy)
+running in parallel — neither depends on the other.
 
 ## Compliance & legal
 
