@@ -881,6 +881,25 @@ Two views on the same codebase, gated by auth.
   - ToS: explicit indemnity, "no advice," past-performance language
   - Data badge: "EOD · 15-min delayed where applicable"
 
+- **Page set** (Phase K scope):
+  - `/` — hero + today's top 3 score-12+ candidates preview
+  - `/scanner` — universe selector + sortable results table (K1.2)
+  - `/stock/[symbol]` — header + 13-condition checklist + risk levels (K1.3)
+  - `/about` — methodology + disclaimer (K1)
+  - **`/research`** — sector strength heatmap + top-10 sector RS list +
+    score 10–13 *Watching* candidates within leading sectors + 52WH
+    breakout watch panel. **Visible in all regimes including Risk-Off**
+    (the system is standing aside but the user still wants to see what
+    the universe is doing). No BUY action enabled; no position sizing
+    displayed; rows tagged *"Research Only — system standing aside per
+    §12"*. Header text quotes §12 verbatim. Connects conceptually to
+    §22 Thinking Engine M1 (Sector Strength Engine) — `/research` is
+    the surface where M1 will eventually render its outputs. K1 ships
+    a basic implementation (sector-RS computed naively from index
+    OHLCV); M1 swaps in the proper multi-window RS + breadth + tier
+    classifier.
+  - `/learning` — forensics review (PERSONAL only, see §21.2)
+
 ### 21.2 Saadhana Personal (PRIVATE)
 
 - **Audience:** owner only (later: explicitly invited friends)
@@ -902,9 +921,108 @@ research-analyst safe harbor. File the letter.
 
 ---
 
-## 22. What v2 deliberately excludes (parked for v3+)
+## 22. Thinking Engine (post-MVP roadmap, future Phases Q/R/S/T)
 
-- Sector rotation overlay (beyond regime filter)
+The Thinking Engine is the higher-order conviction layer that sits
+**above** Pro-Setup + Catalyst. It targets the 5–10× bagger setups —
+rare (5–15 per decade in Indian equities) but where asymmetric upside
+lives.
+
+**Reference setup.** India 2021 PSU / Defense / Banking re-rating: 10+
+years of underperformance, multiple narrative triggers aligning,
+sector breadth confirming, produced multi-baggers (BEL, HAL, Concor,
+IRCTC). The Pro-Setup engine alone misses these — by the time score
+reaches 13/13 the move is already 2-3× along. The Thinking Engine
+catches them at the inflection.
+
+Positioning:
+- **Pro-Setup (§5)** — table stakes. Many systems do similar things
+  and produce ~40–50% hit rate with PF 1.5–2.0. A working swing
+  system, not a moat.
+- **Catalyst (§13)** — adds idiosyncratic context. Lifts conviction
+  but stays inside the same swing-trade frame.
+- **Thinking Engine (§22)** — adds *structural* capabilities Pro-Setup
+  can't: multi-year base recognition + multi-attribute thesis
+  synthesis. This is what separates institutional desks from retail.
+
+### 22.1 Module roadmap
+
+Four modules, sequenced post-MVP after Phase D + Phase F:
+
+- **M1 / Phase Q — Sector Strength Engine.** Multi-window sector RS
+  (5d / 20d / 60d / 252d), sector breadth (% above 50DMA / 200DMA /
+  Stage 2), volume sustainability, lead / confirming / mature /
+  fading tier classifier. Surface: the public `/research` page (§21.1)
+  is the eventual render target.
+
+- **M2 / Phase R — Pattern Lifecycle Engine.** Pre-breakout / initial
+  / confirmed / failed taxonomy. Adds *temporal context* to Pro-Setup
+  signals — a 13/13 stock in `confirmed` lifecycle stage is materially
+  higher conviction than a 13/13 stock in `initial` stage even though
+  both score the same on §5.
+
+- **M3 / Phase S — Multi-Year Base / Turnaround Engine.** Stock down
+  ≥ 40% from prior peak (or flat ≥ 3 years), recent break above a
+  multi-year resistance level (typically 200-week SMA reclaim), volume
+  confirmation, sector + fundamental + catalyst convergence. **The
+  5–10× bagger detector.** Outputs feed M4.
+
+- **M4 / Phase T — Thesis Score Synthesizer.** Composite of ProSetup +
+  Catalyst + Sector Strength + Lifecycle + Multi-year Base +
+  Fundamentals → 0–100 thesis score. Drives position sizing 0.5%
+  STANDARD → 1.5% HIGH → **5% THESIS-grade** (extreme rarity, not a
+  routine sizing tier).
+
+### 22.2 Validation philosophy
+
+The Thinking Engine validation **departs from §11's statistical gate**.
+With N=5–15 multi-bagger setups per decade, classical backtesting
+produces uninformative confidence intervals (standard error on hit
+rate at N=10 is ±15pp — the test signal can't beat noise).
+
+Validation shifts to:
+
+- **Thesis-quality manual review** of historical examples documented
+  in `spec/thinking_engine.md` §2 (PSU re-rating 2021, Defense
+  2022–23, Pharma COVID 2020, IT 2017–19). Each example walks the
+  setup, catalysts, sector / macro / fundamental alignment, and
+  outcome — the same way an investment-committee memo reads.
+- **Paper-trade-only deployment for the first 12 months** after each
+  module ships. Real capital deployment requires explicit human
+  approval per a Phase-F-style ledger after the paper window.
+- **Separate audit trail** at `spec/thinking_engine.md` (this file
+  remains the operational §11-gated contract; the Thinking Engine
+  has its own evidence file).
+
+### 22.3 Dependency graph
+
+```
+M1 (Sector Strength)  ──┐
+                        ├──► M3 (Multi-Year Base)  ──► M4 (Thesis Score)
+M2 (Lifecycle)        ──┘                              │
+                                                       │
+Phase D (Catalyst)    ──────────────────────────────►  M4
+Phase F (Conviction)  ──────────────────────────────►  M4
+```
+
+- M1 standalone — depends only on existing universe + sector-index
+  data.
+- M2 depends on M1 + existing §5 Pro-Setup conditions.
+- M3 depends on M1 + M2 + Phase D catalyst data (the multi-attribute
+  convergence test needs the catalyst tags).
+- M4 synthesizes everything above.
+
+CR-005 (in `spec/candidate_rules.md`) lists the schema fields Phase D
+must emit so M1–M3 can land later without an expensive schema
+migration. CR-005 is the only candidate marked **ACTIVE** rather than
+parked — apply during Phase D implementation.
+
+---
+
+## 22b. What v2 deliberately excludes (parked for v3+)
+
+- Sector rotation overlay (beyond regime filter and the §22 M1
+  Sector Strength Engine when it lands)
 - Earnings/event calendar avoidance window
 - Intraday timing within the day
 - Short-side signals
