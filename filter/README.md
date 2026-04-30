@@ -1,10 +1,12 @@
 # filter — the Saadhana brain
 
 Python module that implements the canonical filter rules from
-[`spec/filter_spec_v2.md`](../spec/filter_spec_v2.md). This is the
-reference implementation; the TypeScript mirror in `trader/app/lib/`
-and the Pine scripts in `pine/` are validated against it via parity
-tests.
+[`spec/filter_spec_v2_1.md`](../spec/filter_spec_v2_1.md) (v2.1
+Provisional, current contract). The previous v2.0 spec is preserved
+as audit trail at [`spec/filter_spec_v2.md`](../spec/filter_spec_v2.md)
+per §16 — frozen, read-only. This is the reference implementation;
+the TypeScript mirror in `trader/app/lib/` and the Pine scripts in
+`pine/` are validated against it via parity tests.
 
 ## Install (dev)
 

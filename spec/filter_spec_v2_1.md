@@ -1,3 +1,9 @@
+> ✅ **This file is canonical (v2.1 Provisional).**
+> Supersedes [filter_spec_v2.md](filter_spec_v2.md) (v2.0,
+> preserved as audit trail per §16).
+>
+> Status: Provisional pending Phase F validation per §11.1.
+
 # Saadhana Stock Filtering System — Specification v2.1 (Provisional)
 
 **Status:** Provisional v2.1 · **Owner:** Kumaravel · **Date:** 2026-04-30

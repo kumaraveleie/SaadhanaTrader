@@ -8,9 +8,10 @@ into your first Claude Code message after opening this repo in VS Code.
 You're picking up the Saadhana Trader project. Before writing any code,
 follow these orientation steps in order:
 
-1. Read `spec/filter_spec_v2.md` cover to cover. It is the canonical
-   contract. Every line of code you write must trace back to a section
-   in this spec.
+1. Read `spec/filter_spec_v2_1.md` cover to cover. It is the canonical
+   contract (v2.1 Provisional). Every line of code you write must trace
+   back to a section in this spec. `spec/filter_spec_v2.md` is the v2.0
+   audit trail — frozen, read-only.
 
 2. Read `spec/design_system.md` cover to cover. This is the visual
    contract — colors, typography, layout primitives, component

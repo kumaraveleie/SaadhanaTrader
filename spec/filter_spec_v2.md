@@ -1,3 +1,16 @@
+> ⚠️ **This file is historical (v2.0 audit trail). The
+> canonical spec is [filter_spec_v2_1.md](filter_spec_v2_1.md).**
+>
+> v2.0 was promoted to Locked, then frozen as audit trail per
+> §16 when v2.1 superseded it on 2026-04-30. All operational
+> rules, §22 Thinking Engine roadmap, and current §11
+> calibration live in v2.1.
+>
+> Read this file only when you need to see the original gate
+> values, the pre-recency condition #12, or the original §22
+> "What v2 deliberately excludes" content (preserved here as
+> §22; reorganized in v2.1 as §22b).
+
 # Saadhana Stock Filtering System — Specification v2.0
 
 **Status:** Locked · **Owner:** Kumaravel · **Date:** 2026-04-29

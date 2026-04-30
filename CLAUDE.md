@@ -18,9 +18,10 @@ Build an Indian cash-equity stock filtering and signal system that:
 - Ships as a public research dashboard (Saadhana Trader) AND a private
   trading dashboard (Saadhana Personal) on the same codebase, gated by auth
 
-**The single source of truth is `spec/filter_spec_v2.md`.** Read it end to
-end before writing code. Every commit message references the section number
-it implements (e.g., "feat(§5.3): institutional flow score").
+**The single source of truth is `spec/filter_spec_v2_1.md`.** Read it end
+to end before writing code. Every commit message references the section
+number it implements (e.g., "feat(§5.3): institutional flow score").
+`spec/filter_spec_v2.md` is the v2.0 audit trail — frozen, read-only.
 
 **The visual contract is `spec/design_system.md`.** Saadhana Trader looks
 and feels like Optaur — same dark theme, same neon-green accent, same
@@ -49,7 +50,11 @@ saadhana-trader/
 ├── .github/
 │   └── workflows/               # GitHub Actions cron jobs (Phase M)
 ├── spec/
-│   ├── filter_spec_v2.md        # ← canonical spec, single source of truth
+│   ├── filter_spec_v2_1.md      # ← canonical spec (v2.1 Provisional)
+│   ├── filter_spec_v2.md        # v2.0 audit trail (frozen)
+│   ├── thinking_engine.md       # Thinking Engine roadmap (M1–M4)
+│   ├── candidate_rules.md       # CR-001..CR-008 — parked rule ideas
+│   ├── design_system.md         # visual contract
 │   └── samples/
 │       └── weekly_review_example.md
 ├── filter/                      # Python module — the brain
@@ -199,7 +204,10 @@ build-time env var differs; the codebase is one.
 
 ## Where to find things
 
-- **The contract:** `spec/filter_spec_v2.md`
+- **The contract:** `spec/filter_spec_v2_1.md` (canonical)
+- **Audit trail:** `spec/filter_spec_v2.md` (v2.0, frozen)
+- **Thinking Engine roadmap:** `spec/thinking_engine.md`
+- **Candidate rules registry:** `spec/candidate_rules.md`
 - **The visual contract:** `spec/design_system.md`
 - **What to build next:** §23 of the spec lists phases A through N
 - **Pine scripts (chart-side visual checklist — NOT a Python mirror):**
@@ -221,7 +229,7 @@ build-time env var differs; the codebase is one.
 
 ## How to start work in a fresh Claude Code session
 
-1. Read `spec/filter_spec_v2.md` cover to cover (it's the contract)
+1. Read `spec/filter_spec_v2_1.md` cover to cover (it's the contract)
 2. Read this file (CLAUDE.md)
 3. Read the most recent commits to see what's been done
 4. Pick the next phase from §23 that isn't yet complete
