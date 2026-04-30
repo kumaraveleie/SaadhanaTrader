@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useTheme } from '../../components/theme';
+import { regimeLabel as regimeLabelMap } from '../../lib/labels';
 import type { Regime } from '../../lib/scan-types';
 
 const FONT_MONO = 'var(--font-mono), "JetBrains Mono", ui-monospace, monospace';
@@ -92,14 +93,14 @@ export function StockNotMatched({ symbol, reason, regime, scanDate }: Props) {
             <p style={{ fontSize: 15, color: t.text2, lineHeight: 1.65 }}>
               On the latest scan ({scanDate}), {symbol} did not match the
               full 13-condition pattern set, or is outside the system&apos;s
-              scan universe (Nifty 500, industrial sectors). The scan
-              ran in <strong style={{ color: t.text }}>{regimeLabel(regime)}</strong>{' '}
-              regime.
+              scan universe (Nifty 500, industrial sectors). The market
+              read at scan time was{' '}
+              <strong style={{ color: t.text }}>{regimeText(regime)}</strong>.
               {regime === 'Risk_Off' && (
                 <>
                   {' '}
-                  Per spec §12, the system suspends new pattern matches when
-                  the broader market trades below its 200-day moving average —
+                  Our trading rules pause new pattern matches when the
+                  broader market trades below its 200-day moving average —
                   capital preservation over fear of missing out.
                 </>
               )}
@@ -127,14 +128,7 @@ export function StockNotMatched({ symbol, reason, regime, scanDate }: Props) {
   );
 }
 
-function regimeLabel(regime?: Regime): string {
-  if (!regime) return 'Unknown';
-  switch (regime) {
-    case 'Risk_On':
-      return 'Risk-On';
-    case 'Caution':
-      return 'Caution';
-    case 'Risk_Off':
-      return 'Risk-Off';
-  }
+function regimeText(regime?: Regime): string {
+  if (!regime) return 'unknown';
+  return regimeLabelMap(regime).text;
 }

@@ -3,15 +3,17 @@
 import Link from 'next/link';
 import { useTheme } from '../components/theme';
 import { LifecycleTag } from './lifecycle-tag';
+import {
+  type Column,
+  Dist52whCell,
+  LifecycleChips,
+  PercentCell,
+  SortableTable,
+} from './research-table';
 import type { ResearchRow } from '../lib/scan-types';
 
 const FONT_MONO = 'var(--font-mono), "JetBrains Mono", ui-monospace, monospace';
 
-/**
- * 52WH Breakout Watch — universe-wide names within 5% of 52WH with
- * healthy momentum (RSI 50-75) and positive 30-bar inst flow score.
- * Visible in all regimes; ranked by closest-to-52WH first.
- */
 export function Breakout52whPanel({ rows }: { rows: ResearchRow[] }) {
   const { t } = useTheme();
   return (
@@ -24,93 +26,182 @@ export function Breakout52whPanel({ rows }: { rows: ResearchRow[] }) {
       }}
     >
       <header style={{ padding: '20px 24px', borderBottom: `1px solid ${t.border}` }}>
-        <h2 style={{ fontSize: 18, fontWeight: 700, margin: 0, color: t.text, letterSpacing: '-0.02em' }}>
+        <h2
+          style={{
+            fontSize: 18,
+            fontWeight: 700,
+            margin: 0,
+            color: t.text,
+            letterSpacing: '-0.02em',
+          }}
+        >
           52-Week High Breakout Watch
         </h2>
-        <p style={{ fontSize: 13, color: t.text3, margin: '6px 0 0', lineHeight: 1.55, maxWidth: 800 }}>
-          Tier-1-passing names within 5% of their 52-week high with healthy momentum
-          (RSI 50–75) and positive 30-bar institutional flow. <strong style={{ color: t.text2 }}>
-          Universe-wide — visible regardless of regime</strong>; the §12 trading rule still
-          gates BUYs. Top 20 by 52WH proximity.
+        <p
+          style={{
+            fontSize: 13,
+            color: t.text3,
+            margin: '6px 0 0',
+            lineHeight: 1.55,
+            maxWidth: 800,
+          }}
+        >
+          Stocks within 5% of a fresh 52-week high with healthy momentum and
+          institutional interest — top 20 by closeness to high.
         </p>
       </header>
 
       {rows.length === 0 ? (
-        <div style={{ padding: '36px 24px', textAlign: 'center' }}>
-          <p style={{ fontSize: 14, color: t.text2, margin: 0, lineHeight: 1.6 }}>
-            No symbols currently within 5% of 52WH with the momentum + accumulation
-            criteria. The bear regime has pulled most names well below their highs.
-          </p>
-        </div>
+        <Empty
+          message="No symbols are currently within 5% of a 52-week high with the
+          momentum + institutional-interest criteria — most names have pulled
+          well below their highs."
+        />
       ) : (
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
-            <thead>
-              <tr>
-                {[
-                  { label: 'Symbol', align: 'left' as const },
-                  { label: 'Sector', align: 'left' as const },
-                  { label: 'Dist 52WH', align: 'right' as const },
-                  { label: 'Lifecycle', align: 'left' as const },
-                  { label: 'RSI', align: 'right' as const },
-                  { label: 'Score', align: 'right' as const },
-                  { label: 'Inst flow 30b', align: 'right' as const },
-                ].map((h) => (
-                  <th
-                    key={h.label}
-                    style={{
-                      padding: '12px 14px',
-                      textAlign: h.align,
-                      fontSize: 11,
-                      fontWeight: 600,
-                      letterSpacing: '0.08em',
-                      textTransform: 'uppercase',
-                      color: t.text3,
-                      background: t.surface,
-                      borderBottom: `1px solid ${t.border}`,
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    {h.label}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((r) => (
-                <tr key={r.symbol} style={{ borderTop: `1px solid ${t.border}` }}>
-                  <td style={{ padding: '12px 14px' }}>
-                    <Link
-                      href={`/stock/${encodeURIComponent(r.symbol)}`}
-                      style={{ color: t.text, fontWeight: 600, fontFamily: FONT_MONO }}
-                    >
-                      {r.symbol}
-                    </Link>
-                  </td>
-                  <td style={{ padding: '12px 14px', color: t.text3, fontSize: 12 }}>
-                    {r.sector}
-                  </td>
-                  <td style={{ padding: '12px 14px', textAlign: 'right', fontFamily: FONT_MONO, color: t.text2 }}>
-                    {(r.dist_from_52wh_pct * 100).toFixed(2)}%
-                  </td>
-                  <td style={{ padding: '12px 14px' }}>
-                    <LifecycleTag tag={r.lifecycle} />
-                  </td>
-                  <td style={{ padding: '12px 14px', textAlign: 'right', fontFamily: FONT_MONO, color: t.text2 }}>
-                    {r.rsi_14.toFixed(0)}
-                  </td>
-                  <td style={{ padding: '12px 14px', textAlign: 'right', fontFamily: FONT_MONO, color: r.pro_setup_score >= 11 ? t.bullish : t.text2 }}>
-                    {r.pro_setup_score}/13
-                  </td>
-                  <td style={{ padding: '12px 14px', textAlign: 'right', fontFamily: FONT_MONO, color: r.inst_flow_score_30b > 0 ? t.bullish : t.text2 }}>
-                    {r.inst_flow_score_30b > 0 ? '+' : ''}{r.inst_flow_score_30b}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <>
+          <LifecycleChips rows={rows} />
+          <SortableTable
+            columns={BREAKOUT_COLUMNS}
+            rows={rows}
+            getRowKey={(r) => r.symbol}
+          />
+        </>
       )}
     </section>
+  );
+}
+
+const BREAKOUT_COLUMNS: Column<ResearchRow>[] = [
+  {
+    key: 'symbol',
+    label: 'Symbol',
+    align: 'left',
+    sortValue: (r) => r.symbol,
+    cell: (r) => <SymbolCell symbol={r.symbol} />,
+  },
+  {
+    key: 'sub_industry',
+    label: 'Sub-sector',
+    tooltip: 'NSE Industry — finer-grained than the broad sector bucket.',
+    align: 'left',
+    sortValue: (r) => r.sub_industry,
+    cell: (r) => <SubsectorCell value={r.sub_industry} />,
+  },
+  {
+    key: 'pct_change_5d',
+    label: '5D %',
+    tooltip: '5-trading-day return.',
+    align: 'right',
+    sortValue: (r) => r.pct_change_5d,
+    cell: (r) => <PercentCell value={r.pct_change_5d} />,
+  },
+  {
+    key: 'dist_from_52wh_pct',
+    label: 'Close to 52WH',
+    tooltip: 'How close the stock is to its 52-week high. 0% = at the high.',
+    align: 'right',
+    sortValue: (r) => r.dist_from_52wh_pct,
+    cell: (r) => <Dist52whCell value={r.dist_from_52wh_pct} />,
+  },
+  {
+    key: 'lifecycle',
+    label: 'Lifecycle',
+    tooltip: 'Where in the move this stock sits — INITIAL fresh, LATE limited.',
+    align: 'left',
+    sortValue: (r) => ({ INITIAL: 0, CONFIRMED: 1, LATE: 2, UNKNOWN: 3 }[r.lifecycle]),
+    cell: (r) => <LifecycleTag tag={r.lifecycle} />,
+  },
+  {
+    key: 'rsi_14',
+    label: 'RSI',
+    tooltip: '14-period RSI. 50–75 here = healthy, not yet overbought.',
+    align: 'right',
+    sortValue: (r) => r.rsi_14,
+    cell: (r) => <DimNumber value={r.rsi_14.toFixed(0)} />,
+  },
+  {
+    key: 'pro_setup_score',
+    label: 'Score',
+    tooltip:
+      'Pro-Setup Score — how many of the 13 entry conditions are firing. 13/13 = full match.',
+    align: 'right',
+    sortValue: (r) => r.pro_setup_score,
+    cell: (r) => <ScoreCell value={r.pro_setup_score} />,
+  },
+  {
+    key: 'rvol_today',
+    label: 'Volume',
+    tooltip: "Today's volume vs the 50-day average. >1.5× = unusual interest.",
+    align: 'right',
+    sortValue: (r) => r.rvol_today,
+    cell: (r) => <RvolCell value={r.rvol_today} />,
+  },
+];
+
+function SymbolCell({ symbol }: { symbol: string }) {
+  const { t } = useTheme();
+  return (
+    <Link
+      href={`/stock/${encodeURIComponent(symbol)}`}
+      style={{
+        color: t.text,
+        fontWeight: 600,
+        fontFamily: FONT_MONO,
+        textDecoration: 'none',
+      }}
+    >
+      {symbol}
+    </Link>
+  );
+}
+
+function SubsectorCell({ value }: { value: string }) {
+  const { t } = useTheme();
+  return <span style={{ color: t.text2, fontSize: 12 }}>{value}</span>;
+}
+
+function DimNumber({ value }: { value: string }) {
+  const { t } = useTheme();
+  return <span style={{ color: t.text2 }}>{value}</span>;
+}
+
+function ScoreCell({ value }: { value: number }) {
+  const { t } = useTheme();
+  const color = value >= 11 ? t.bullish : t.text2;
+  return (
+    <span style={{ color, fontWeight: 600 }}>
+      {value}/13
+    </span>
+  );
+}
+
+function RvolCell({ value }: { value: number }) {
+  const { t } = useTheme();
+  const isHigh = value >= 1.5;
+  const color = isHigh ? t.bullish : value < 0.7 ? t.text3 : t.text2;
+  return (
+    <span style={{ color, fontWeight: isHigh ? 600 : 500 }}>
+      {value.toFixed(2)}×
+    </span>
+  );
+}
+
+function Empty({ message }: { message: string }) {
+  const { t } = useTheme();
+  return (
+    <div style={{ padding: '36px 24px', textAlign: 'center' }}>
+      <p
+        style={{
+          fontSize: 14,
+          color: t.text2,
+          margin: 0,
+          lineHeight: 1.6,
+          maxWidth: 560,
+          marginInline: 'auto',
+        }}
+      >
+        {message}
+      </p>
+    </div>
   );
 }

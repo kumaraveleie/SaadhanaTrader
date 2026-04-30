@@ -29,6 +29,21 @@ from saadhana_filter.signals.tier1 import tier1_filter
 
 NIFTY_INDEX_TICKER = "^NSEI"
 
+DEFAULT_CONSTITUENTS_CSV = Path("data/nifty500_constituents.csv")
+
+
+def _load_industries(constituents_csv: Path) -> dict[str, str]:
+    """Read symbol→NSE Industry mapping from the constituents CSV.
+
+    Industry is finer-grained than the coarse `sector` bucket on the
+    fundamentals parquet — surfaces sub-sector ("Capital Goods",
+    "Power", "Pharmaceuticals") for the /research table column.
+    """
+    if not constituents_csv.exists():
+        return {}
+    df = pd.read_csv(constituents_csv)
+    return {str(r["Symbol"]): str(r["Industry"]) for _, r in df.iterrows()}
+
 
 def _load_index() -> pd.DataFrame:
     import yfinance as yf
@@ -64,6 +79,12 @@ def main(argv: list[str] | None = None) -> int:
         default=date.today(),
     )
     parser.add_argument("--refresh", action="store_true")
+    parser.add_argument(
+        "--constituents",
+        type=Path,
+        default=DEFAULT_CONSTITUENTS_CSV,
+        help="CSV of symbol→Industry mapping (default: data/nifty500_constituents.csv)",
+    )
     args = parser.parse_args(argv)
 
     fund = pd.read_parquet(args.fundamentals)
@@ -71,6 +92,7 @@ def main(argv: list[str] | None = None) -> int:
         fund = fund.set_index("symbol")
     universe = tuple(fund.index.astype(str).tolist())
     sectors = fund["sector"].astype(str).to_dict()
+    industries = _load_industries(args.constituents)
     fundamentals_passed = set(tier1_filter(fund).index.astype(str))
 
     print(
@@ -87,6 +109,7 @@ def main(argv: list[str] | None = None) -> int:
         universe=universe,
         fundamentals_passed=fundamentals_passed,
         sectors=sectors,
+        industries=industries,
         nifty_df=nifty_df,
         ohlcv_provider=provider,
     )

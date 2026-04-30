@@ -30,6 +30,7 @@ from saadhana_filter.indicators.conditions import (
 from saadhana_filter.indicators.primitives import (
     bollinger_bandwidth,
     rsi,
+    rvol,
     sma,
 )
 
@@ -58,11 +59,13 @@ class ResearchRow:
 
     symbol: str
     sector: str
+    sub_industry: str  # NSE Industry column (e.g., "Capital Goods", "Power")
 
     # Price action vs Nifty
     close_today: float
     close_yesterday: float
     pct_change_today: float  # decimal, e.g. 0.024 = +2.4%
+    pct_change_5d: float  # decimal — 5-trading-day return ending today
 
     # Distance / context
     dist_from_50dma_pct: float  # decimal
@@ -74,6 +77,7 @@ class ResearchRow:
     bb_width_pct: float
     bb_width_over_median: float
     inst_flow_score_30b: int
+    rvol_today: float  # today's volume / 50-bar prior mean
 
     # Score + lifecycle
     pro_setup_score: int
@@ -157,6 +161,7 @@ def _row_for(
     symbol: str,
     df: pd.DataFrame,
     sector: str,
+    sub_industry: str,
 ) -> ResearchRow | None:
     """Compute the per-symbol research snapshot. Returns None if the
     underlying data lacks the lookback our indicators need."""
@@ -165,10 +170,14 @@ def _row_for(
 
     close = df["close"]
     high = df["high"]
+    volume = df["volume"]
 
     close_today = float(close.iloc[-1])
     close_yesterday = float(close.iloc[-2])
     pct_change_today = (close_today - close_yesterday) / close_yesterday
+    # 5-day return = close_today vs close 5 trading bars ago
+    close_5d_ago = float(close.iloc[-6]) if len(close) > 5 else close_yesterday
+    pct_change_5d = (close_today - close_5d_ago) / close_5d_ago
 
     sma_50 = sma(close, 50)
     sma_50_today = float(sma_50.iloc[-1])
@@ -187,12 +196,13 @@ def _row_for(
     bbw_median_30b = float(bbw.rolling(30, min_periods=30).median().iloc[-1])
     bbw_over_median = bbw_today / bbw_median_30b if bbw_median_30b > 0 else 0.0
 
+    rvol_series = rvol(volume, 50)
+    rvol_today_val = float(rvol_series.iloc[-1]) if not pd.isna(rvol_series.iloc[-1]) else 1.0
+
     score_panel = pro_setup_score(df)
     score_today = int(score_panel["score"].iloc[-1])
 
     # Inst. flow score = 30-bar net buy/sell from the existing primitive
-    # The pro_setup_score panel already includes ``inst_flow_score`` as a
-    # boolean (>0 net); we want the actual integer count for the table.
     from saadhana_filter.indicators.conditions import _flow_flags
 
     buys, sells = _flow_flags(df)
@@ -213,9 +223,11 @@ def _row_for(
     return ResearchRow(
         symbol=symbol,
         sector=sector,
+        sub_industry=sub_industry,
         close_today=close_today,
         close_yesterday=close_yesterday,
         pct_change_today=pct_change_today,
+        pct_change_5d=pct_change_5d,
         dist_from_50dma_pct=dist_from_50dma_pct,
         dist_from_52wh_pct=dist_from_52wh_pct,
         bars_since_52wh_break=bars_since,
@@ -223,6 +235,7 @@ def _row_for(
         bb_width_pct=bbw_today,
         bb_width_over_median=bbw_over_median,
         inst_flow_score_30b=score_30b,
+        rvol_today=rvol_today_val,
         pro_setup_score=score_today,
         lifecycle=lifecycle,
     )
@@ -238,6 +251,7 @@ def build_research_snapshot(
     universe: tuple[str, ...],
     fundamentals_passed: set[str],
     sectors: Mapping[str, str],
+    industries: Mapping[str, str] | None = None,
     nifty_df: pd.DataFrame,
     ohlcv_provider: Callable[[str], pd.DataFrame],
 ) -> ResearchSnapshot:
@@ -252,6 +266,7 @@ def build_research_snapshot(
     nifty_close_yesterday = float(nifty_df["close"].iloc[-2])
     nifty_pct_change = (nifty_close_today - nifty_close_yesterday) / nifty_close_yesterday
 
+    industries = industries or {}
     rows: list[ResearchRow] = []
     for symbol in universe:
         if symbol not in fundamentals_passed:
@@ -263,7 +278,8 @@ def build_research_snapshot(
         if df.empty:
             continue
         sector = sectors.get(symbol, "UNKNOWN")
-        row = _row_for(symbol, df, sector)
+        sub_industry = industries.get(symbol, "Unknown")
+        row = _row_for(symbol, df, sector, sub_industry)
         if row is not None:
             rows.append(row)
 
@@ -293,9 +309,11 @@ def snapshot_to_dict(snap: ResearchSnapshot) -> dict:
             {
                 "symbol": r.symbol,
                 "sector": r.sector,
+                "sub_industry": r.sub_industry,
                 "close_today": r.close_today,
                 "close_yesterday": r.close_yesterday,
                 "pct_change_today": r.pct_change_today,
+                "pct_change_5d": r.pct_change_5d,
                 "dist_from_50dma_pct": r.dist_from_50dma_pct,
                 "dist_from_52wh_pct": r.dist_from_52wh_pct,
                 "bars_since_52wh_break": r.bars_since_52wh_break,
@@ -303,6 +321,7 @@ def snapshot_to_dict(snap: ResearchSnapshot) -> dict:
                 "bb_width_pct": r.bb_width_pct,
                 "bb_width_over_median": r.bb_width_over_median,
                 "inst_flow_score_30b": r.inst_flow_score_30b,
+                "rvol_today": r.rvol_today,
                 "pro_setup_score": r.pro_setup_score,
                 "lifecycle": r.lifecycle,
             }

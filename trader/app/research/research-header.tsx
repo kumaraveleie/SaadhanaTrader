@@ -2,16 +2,20 @@
 
 import { useTheme } from '../components/theme';
 import { FreshnessIndicator } from '../components/freshness-indicator';
+import { regimeLabel } from '../lib/labels';
+import type { Regime } from '../lib/scan-types';
 
 const FONT_MONO = 'var(--font-mono), "JetBrains Mono", ui-monospace, monospace';
 
 export function ResearchHeader({
   scanDate,
+  regime,
   universeSize,
   rowsScanned,
   niftyPctChange,
 }: {
   scanDate: string;
+  regime: Regime;
   universeSize: number;
   rowsScanned: number;
   niftyPctChange: number;
@@ -20,6 +24,14 @@ export function ResearchHeader({
   const niftyPct = niftyPctChange * 100;
   const niftyTone =
     niftyPct > 0 ? t.bullish : niftyPct < 0 ? t.bearish : t.text2;
+  const label = regimeLabel(regime);
+  const dotColor =
+    label.tone === 'positive'
+      ? t.bullish
+      : label.tone === 'caution'
+      ? t.bearish
+      : t.text2;
+
   return (
     <header>
       <div
@@ -51,69 +63,56 @@ export function ResearchHeader({
           fontSize: 14,
           color: t.text2,
           lineHeight: 1.6,
-          maxWidth: 800,
-          margin: '0 0 20px',
+          maxWidth: 720,
+          margin: '0 0 16px',
         }}
       >
-        Universe-wide context that the §5 BUY scanner doesn&apos;t surface
-        — sector strength, divergent strength, breakout proximity. <strong style={{ color: t.text2 }}>
-        Visible in all regimes including Risk-Off.</strong> No BUY action enabled here;
-        the §12 trading rule still applies. This page is research, not a trade signal.
+        Stocks moving against the market — what&apos;s strong even when the
+        index isn&apos;t.
       </p>
 
       <div
+        title={label.tooltip}
         style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
-          gap: 12,
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 10,
+          padding: '8px 14px',
+          background: t.card,
+          border: `1px solid ${t.border}`,
+          borderRadius: 999,
+          fontSize: 13,
+          color: t.text2,
+          fontFamily: FONT_MONO,
+          flexWrap: 'wrap',
         }}
       >
-        <Stat
-          label="Nifty 50 today"
-          value={`${niftyPct >= 0 ? '+' : ''}${niftyPct.toFixed(2)}%`}
-          valueColor={niftyTone}
+        <span
+          aria-hidden
+          style={{
+            width: 8,
+            height: 8,
+            borderRadius: 999,
+            background: dotColor,
+            display: 'inline-block',
+          }}
         />
-        <Stat label="Universe" value={`${universeSize} symbols`} />
-        <Stat label="Rows scanned" value={`${rowsScanned}`} />
+        <span style={{ color: t.text, fontWeight: 600, textTransform: 'lowercase' }}>
+          {label.text}
+        </span>
+        <span style={{ color: t.text3 }}>·</span>
+        <span>
+          Nifty{' '}
+          <span style={{ color: niftyTone, fontWeight: 600 }}>
+            {niftyPct >= 0 ? '+' : ''}
+            {niftyPct.toFixed(2)}%
+          </span>
+        </span>
+        <span style={{ color: t.text3 }}>·</span>
+        <span>
+          {rowsScanned} of {universeSize} stocks scanned today
+        </span>
       </div>
     </header>
-  );
-}
-
-function Stat({
-  label,
-  value,
-  valueColor,
-}: {
-  label: string;
-  value: string;
-  valueColor?: string;
-}) {
-  const { t } = useTheme();
-  return (
-    <div
-      style={{
-        padding: '14px 18px',
-        background: t.card,
-        border: `1px solid ${t.border}`,
-        borderRadius: 12,
-      }}
-    >
-      <div
-        style={{
-          fontSize: 11,
-          letterSpacing: '0.1em',
-          textTransform: 'uppercase',
-          color: t.text3,
-          fontFamily: FONT_MONO,
-          marginBottom: 6,
-        }}
-      >
-        {label}
-      </div>
-      <div style={{ fontSize: 18, fontWeight: 600, color: valueColor ?? t.text }}>
-        {value}
-      </div>
-    </div>
   );
 }

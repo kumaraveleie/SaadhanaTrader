@@ -2,6 +2,7 @@
 
 import { useTheme } from '../components/theme';
 import { FreshnessIndicator } from '../components/freshness-indicator';
+import { regimeLabel as regimeLabelMap } from '../lib/labels';
 import type { Regime } from '../lib/scan-types';
 
 const FONT_MONO = 'var(--font-mono), "JetBrains Mono", ui-monospace, monospace';
@@ -24,6 +25,7 @@ export function ScannerHeader({
 }) {
   const { t } = useTheme();
   const tone = regimeTone(regime, t);
+  const regimeText = regimeLabelMap(regime).text;
   return (
     <header style={{ marginBottom: 32 }}>
       <div
@@ -57,7 +59,7 @@ export function ScannerHeader({
           gap: 12,
         }}
       >
-        <Stat label="Market regime" value={regimeLabel(regime)} valueColor={tone.fg} />
+        <Stat label="Market" value={regimeText} valueColor={tone.fg} />
         <Stat label="Universe" value={`${universeSize} symbols`} />
         <Stat label="Pattern matches today" value={`${candidatesCount}`} />
       </div>
@@ -119,20 +121,20 @@ export function ScannerEmptyState({ regime }: { regime: Regime }) {
   const message =
     regime === 'Risk_Off'
       ? {
-          title: 'Market regime is Risk-Off',
+          title: 'Defensive market — no new ideas today',
           body: (
             <>
               The Nifty 50 is trading below its 200-day moving average. The
-              system is designed to step aside in hostile regimes —
+              system steps aside when the broader market is weak —
               capital preservation over fear of missing out. No entries
-              are being surfaced today and existing held names are being
+              are being surfaced today, and existing held names are being
               reviewed under tighter stops.
             </>
           ),
         }
       : regime === 'Caution'
       ? {
-          title: 'Market regime is Caution — no high-conviction matches',
+          title: 'Mixed market — no high-conviction matches',
           body: (
             <>
               The Nifty 50 sits between its 50-day and 200-day moving
@@ -148,7 +150,7 @@ export function ScannerEmptyState({ regime }: { regime: Regime }) {
             <>
               The system scanned the universe and found no symbols with
               all 13 technical conditions firing simultaneously plus the
-              fundamental quality gate. This is normal — the system is
+              quality filter. This is normal — the system is
               deliberately selective.
             </>
           ),
@@ -232,17 +234,6 @@ export function ScannerNoData() {
 // ──────────────────────────────────────────────────────────────────────
 // Helpers
 // ──────────────────────────────────────────────────────────────────────
-function regimeLabel(regime: Regime): string {
-  switch (regime) {
-    case 'Risk_On':
-      return 'Risk-On';
-    case 'Caution':
-      return 'Caution';
-    case 'Risk_Off':
-      return 'Risk-Off';
-  }
-}
-
 function regimeTone(
   regime: Regime,
   t: ReturnType<typeof useTheme>['t'],

@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useTheme } from './theme';
 import { BrandMark } from './brand-mark';
 
@@ -72,7 +73,7 @@ export function Footer() {
           ))}
         </div>
 
-        {/* §21.1 SEBI disclaimer — required on every page */}
+        {/* §21.1 SEBI disclaimer — sitewide, replaces per-panel compliance copy */}
         <div
           style={{
             marginTop: 48,
@@ -83,12 +84,14 @@ export function Footer() {
             lineHeight: 1.6,
           }}
         >
-          <strong style={{ color: t.text2 }}>Disclaimer:</strong> Saadhana Trader is a
-          research and pattern-detection tool. Information only. Not investment advice.
-          We are not registered with SEBI as an Investment Advisor or Research Analyst.
-          Do your own research and consult a SEBI-registered advisor before making
-          investment decisions. Market data is end-of-day, sourced from public exchange
-          feeds.
+          Saadhana Trader is a research tool — information only, not investment
+          advice. Not SEBI-registered.{' '}
+          <Link
+            href="/about"
+            style={{ color: t.text2, textDecoration: 'underline', textUnderlineOffset: 2 }}
+          >
+            Read disclaimer →
+          </Link>
         </div>
 
         <div

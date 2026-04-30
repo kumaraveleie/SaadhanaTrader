@@ -3,6 +3,14 @@
 import Link from 'next/link';
 import { useTheme } from '../components/theme';
 import { LifecycleTag } from './lifecycle-tag';
+import {
+  type Column,
+  Dist50DmaCell,
+  Dist52whCell,
+  LifecycleChips,
+  PercentCell,
+  SortableTable,
+} from './research-table';
 import type { ResearchRow } from '../lib/scan-types';
 
 const FONT_MONO = 'var(--font-mono), "JetBrains Mono", ui-monospace, monospace';
@@ -16,25 +24,20 @@ export function StrengthDespiteWeaknessPanel({
 }) {
   const { t } = useTheme();
   const niftyPct = (niftyPctChange * 100).toFixed(2);
+  const initialCount = rows.filter((r) => r.lifecycle === 'INITIAL').length;
+
   return (
     <PanelShell
       title="Strength Despite Weakness"
-      subtitle={
-        <>
-          Stocks making new highs while broader market falls. Lifecycle tag
-          indicates where in the move the stock currently sits. <strong style={{ color: t.text2 }}>Research only —
-          Saadhana §12 trading rule still applies.</strong> INITIAL = fresh strength,
-          CONFIRMED = trend running, LATE = limited upside, do not chase.
-        </>
-      }
+      subtitle="Stocks up while the market falls — closer to a fresh high = stronger."
     >
       {niftyPctChange >= 0 ? (
         <Empty
           message={
             <>
-              Nifty closed up <strong style={{ color: t.text }}>{niftyPct}%</strong> today.
-              This panel surfaces divergent strength only when the broader
-              market is falling — by definition there is none today.
+              Nifty closed up <strong style={{ color: t.text }}>+{niftyPct}%</strong>{' '}
+              today. This panel only shows divergent strength on red-market days
+              — there&apos;s nothing to surface here today.
             </>
           }
         />
@@ -42,107 +45,144 @@ export function StrengthDespiteWeaknessPanel({
         <Empty
           message={
             <>
-              Nifty closed <strong style={{ color: t.text }}>{niftyPct}%</strong> today,
-              but no Tier-1-passing industrial name closed up AND within 5%
+              Nifty closed <strong style={{ color: t.text }}>{niftyPct}%</strong>,
+              but no stock that passes our quality filter closed up AND within 5%
               of its 52-week high. Divergent strength is rare; today it isn&apos;t
               showing.
             </>
           }
         />
       ) : (
-        <Table rows={rows} />
+        <>
+          <LifecycleChips rows={rows} />
+          {initialCount === 0 && (
+            <InitialNote
+              note={`No INITIAL setups today — all ${rows.length} divergent names are
+              already mid-trend or late.`}
+            />
+          )}
+          <SortableTable
+            columns={SDW_COLUMNS}
+            rows={rows}
+            getRowKey={(r) => r.symbol}
+          />
+        </>
       )}
     </PanelShell>
   );
 }
 
-function Table({ rows }: { rows: ResearchRow[] }) {
+const SDW_COLUMNS: Column<ResearchRow>[] = [
+  {
+    key: 'symbol',
+    label: 'Symbol',
+    align: 'left',
+    sortValue: (r) => r.symbol,
+    cell: (r) => <SymbolCell symbol={r.symbol} />,
+  },
+  {
+    key: 'sub_industry',
+    label: 'Sub-sector',
+    tooltip: 'NSE Industry — finer-grained than the broad sector bucket.',
+    align: 'left',
+    sortValue: (r) => r.sub_industry,
+    cell: (r) => <SubsectorCell value={r.sub_industry} />,
+  },
+  {
+    key: 'pct_change_today',
+    label: 'Today %',
+    tooltip: "Today's close vs yesterday's close.",
+    align: 'right',
+    sortValue: (r) => r.pct_change_today,
+    cell: (r) => <PercentCell value={r.pct_change_today} />,
+  },
+  {
+    key: 'pct_change_5d',
+    label: '5D %',
+    tooltip: '5-trading-day return — confirms whether today is part of a real run.',
+    align: 'right',
+    sortValue: (r) => r.pct_change_5d,
+    cell: (r) => <PercentCell value={r.pct_change_5d} />,
+  },
+  {
+    key: 'dist_from_52wh_pct',
+    label: 'Close to 52WH',
+    tooltip: 'How close the stock is to its 52-week high. 0% = at the high.',
+    align: 'right',
+    sortValue: (r) => r.dist_from_52wh_pct,
+    cell: (r) => <Dist52whCell value={r.dist_from_52wh_pct} />,
+  },
+  {
+    key: 'lifecycle',
+    label: 'Lifecycle',
+    tooltip: 'Where in the move this stock sits — INITIAL fresh, LATE limited.',
+    align: 'left',
+    sortValue: (r) => ({ INITIAL: 0, CONFIRMED: 1, LATE: 2, UNKNOWN: 3 }[r.lifecycle]),
+    cell: (r) => <LifecycleTag tag={r.lifecycle} />,
+  },
+  {
+    key: 'rsi_14',
+    label: 'RSI',
+    tooltip: '14-period RSI. >70 = stretched, 50–70 = healthy momentum.',
+    align: 'right',
+    sortValue: (r) => r.rsi_14,
+    cell: (r) => <DimNumber value={r.rsi_14.toFixed(0)} />,
+  },
+  {
+    key: 'dist_from_50dma_pct',
+    label: 'Vs 50DMA',
+    tooltip: 'Distance from 50-day moving average. Bar shows position vs ±20%.',
+    align: 'right',
+    sortValue: (r) => r.dist_from_50dma_pct,
+    cell: (r) => <Dist50DmaCell value={r.dist_from_50dma_pct} />,
+  },
+  {
+    key: 'rvol_today',
+    label: 'Volume',
+    tooltip: "Today's volume vs the 50-day average. >1.5× = unusual interest.",
+    align: 'right',
+    sortValue: (r) => r.rvol_today,
+    cell: (r) => <RvolCell value={r.rvol_today} />,
+  },
+];
+
+function SymbolCell({ symbol }: { symbol: string }) {
   const { t } = useTheme();
   return (
-    <div style={{ overflowX: 'auto' }}>
-      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
-        <thead>
-          <tr>
-            {[
-              { label: 'Symbol', align: 'left' as const },
-              { label: 'Sector', align: 'left' as const },
-              { label: 'Today %', align: 'right' as const },
-              { label: 'Dist 52WH', align: 'right' as const },
-              { label: 'Lifecycle', align: 'left' as const },
-              { label: 'RSI', align: 'right' as const },
-              { label: 'Dist 50DMA', align: 'right' as const },
-              { label: 'Inst flow 30b', align: 'right' as const },
-            ].map((h) => (
-              <th
-                key={h.label}
-                style={{
-                  padding: '12px 14px',
-                  textAlign: h.align,
-                  fontSize: 11,
-                  fontWeight: 600,
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase',
-                  color: t.text3,
-                  background: t.surface,
-                  borderBottom: `1px solid ${t.border}`,
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                {h.label}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((r) => (
-            <Row key={r.symbol} row={r} />
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <Link
+      href={`/stock/${encodeURIComponent(symbol)}`}
+      style={{
+        color: t.text,
+        fontWeight: 600,
+        fontFamily: FONT_MONO,
+        textDecoration: 'none',
+      }}
+    >
+      {symbol}
+    </Link>
   );
 }
 
-function Row({ row }: { row: ResearchRow }) {
+function SubsectorCell({ value }: { value: string }) {
   const { t } = useTheme();
-  const todayColor =
-    row.pct_change_today > 0.02
-      ? t.bullish
-      : row.pct_change_today > 0
-      ? t.text
-      : t.text2;
   return (
-    <tr style={{ borderTop: `1px solid ${t.border}` }}>
-      <td style={{ padding: '12px 14px' }}>
-        <Link
-          href={`/stock/${encodeURIComponent(row.symbol)}`}
-          style={{ color: t.text, fontWeight: 600, fontFamily: FONT_MONO }}
-        >
-          {row.symbol}
-        </Link>
-      </td>
-      <td style={{ padding: '12px 14px', color: t.text3, fontSize: 12 }}>
-        {row.sector}
-      </td>
-      <td style={{ padding: '12px 14px', textAlign: 'right', fontFamily: FONT_MONO, color: todayColor, fontWeight: 600 }}>
-        {(row.pct_change_today * 100).toFixed(2)}%
-      </td>
-      <td style={{ padding: '12px 14px', textAlign: 'right', fontFamily: FONT_MONO, color: t.text2 }}>
-        {(row.dist_from_52wh_pct * 100).toFixed(2)}%
-      </td>
-      <td style={{ padding: '12px 14px' }}>
-        <LifecycleTag tag={row.lifecycle} />
-      </td>
-      <td style={{ padding: '12px 14px', textAlign: 'right', fontFamily: FONT_MONO, color: t.text2 }}>
-        {row.rsi_14.toFixed(0)}
-      </td>
-      <td style={{ padding: '12px 14px', textAlign: 'right', fontFamily: FONT_MONO, color: t.text2 }}>
-        {(row.dist_from_50dma_pct * 100).toFixed(1)}%
-      </td>
-      <td style={{ padding: '12px 14px', textAlign: 'right', fontFamily: FONT_MONO, color: row.inst_flow_score_30b > 0 ? t.bullish : t.text2 }}>
-        {row.inst_flow_score_30b > 0 ? '+' : ''}{row.inst_flow_score_30b}
-      </td>
-    </tr>
+    <span style={{ color: t.text2, fontSize: 12 }}>{value}</span>
+  );
+}
+
+function DimNumber({ value }: { value: string }) {
+  const { t } = useTheme();
+  return <span style={{ color: t.text2 }}>{value}</span>;
+}
+
+function RvolCell({ value }: { value: number }) {
+  const { t } = useTheme();
+  const isHigh = value >= 1.5;
+  const color = isHigh ? t.bullish : value < 0.7 ? t.text3 : t.text2;
+  return (
+    <span style={{ color, fontWeight: isHigh ? 600 : 500 }}>
+      {value.toFixed(2)}×
+    </span>
   );
 }
 
@@ -203,9 +243,36 @@ function Empty({ message }: { message: React.ReactNode }) {
   const { t } = useTheme();
   return (
     <div style={{ padding: '36px 24px', textAlign: 'center' }}>
-      <p style={{ fontSize: 14, color: t.text2, margin: 0, lineHeight: 1.65, maxWidth: 560, marginInline: 'auto' }}>
+      <p
+        style={{
+          fontSize: 14,
+          color: t.text2,
+          margin: 0,
+          lineHeight: 1.65,
+          maxWidth: 560,
+          marginInline: 'auto',
+        }}
+      >
         {message}
       </p>
+    </div>
+  );
+}
+
+function InitialNote({ note }: { note: string }) {
+  const { t } = useTheme();
+  return (
+    <div
+      style={{
+        padding: '10px 24px',
+        borderBottom: `1px solid ${t.border}`,
+        background: t.bg,
+        fontSize: 12,
+        color: t.text3,
+        lineHeight: 1.5,
+      }}
+    >
+      {note}
     </div>
   );
 }

@@ -58,9 +58,11 @@ export type LifecycleTag = 'INITIAL' | 'CONFIRMED' | 'LATE' | 'UNKNOWN';
 export type ResearchRow = {
   symbol: string;
   sector: string;
+  sub_industry: string; // NSE Industry — finer than sector (e.g. "Capital Goods")
   close_today: number;
   close_yesterday: number;
   pct_change_today: number; // decimal
+  pct_change_5d: number; // decimal — 5-trading-day return
   dist_from_50dma_pct: number; // decimal
   dist_from_52wh_pct: number; // decimal; negative = below 52WH
   bars_since_52wh_break: number | null;
@@ -68,6 +70,7 @@ export type ResearchRow = {
   bb_width_pct: number;
   bb_width_over_median: number;
   inst_flow_score_30b: number;
+  rvol_today: number; // today's volume / 50-bar prior mean
   pro_setup_score: number;
   lifecycle: LifecycleTag;
 };

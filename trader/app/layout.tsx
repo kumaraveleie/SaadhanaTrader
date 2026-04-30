@@ -3,7 +3,6 @@ import { Inter, JetBrains_Mono } from 'next/font/google';
 import { ThemeProvider } from './components/theme';
 import { Nav } from './components/nav';
 import { Footer } from './components/footer';
-import { DisclaimerBanner } from './components/disclaimer-banner';
 import './globals.css';
 
 const inter = Inter({
@@ -51,8 +50,6 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-const PUBLIC_MODE = (process.env.NEXT_PUBLIC_MODE ?? 'public') === 'public';
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${inter.variable} ${jetMono.variable}`}>
@@ -60,7 +57,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider>
           <Nav />
           <main style={{ padding: '40px clamp(20px, 5vw, 64px)' }}>{children}</main>
-          {PUBLIC_MODE && <DisclaimerBanner />}
           <Footer />
         </ThemeProvider>
       </body>

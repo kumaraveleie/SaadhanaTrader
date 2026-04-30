@@ -34,7 +34,7 @@ export default function AboutPage() {
             checklist (trend, momentum, accumulation, risk, not-extended).
           </li>
           <li>
-            Filters by a quarterly fundamental gate (market cap ≥ ₹5,000 Cr,
+            Applies a quarterly quality filter (market cap ≥ ₹5,000 Cr,
             growth, low pledge, healthy debt or bank-equivalent metrics).
           </li>
           <li>
@@ -120,8 +120,8 @@ export default function AboutPage() {
         </table>
         <p style={{ fontSize: 13, color: t.text3, marginTop: 16 }}>
           A symbol is surfaced as <em>High Pattern Match</em> when the
-          score reaches 13 of 13 in a Risk-On market regime. Anything
-          below that is either watch-only or filtered out entirely.
+          score reaches 13 of 13 in a bullish market. Anything below that
+          is either watch-only or filtered out entirely.
         </p>
       </Section>
 

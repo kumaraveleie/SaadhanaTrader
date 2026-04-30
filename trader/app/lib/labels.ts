@@ -8,7 +8,7 @@
  * raw internal labels.
  */
 
-import type { SignalState } from './scan-types';
+import type { Regime, SignalState } from './scan-types';
 
 export type PublicLabel = {
   text: string;
@@ -54,3 +54,50 @@ export function displayLabel(signal: SignalState, mode: 'public' | 'personal' = 
   if (mode === 'personal') return signal;
   return publicLabel(signal).text;
 }
+
+// ──────────────────────────────────────────────────────────────────────────
+// Regime → plain-English (§21.1 public-mode jargon scrub).
+// Internal labels (Risk_On/Caution/Risk_Off) are never rendered directly.
+// ──────────────────────────────────────────────────────────────────────────
+export type RegimeLabel = {
+  text: string; // short headline ("defensive market")
+  tooltip: string; // hover description for the curious
+  tone: 'positive' | 'neutral' | 'caution';
+};
+
+const REGIME_LABELS: Record<Regime, RegimeLabel> = {
+  Risk_On: {
+    text: 'bullish market',
+    tooltip: 'Nifty is trading above both its 50-day and 200-day moving averages.',
+    tone: 'positive',
+  },
+  Caution: {
+    text: 'mixed market',
+    tooltip:
+      'Nifty is between its 50-day and 200-day moving averages — direction is unclear.',
+    tone: 'neutral',
+  },
+  Risk_Off: {
+    text: 'defensive market',
+    tooltip:
+      'Nifty is trading below its 200-day moving average. The system pauses new long ideas in this regime.',
+    tone: 'caution',
+  },
+};
+
+export function regimeLabel(regime: Regime): RegimeLabel {
+  return REGIME_LABELS[regime] ?? REGIME_LABELS.Caution;
+}
+
+// Lightweight jargon → plain English mapping for inline copy. Keeps a
+// single dictionary so /research, /scanner, /about all speak the same.
+export const PLAIN_LANGUAGE = {
+  scanner: 'main scanner',
+  scannerLong: 'trade scanner',
+  rules: 'our trading rules',
+  qualityFilter: 'quality filter',
+  // Product nomenclature kept verbatim — these are the terms the user
+  // explicitly chose to keep visible.
+  proSetupScore: 'Pro-Setup Score',
+  patternMatch: 'Pattern Match',
+} as const;

@@ -5,11 +5,8 @@ import { useTheme } from '../components/theme';
 const FONT_MONO = 'var(--font-mono), "JetBrains Mono", ui-monospace, monospace';
 
 /**
- * Sector Strength panel — placeholder for the full Phase Q / M1 Sector
- * Strength Engine (see spec/thinking_engine.md §3.1). The full module
- * lands post-MVP; this card explicitly states what's coming so users
- * see the placeholder for what it is rather than thinking the page is
- * unfinished.
+ * Placeholder for the Sector Strength engine. Surfaces what's coming so
+ * the empty card reads as deliberate rather than unfinished.
  */
 export function SectorStrengthPanel() {
   const { t } = useTheme();
@@ -23,13 +20,28 @@ export function SectorStrengthPanel() {
       }}
     >
       <header style={{ padding: '20px 24px', borderBottom: `1px solid ${t.border}` }}>
-        <h2 style={{ fontSize: 18, fontWeight: 700, margin: 0, color: t.text, letterSpacing: '-0.02em' }}>
+        <h2
+          style={{
+            fontSize: 18,
+            fontWeight: 700,
+            margin: 0,
+            color: t.text,
+            letterSpacing: '-0.02em',
+          }}
+        >
           Sector Strength
         </h2>
-        <p style={{ fontSize: 13, color: t.text3, margin: '6px 0 0', lineHeight: 1.55, maxWidth: 800 }}>
-          Multi-window sector relative strength (5d / 20d / 60d / 252d), sector
-          breadth (% above 50-DMA / 200-DMA / Stage 2), volume sustainability,
-          lead / confirming / mature / fading tier classifier.
+        <p
+          style={{
+            fontSize: 13,
+            color: t.text3,
+            margin: '6px 0 0',
+            lineHeight: 1.55,
+            maxWidth: 720,
+          }}
+        >
+          Which sectors are leading the market — and which are quietly
+          falling behind.
         </p>
       </header>
 
@@ -41,15 +53,23 @@ export function SectorStrengthPanel() {
             color: t.text3,
             letterSpacing: '0.1em',
             textTransform: 'uppercase',
-            marginBottom: 12,
+            marginBottom: 10,
           }}
         >
-          Phase Q · M1 — pending
+          Coming next
         </div>
-        <p style={{ fontSize: 14, color: t.text2, margin: 0, lineHeight: 1.6, maxWidth: 560, marginInline: 'auto' }}>
-          The full Sector Strength Engine ships as Module M1 of the Thinking
-          Engine roadmap (see <code style={{ color: t.text3 }}>spec/thinking_engine.md</code> §3.1).
-          This card will render the heatmap and lead-tier list when M1 lands.
+        <p
+          style={{
+            fontSize: 14,
+            color: t.text2,
+            margin: 0,
+            lineHeight: 1.6,
+            maxWidth: 520,
+            marginInline: 'auto',
+          }}
+        >
+          A heatmap of sector relative strength and breadth, with lead /
+          mature / fading classifications. Will appear here when ready.
         </p>
       </div>
     </section>

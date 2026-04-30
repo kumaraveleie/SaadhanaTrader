@@ -1,4 +1,8 @@
-import { readResearchSnapshot, type ResearchRow } from '../lib/scan-data';
+import {
+  readLatestScan,
+  readResearchSnapshot,
+  type ResearchRow,
+} from '../lib/scan-data';
 import { ResearchHeader } from './research-header';
 import { StrengthDespiteWeaknessPanel } from './strength-despite-weakness';
 import { Breakout52whPanel } from './breakout-52wh';
@@ -44,7 +48,10 @@ function filterBreakout52wh(snap: { rows: ResearchRow[] }): ResearchRow[] {
 }
 
 export default async function ResearchPage() {
-  const snap = await readResearchSnapshot();
+  const [snap, latest] = await Promise.all([
+    readResearchSnapshot(),
+    readLatestScan(),
+  ]);
 
   if (snap === null) {
     return <ResearchNoData />;
@@ -52,11 +59,16 @@ export default async function ResearchPage() {
 
   const sdw = filterStrengthDespiteWeakness(snap);
   const breakouts = filterBreakout52wh(snap);
+  // Regime is authoritative on latest.json (the §15 daily-scan output);
+  // the research snapshot doesn't classify it. Fall back to Caution if
+  // latest.json is missing — research is informational, not gating.
+  const regime = latest?.regime ?? 'Caution';
 
   return (
     <div style={{ maxWidth: 1200, margin: '20px auto 60px' }}>
       <ResearchHeader
         scanDate={snap.scan_date}
+        regime={regime}
         universeSize={snap.universe_size}
         rowsScanned={snap.rows.length}
         niftyPctChange={snap.nifty_pct_change_today}
