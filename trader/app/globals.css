@@ -67,6 +67,9 @@ input, select, textarea {
     width: 100% !important;
     position: relative !important;
   }
+  .saadhana-stock-grid {
+    grid-template-columns: 1fr !important;
+  }
   .saadhana-nav-links { display: none !important; }
 }
 @media (max-width: 600px) {

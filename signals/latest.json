@@ -1,8 +1,8 @@
 {
-  "scan_date": "2026-04-29",
+  "scan_date": "2026-04-30",
   "spec_version": "2.0",
   "regime": "Risk_Off",
-  "universe_size": 50,
-  "tier1_passed": 49,
+  "universe_size": 399,
+  "tier1_passed": 398,
   "candidates": []
 }
