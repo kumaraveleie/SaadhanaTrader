@@ -1,47 +1,34 @@
-'use client';
+import { readLatestScan, type Regime, type ScanResult } from '../lib/scan-data';
+import { ScannerTable } from './scanner-table';
+import { ScannerHeader, ScannerEmptyState, ScannerNoData } from './scanner-states';
 
-import { useTheme } from '../components/theme';
+// Force dynamic rendering so the JSON file is re-read on every request
+// in dev. Production behavior on Vercel re-reads on each cold start;
+// the Phase M cron rewrites latest.json out-of-band.
+export const dynamic = 'force-dynamic';
 
-const FONT_MONO = 'var(--font-mono), "JetBrains Mono", ui-monospace, monospace';
+export default async function ScannerPage() {
+  const data: ScanResult | null = await readLatestScan();
 
-/**
- * K1.2 placeholder. The real scanner page (sortable results table,
- * universe selector, stale-data indicator, Risk_Off empty state, Tier 1
- * failures hidden) lands after K1.1 sign-off.
- */
-export default function ScannerPage() {
-  const { t } = useTheme();
+  if (data === null) {
+    return <ScannerNoData />;
+  }
+
+  const { scan_date, regime, universe_size, candidates } = data;
+
   return (
-    <div style={{ maxWidth: 720, margin: '40px auto', textAlign: 'center' }}>
-      <div
-        style={{
-          fontFamily: FONT_MONO,
-          fontSize: 12,
-          color: t.text3,
-          letterSpacing: '0.1em',
-          textTransform: 'uppercase',
-          marginBottom: 16,
-        }}
-      >
-        K1.2 — In progress
-      </div>
-      <h1
-        style={{
-          fontSize: 'clamp(28px, 4vw, 36px)',
-          fontWeight: 700,
-          margin: '0 0 16px',
-          color: t.text,
-          letterSpacing: '-0.03em',
-        }}
-      >
-        Scanner page is being built
-      </h1>
-      <p style={{ fontSize: 16, color: t.text2, lineHeight: 1.6 }}>
-        The full scanner — universe selector, sortable results table,
-        stale-data indicator, Risk-Off empty state — lands at the next
-        K1.2 checkpoint. Until then this stub keeps the navigation links
-        intact so you can verify the layout shell without 404s.
-      </p>
+    <div style={{ maxWidth: 1100, margin: '20px auto 60px' }}>
+      <ScannerHeader
+        scanDate={scan_date}
+        regime={regime}
+        universeSize={universe_size}
+        candidatesCount={candidates.length}
+      />
+      {candidates.length === 0 ? (
+        <ScannerEmptyState regime={regime} />
+      ) : (
+        <ScannerTable candidates={candidates} />
+      )}
     </div>
   );
 }

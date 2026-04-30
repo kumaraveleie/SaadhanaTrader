@@ -111,7 +111,17 @@ def main(argv: list[str] | None = None) -> int:
     )
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(scan_to_json(result), encoding="utf-8")
+    payload = scan_to_json(result)
+    args.output.write_text(payload, encoding="utf-8")
+
+    # Also write signals/latest.json next to the dated file so the
+    # Next.js trader app has a stable filename to read. Atomic via
+    # write-temp-then-rename so a partial write never serves stale-and-
+    # corrupted JSON to the public scanner page.
+    latest_path = args.output.parent / "latest.json"
+    tmp_path = latest_path.with_suffix(".json.tmp")
+    tmp_path.write_text(payload, encoding="utf-8")
+    tmp_path.replace(latest_path)
 
     summary = {
         "scan_date": result["scan_date"],

@@ -61,9 +61,12 @@ logs/
 reviews/*.md
 !reviews/.gitkeep
 
-# Daily scan outputs (regenerated nightly, not committed)
+# Daily scan outputs — dated files are regenerated nightly, not committed.
+# ``latest.json`` is the exception: it's the file the trader/ Next.js app
+# reads as the canonical scan for both dev and Vercel-preview builds.
 signals/*.json
 !signals/.gitkeep
+!signals/latest.json
 
 # Claude Code runtime artifacts
 .claude/scheduled_tasks.lock
