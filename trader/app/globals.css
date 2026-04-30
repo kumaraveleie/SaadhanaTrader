@@ -1,0 +1,85 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #0A0A0F;
+  color: #F0F0F4;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+button {
+  font-family: inherit;
+}
+
+a {
+  text-decoration: none;
+}
+
+input, select, textarea {
+  font-family: inherit;
+}
+
+/* Saadhana brand mark — sonar pulse on the center spark */
+.saadhana-spark {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: saadhana-dot-breathe 2.4s ease-in-out infinite;
+}
+.saadhana-ping {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: saadhana-spark-ping 2.4s ease-out infinite;
+  opacity: 0;
+}
+@keyframes saadhana-dot-breathe {
+  0%, 100% { opacity: 0.85; transform: scale(0.92); }
+  50%      { opacity: 1;    transform: scale(1.10); }
+}
+@keyframes saadhana-spark-ping {
+  0%   { transform: scale(0.6); opacity: 0; }
+  15%  { opacity: 0.8; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+/* Live data indicator pulse (used by the §15 freshness chip) */
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.4; transform: scale(0.85); }
+}
+
+/* Mobile responsive (per design_system.md §7) */
+@media (max-width: 900px) {
+  .saadhana-bento {
+    grid-template-columns: 1fr !important;
+  }
+  .saadhana-bento > * {
+    grid-column: span 1 !important;
+    grid-row: span 1 !important;
+  }
+  .saadhana-footer-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .saadhana-scanner-rail {
+    width: 100% !important;
+    position: relative !important;
+  }
+  .saadhana-nav-links { display: none !important; }
+}
+@media (max-width: 600px) {
+  .saadhana-footer-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  .saadhana-spark { animation: none !important; opacity: 0.95; }
+  .saadhana-ping { animation: none !important; opacity: 0; }
+}
