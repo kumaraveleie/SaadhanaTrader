@@ -59,8 +59,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <ThemeProvider>
           <Nav />
-          {PUBLIC_MODE && <DisclaimerBanner />}
           <main style={{ padding: '40px clamp(20px, 5vw, 64px)' }}>{children}</main>
+          {PUBLIC_MODE && <DisclaimerBanner />}
           <Footer />
         </ThemeProvider>
       </body>

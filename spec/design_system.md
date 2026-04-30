@@ -300,20 +300,29 @@ EOD · {scanDate}
 ```
 
 ### Disclaimer banner (PUBLIC mode only — §21.1 required)
-Layout-level, sits below `<Nav />` on every page in public mode.
+Layout-level, sits **above `<Footer />`** on every page in public mode.
+
+*Placement note (v2 — Apr 2026):* the v1 design placed the banner
+below `<Nav />`. Live K1.1 testing showed that placement squeezed the
+hero on mobile and ate vertical space on the scanner. Moved to a
+bottom-anchored slot (just above the footer) so the disclaimer stays
+persistent and reachable without competing for primary content space.
+Font bumped from 12 → 14px and padding from 8 → 14px so the bottom-
+anchored placement reads at a glance.
 
 ```tsx
 function DisclaimerBanner() {
   return (
     <div style={{
-      padding: '8px clamp(20px, 5vw, 64px)',
+      padding: '14px clamp(20px, 5vw, 64px)',
       background: 'rgba(255,184,0,0.08)',
+      borderTop: `1px solid ${t.border}`,
       borderBottom: `1px solid ${t.border}`,
-      fontSize: 12, color: t.text2, textAlign: 'center',
+      fontSize: 14, color: t.text2, textAlign: 'center', lineHeight: 1.55,
     }}>
       Saadhana Trader is a research and pattern-detection tool.
       Information only. Not investment advice.{' '}
-      <Link href="/about/disclaimer" style={{ color: t.accent }}>
+      <Link href="/about" style={{ color: t.accent, fontWeight: 500 }}>
         Read the full disclaimer →
       </Link>
     </div>
