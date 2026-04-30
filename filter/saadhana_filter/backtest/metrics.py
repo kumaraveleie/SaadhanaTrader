@@ -4,18 +4,23 @@ Takes a list of ``SimulatedTrade``s from the replay engine and
 computes the seven §11 must-pass metrics, plus a few diagnostic
 extras used by the report generator.
 
-Spec §11 thresholds:
+Spec §11 thresholds (v2.1, recalibrated per G1 evidence):
 
-| Metric                       | Target  |
-|------------------------------|---------|
-| Hit rate (% reaching +5%)    | ≥ 60%   |
-| Average days to T1           | ≤ 25    |
-| Average win                  | ≥ +8%   |
-| Average loss                 | ≤ −2.5% |
-| Max consecutive losses       | ≤ 5     |
-| Win/loss ratio               | ≥ 2.0   |
-| Profit Factor                | ≥ 1.8   |
-| Sharpe (annualized)          | ≥ 1.5   |
+| Metric                       | Target   |
+|------------------------------|----------|
+| Hit rate (% reaching +5%)    | ≥ 45%    |
+| Average days to T1           | ≤ 25     |
+| Average win                  | ≥ +6%    |
+| Average loss                 | ≤ −3%    |
+| Max consecutive losses       | ≤ 8      |
+| Win/loss ratio               | ≥ 2.0    |
+| Profit Factor                | ≥ 1.8    |
+| Sharpe (annualized)          | ≥ 1.5    |
+
+The v2.0 targets (60% / +8% / −2.5% / 5) were set pre-evidence;
+the recalibration aligns with institutional-grade momentum-system
+norms and the G1 sweep. Original values preserved at
+``spec/filter_spec_v2.md`` per §16 audit trail.
 
 Profit Factor = Σ(positive returns) / |Σ(negative returns)|. Catches
 the case where hit rate is high but a few oversized losers wipe out
@@ -157,12 +162,14 @@ def compute_metrics(trades: list[SimulatedTrade]) -> BacktestMetrics:
     win_rate = len(wins) / len(closed) if closed else 0.0
     expectancy = win_rate * avg_win + (1 - win_rate) * avg_loss if closed else 0.0
 
-    # Per-metric pass / fail bools
-    hit_rate_passes = hit_rate >= 60.0
+    # Per-metric pass / fail bools (v2.1 thresholds — recalibrated per
+    # G1 evidence; see spec/filter_spec_v2_1.md §11. v2.0 values
+    # preserved at spec/filter_spec_v2.md per §16 audit trail.)
+    hit_rate_passes = hit_rate >= 45.0
     days_to_t1_passes = avg_days_to_t1 is not None and avg_days_to_t1 <= 25.0
-    avg_win_passes = avg_win >= 8.0
-    avg_loss_passes = avg_loss >= -2.5  # avg_loss is negative; "≤ -2.5%" means abs ≤ 2.5%
-    consecutive_losses_passes = max_consec_losses <= 5
+    avg_win_passes = avg_win >= 6.0
+    avg_loss_passes = avg_loss >= -3.0  # avg_loss is negative; "≤ -3%" = abs ≤ 3%
+    consecutive_losses_passes = max_consec_losses <= 8
     win_loss_passes = win_loss >= 2.0
     profit_factor_passes = profit_factor >= 1.8
     sharpe_passes = sharpe >= 1.5

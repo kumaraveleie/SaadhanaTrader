@@ -23,6 +23,30 @@ per §19.2, no single-metric degradation > 5%.
   Factor) with no single-metric degradation > 5%.
 - **Status:** Parked (awaiting Phase H + 90 days of closed-signal data)
 
+### CR-002: Recency-of-strength as HIGH-conviction-tier filter
+- **Source:** Phase G1 A4 stop-out audit + Apr 2026 recency sweep
+  (`spec/samples/backtest_g1_a4_stopout_audit.md` and
+  `spec/samples/backtest_g1_recency_sweep.md`).
+- **Hypothesis:** ``days_since_52wh`` ≤ 90 is a meaningful entry-
+  quality filter, but as a hard BUY gate it cuts trade volume
+  85–90% (G1d ran with N=11). Used instead as a HIGH-conviction-
+  tier gate per §14, it would split BUYs into:
+  - **STANDARD tier** (1× sizing per §10) — score = 13/13 on the
+    v2.0 §5 conditions, no recency requirement.
+  - **HIGH tier** (1.5× sizing per §10) — score = 13/13 AND last
+    52WH touch within 90 calendar days.
+
+  The recency sweep at 90 days produced PF 2.59 / Sharpe 4.98 vs.
+  A1's 1.95 / 2.81 on the same cohort. If that quality lift
+  survives in Phase F's tier-weighted portfolio replay, HIGH-tier
+  sizing should outperform STANDARD-tier even with smaller N.
+- **Test plan:** Implement in Phase F (§14 conviction tier). Run
+  the §11 backtest with the tier-split sizing and compare the
+  tier-weighted return curve against the equal-weight A1 baseline.
+  If HIGH-tier alone beats blended on Sharpe and PF, promote per
+  §19 user-approval flow.
+- **Status:** Parked for Phase F implementation.
+
 ## Retired candidates
 
 (none yet)

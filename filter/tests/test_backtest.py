@@ -129,7 +129,7 @@ class TestMetricsAggregation:
         assert m.win_loss_passes
         assert m.profit_factor == pytest.approx(14.0)
         assert m.profit_factor_passes
-        assert m.consecutive_losses_passes  # 3 in a row, ≤ 5
+        assert m.consecutive_losses_passes  # 3 in a row, ≤ 8 (v2.1)
 
     def test_failure_path(self) -> None:
         # Hit rate too low + losses too big
@@ -145,7 +145,7 @@ class TestMetricsAggregation:
         m = compute_metrics(trades)
         assert not m.hit_rate_passes
         assert not m.avg_loss_passes
-        assert not m.consecutive_losses_passes  # 9 in a row
+        assert not m.consecutive_losses_passes  # 9 in a row > v2.1 ≤ 8
         assert not m.overall_passes
 
     def test_still_open_excluded_from_win_loss_counts(self) -> None:
