@@ -16,6 +16,8 @@ export type {
   ResearchRow,
   ResearchSnapshot,
   ScanResult,
+  SectorStrength,
+  SectorTopStock,
   SignalState,
 } from './scan-types';
 

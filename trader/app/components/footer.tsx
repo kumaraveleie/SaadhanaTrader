@@ -84,14 +84,32 @@ export function Footer() {
             lineHeight: 1.6,
           }}
         >
-          Saadhana Trader is a research tool — information only, not investment
-          advice. Not SEBI-registered.{' '}
-          <Link
-            href="/about"
-            style={{ color: t.text2, textDecoration: 'underline', textUnderlineOffset: 2 }}
-          >
-            Read disclaimer →
-          </Link>
+          <div style={{ marginBottom: 8 }}>
+            Saadhana Trader is a research tool — information only, not investment
+            advice. Not SEBI-registered.
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, fontSize: 12 }}>
+            <Link
+              href="/about"
+              style={{ color: t.text2, textDecoration: 'underline', textUnderlineOffset: 2 }}
+            >
+              About
+            </Link>
+            <span style={{ color: t.text3 }}>·</span>
+            <Link
+              href="/about/phases"
+              style={{ color: t.text2, textDecoration: 'underline', textUnderlineOffset: 2 }}
+            >
+              Phases
+            </Link>
+            <span style={{ color: t.text3 }}>·</span>
+            <Link
+              href="/about"
+              style={{ color: t.text2, textDecoration: 'underline', textUnderlineOffset: 2 }}
+            >
+              Disclaimer
+            </Link>
+          </div>
         </div>
 
         <div

@@ -3,10 +3,12 @@
 import Link from 'next/link';
 import { useTheme } from '../components/theme';
 import { LifecycleTag } from './lifecycle-tag';
+import { PhaseTooltip } from '../components/phase-tooltip';
 import {
   type Column,
   Dist50DmaCell,
   Dist52whCell,
+  HelpIcon,
   LifecycleChips,
   PercentCell,
   SortableTable,
@@ -18,13 +20,16 @@ const FONT_MONO = 'var(--font-mono), "JetBrains Mono", ui-monospace, monospace';
 export function StrengthDespiteWeaknessPanel({
   rows,
   niftyPctChange,
+  onPhaseHelp,
 }: {
   rows: ResearchRow[];
   niftyPctChange: number;
+  onPhaseHelp?: () => void;
 }) {
   const { t } = useTheme();
   const niftyPct = (niftyPctChange * 100).toFixed(2);
   const initialCount = rows.filter((r) => r.lifecycle === 'INITIAL').length;
+  const columns = buildColumns({ onPhaseHelp });
 
   return (
     <PanelShell
@@ -54,15 +59,15 @@ export function StrengthDespiteWeaknessPanel({
         />
       ) : (
         <>
-          <LifecycleChips rows={rows} />
+          <LifecycleChips rows={rows} onHelp={onPhaseHelp} />
           {initialCount === 0 && (
             <InitialNote
-              note={`No INITIAL setups today — all ${rows.length} divergent names are
-              already mid-trend or late.`}
+              note={`No Breakout setups today — all ${rows.length} divergent names
+              are already mid-trend or late.`}
             />
           )}
           <SortableTable
-            columns={SDW_COLUMNS}
+            columns={columns}
             rows={rows}
             getRowKey={(r) => r.symbol}
           />
@@ -72,79 +77,93 @@ export function StrengthDespiteWeaknessPanel({
   );
 }
 
-const SDW_COLUMNS: Column<ResearchRow>[] = [
-  {
-    key: 'symbol',
-    label: 'Symbol',
-    align: 'left',
-    sortValue: (r) => r.symbol,
-    cell: (r) => <SymbolCell symbol={r.symbol} />,
-  },
-  {
-    key: 'sub_industry',
-    label: 'Sub-sector',
-    tooltip: 'NSE Industry — finer-grained than the broad sector bucket.',
-    align: 'left',
-    sortValue: (r) => r.sub_industry,
-    cell: (r) => <SubsectorCell value={r.sub_industry} />,
-  },
-  {
-    key: 'pct_change_today',
-    label: 'Today %',
-    tooltip: "Today's close vs yesterday's close.",
-    align: 'right',
-    sortValue: (r) => r.pct_change_today,
-    cell: (r) => <PercentCell value={r.pct_change_today} />,
-  },
-  {
-    key: 'pct_change_5d',
-    label: '5D %',
-    tooltip: '5-trading-day return — confirms whether today is part of a real run.',
-    align: 'right',
-    sortValue: (r) => r.pct_change_5d,
-    cell: (r) => <PercentCell value={r.pct_change_5d} />,
-  },
-  {
-    key: 'dist_from_52wh_pct',
-    label: 'Close to 52WH',
-    tooltip: 'How close the stock is to its 52-week high. 0% = at the high.',
-    align: 'right',
-    sortValue: (r) => r.dist_from_52wh_pct,
-    cell: (r) => <Dist52whCell value={r.dist_from_52wh_pct} />,
-  },
-  {
-    key: 'lifecycle',
-    label: 'Lifecycle',
-    tooltip: 'Where in the move this stock sits — INITIAL fresh, LATE limited.',
-    align: 'left',
-    sortValue: (r) => ({ INITIAL: 0, CONFIRMED: 1, LATE: 2, UNKNOWN: 3 }[r.lifecycle]),
-    cell: (r) => <LifecycleTag tag={r.lifecycle} />,
-  },
-  {
-    key: 'rsi_14',
-    label: 'RSI',
-    tooltip: '14-period RSI. >70 = stretched, 50–70 = healthy momentum.',
-    align: 'right',
-    sortValue: (r) => r.rsi_14,
-    cell: (r) => <DimNumber value={r.rsi_14.toFixed(0)} />,
-  },
-  {
-    key: 'dist_from_50dma_pct',
-    label: 'Vs 50DMA',
-    tooltip: 'Distance from 50-day moving average. Bar shows position vs ±20%.',
-    align: 'right',
-    sortValue: (r) => r.dist_from_50dma_pct,
-    cell: (r) => <Dist50DmaCell value={r.dist_from_50dma_pct} />,
-  },
-  {
-    key: 'rvol_today',
-    label: 'Volume',
-    tooltip: "Today's volume vs the 50-day average. >1.5× = unusual interest.",
-    align: 'right',
-    sortValue: (r) => r.rvol_today,
-    cell: (r) => <RvolCell value={r.rvol_today} />,
-  },
-];
+function buildColumns({
+  onPhaseHelp,
+}: {
+  onPhaseHelp?: () => void;
+}): Column<ResearchRow>[] {
+  return [
+    {
+      key: 'symbol',
+      label: 'Symbol',
+      align: 'left',
+      sortValue: (r) => r.symbol,
+      cell: (r) => <SymbolCell symbol={r.symbol} />,
+    },
+    {
+      key: 'sub_industry',
+      label: 'Sub-sector',
+      tooltip: 'NSE Industry — finer-grained than the broad sector bucket.',
+      align: 'left',
+      sortValue: (r) => r.sub_industry,
+      cell: (r) => <SubsectorCell value={r.sub_industry} />,
+    },
+    {
+      key: 'pct_change_today',
+      label: 'Today %',
+      tooltip: "Today's close vs yesterday's close.",
+      align: 'right',
+      sortValue: (r) => r.pct_change_today,
+      cell: (r) => <PercentCell value={r.pct_change_today} />,
+    },
+    {
+      key: 'pct_change_5d',
+      label: '5D %',
+      tooltip: '5-trading-day return — confirms whether today is part of a real run.',
+      align: 'right',
+      sortValue: (r) => r.pct_change_5d,
+      cell: (r) => <PercentCell value={r.pct_change_5d} />,
+    },
+    {
+      key: 'dist_from_52wh_pct',
+      label: 'Close to 52WH',
+      tooltip: 'How close the stock is to its 52-week high. 0% = at the high.',
+      align: 'right',
+      sortValue: (r) => r.dist_from_52wh_pct,
+      cell: (r) => <Dist52whCell value={r.dist_from_52wh_pct} />,
+    },
+    {
+      key: 'phase',
+      label: 'Phase',
+      tooltip: 'Where in the move this stock sits — Breakout fresh, Extended limited.',
+      align: 'left',
+      sortValue: (r) =>
+        ({ INITIAL: 0, CONFIRMED: 1, LATE: 2, UNKNOWN: 3 }[r.lifecycle]),
+      cell: (r) => (
+        <PhaseTooltip tag={r.lifecycle} onLearnMore={onPhaseHelp}>
+          <LifecycleTag tag={r.lifecycle} />
+        </PhaseTooltip>
+      ),
+      labelAdornment: onPhaseHelp ? (
+        <HelpIcon label="How to read phases" onClick={onPhaseHelp} />
+      ) : undefined,
+    },
+    {
+      key: 'rsi_14',
+      label: 'RSI',
+      tooltip: '14-period RSI. >70 = stretched, 50–70 = healthy momentum.',
+      align: 'right',
+      sortValue: (r) => r.rsi_14,
+      cell: (r) => <DimNumber value={r.rsi_14.toFixed(0)} />,
+    },
+    {
+      key: 'dist_from_50dma_pct',
+      label: 'Vs 50DMA',
+      tooltip: 'Distance from 50-day moving average. Bar shows position vs ±20%.',
+      align: 'right',
+      sortValue: (r) => r.dist_from_50dma_pct,
+      cell: (r) => <Dist50DmaCell value={r.dist_from_50dma_pct} />,
+    },
+    {
+      key: 'rvol_today',
+      label: 'Volume',
+      tooltip: "Today's volume vs the 50-day average. >1.5× = unusual interest.",
+      align: 'right',
+      sortValue: (r) => r.rvol_today,
+      cell: (r) => <RvolCell value={r.rvol_today} />,
+    },
+  ];
+}
 
 function SymbolCell({ symbol }: { symbol: string }) {
   const { t } = useTheme();

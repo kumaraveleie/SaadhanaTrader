@@ -138,6 +138,32 @@ Surfaces in: the public `/research` page (`filter_spec_v2_1.md`
 shows the same plus tier transitions (sector flipping from
 `confirming` to `lead` is itself a signal).
 
+#### M1 v0 (ships in K1)
+
+A deterministic v0 of the sector aggregator ships ahead of the
+full Phase Q module. It groups Tier-1-passing names by NSE
+Industry (`sub_industry`), and for each group ≥ 5 names emits:
+
+- `today_pct` — mean constituent intraday % change
+- `rs_5d`, `rs_20d`, `rs_60d` — sector return / Nifty return
+  ratios (no 252d in v0)
+- `breadth_above_50dma`, `breadth_above_200dma`
+- `top_stocks` — top 5 by today's % change (symbol, today %,
+  5d %, phase, inst-flow score)
+- `inst_flow_total`, `inst_buy_bar_count_5d`, `rank_by_inst_flow`
+- `sector_phase` — placeholder `"Confirming"` with note `"Phase Q
+  M1 pending"` until the full classifier lands
+
+**Implementation:** `filter/saadhana_filter/sectors/strength.py`,
+emitted under `sector_strength` on `signals/research.json`, and
+rendered as the regime-ribbon strip + inline drill-down on
+`/research`. Phase Q replaces the v0 with the full module above
+without changing the JSON contract — additional fields (`rs_252d`,
+`breadth_stage_2_pct`, `volume_sustainability_score`, `tier`) are
+purely additive. Phase D's catalyst data populates the drill-
+down's "Triggers" section (currently a placeholder) once the
+catalyst engine ships.
+
 ### 3.2 M2 / Phase R — Pattern Lifecycle Engine
 
 For each Pro-Setup-13/13 candidate, classify the lifecycle stage
@@ -274,6 +300,24 @@ later.
 
 ## 7. Lifecycle classification (M2 / Phase R)
 
+> **Internal vs user-facing labels.** The bucket names below
+> (`INITIAL`, `CONFIRMED`, `LATE`, `UNKNOWN`, `PRE_BREAKOUT`,
+> `FAILED`) are the **internal canonical keys** used in §17 ledger,
+> CR-008, and `filter/saadhana_filter/scan/research.py`. The
+> user-facing equivalents — rendered everywhere on the public site
+> via `trader/app/lib/labels.ts::LIFECYCLE_DISPLAY` — are:
+>
+> | Internal key | User label | Tone |
+> |---|---|---|
+> | `INITIAL` | **Breakout** | bullish |
+> | `CONFIRMED` | **Trending** | info |
+> | `LATE` | **Extended** | warning |
+> | `UNKNOWN` | **Sideways** | muted |
+>
+> Translate **only** at the UI boundary; never rename the canonical
+> keys (the §17 ledger is append-only and the keys are part of the
+> historical record).
+
 The full M2 lifecycle classifier uses **six markers** to place each
 candidate's current breakout into one of four buckets (`PRE_BREAKOUT`,
 `INITIAL`, `CONFIRMED`, `LATE`, plus a `FAILED` rollback state).
@@ -358,3 +402,63 @@ historical reference setups in `§2`:
 
 If the classifier mislabels the inflection bar in any of the four
 reference setups, M2 doesn't ship — re-tune thresholds first.
+
+### 7.5 User-facing phase guidance
+
+The /research page surfaces phase information through three layers
+so casual readers and serious users get the right depth at the right
+time. The action rules below are the canonical wording — the UI
+implementation in `trader/app/lib/labels.ts::PHASE_HELP`,
+`trader/app/components/phase-tooltip.tsx`,
+`trader/app/components/phase-drawer.tsx`, and
+`trader/app/about/phases/page.tsx` mirrors this verbatim. If this
+section changes, the four files must be updated in the same commit.
+
+**Layer 1 — hover tooltip (per phase tag)**
+
+Every phase tag in any /research table or sector drill-down wraps in
+a `<PhaseTooltip>` that, on hover, surfaces:
+
+| Phase | Summary | Action lines |
+|---|---|---|
+| **Breakout** (`INITIAL`) | Fresh strength · just emerged from base | ► Best entry: highest reward, slightly lower hit rate <br/> ► Stop: tight (close to base support) |
+| **Trending** (`CONFIRMED`) | Trend running · momentum confirmed | ► Solid entry: higher hit rate, less upside left <br/> ► Stop: ATR-based, slightly wider than Breakout |
+| **Extended** (`LATE`) | Stretched · stop chasing | ► Avoid new entries — late-stage exhaustion risk <br/> ► Hold-only: tighten stops if already in position |
+| **Sideways** (`UNKNOWN`) | No clear direction yet | ► Wait for the stock to declare — Breakout or breakdown <br/> ► No system signal in this phase |
+
+Each tooltip ends with a "Learn more →" link routing to Layer 2 (or
+Layer 3 if the user is already on a non-/research page).
+
+**Layer 2 — `?` icon → side drawer**
+
+A small `?` icon (14px, `t.text2`) sits at two places on /research:
+next to the PHASE column header in each panel table, and next to the
+distribution chip strip header. Click → right-side slide-in drawer
+(~480px), titled "How to read phases", containing the comparison
+table, practical rules ("Pattern Match + Breakout → take it"), the
+phase-progression narrative, and a CTA routing to Layer 3.
+
+The drawer is keyboard-accessible (ESC closes), backdrop click
+closes, and is layout-agnostic (renders above any /research panel).
+
+**Layer 3 — `/about/phases` reference page**
+
+Same content as the drawer, expanded with the underlying phase
+classifier rules (per §7 thresholds), a worked example using the
+day's distribution, and the "phase vs Pro-Setup score" distinction.
+Linked from: the drawer CTA, the Layer 1 tooltip "Learn more →",
+the footer disclaimer area, and the /about page main content.
+
+**Practical rule (canonical, do not soften without spec edit):**
+
+- Pattern Match + **Breakout** → take it (best risk/reward)
+- Pattern Match + **Trending** → take it (highest probability)
+- Pattern Match + **Extended** → the system shouldn't fire here
+  (the §5 `not_extended` condition prevents it)
+- No match but stock shows **Trending** on /research → information,
+  not action
+
+**Coming in Phase F (CR-008):** when conviction-tier sizing ships,
+phase will drive risk allocation directly — Breakout 1.5%, Trending
+0.5%, Extended downgraded to WATCH. Until then, all matches are
+STANDARD-sized and phase is informational on /research only.

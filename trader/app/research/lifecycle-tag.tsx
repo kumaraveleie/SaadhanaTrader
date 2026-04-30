@@ -1,36 +1,39 @@
 'use client';
 
-import { useTheme } from '../components/theme';
+import { LIFECYCLE_DISPLAY, type PhaseTone } from '../lib/labels';
 import type { LifecycleTag as Tag } from '../lib/scan-types';
 
-const VISUALS: Record<Tag, { label: string; tone: string; bg: string }> = {
-  INITIAL: { label: 'INITIAL', tone: '#00FF88', bg: 'rgba(0,255,136,0.12)' },
-  CONFIRMED: { label: 'CONFIRMED', tone: '#00C8FF', bg: 'rgba(0,200,255,0.12)' },
-  LATE: { label: 'LATE', tone: '#FFB800', bg: 'rgba(255,184,0,0.14)' },
-  UNKNOWN: { label: 'UNKNOWN', tone: '#6B7280', bg: 'rgba(107,114,128,0.12)' },
+const TONE_COLOR: Record<PhaseTone, { fg: string; bg: string }> = {
+  bullish: { fg: '#00FF88', bg: 'rgba(0,255,136,0.12)' },
+  info: { fg: '#00C8FF', bg: 'rgba(0,200,255,0.12)' },
+  warning: { fg: '#FFB800', bg: 'rgba(255,184,0,0.14)' },
+  muted: { fg: '#9CA3AF', bg: 'rgba(107,114,128,0.12)' },
 };
 
 /**
- * Lifecycle tag pill — colored per design_system §5 mapping.
- * INITIAL=bullish, CONFIRMED=info, LATE=warning, UNKNOWN=text3.
+ * Lifecycle tag pill — internal key in, plain-English label out.
+ * Internal keys (INITIAL/CONFIRMED/LATE/UNKNOWN) flow through unchanged
+ * in code; only this component performs the user-facing translation.
  */
 export function LifecycleTag({ tag }: { tag: Tag }) {
-  const v = VISUALS[tag];
+  const display = LIFECYCLE_DISPLAY[tag];
+  const tone = TONE_COLOR[display.tone];
   return (
     <span
       style={{
         display: 'inline-block',
         padding: '2px 8px',
         borderRadius: 4,
-        background: v.bg,
-        color: v.tone,
+        background: tone.bg,
+        color: tone.fg,
         fontSize: 11,
         fontWeight: 700,
         letterSpacing: '0.06em',
         whiteSpace: 'nowrap',
+        textTransform: 'uppercase',
       }}
     >
-      {v.label}
+      {display.label}
     </span>
   );
 }

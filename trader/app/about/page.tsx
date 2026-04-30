@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useTheme } from '../components/theme';
 
 const FONT_MONO = 'var(--font-mono), "JetBrains Mono", ui-monospace, monospace';
@@ -122,6 +123,21 @@ export default function AboutPage() {
           A symbol is surfaced as <em>High Pattern Match</em> when the
           score reaches 13 of 13 in a bullish market. Anything below that
           is either watch-only or filtered out entirely.
+        </p>
+        <p style={{ fontSize: 13, color: t.text3, marginTop: 16 }}>
+          Each match is also tagged with a <em>phase</em> — Breakout,
+          Trending, Extended, or Sideways — that tells you where in the
+          move the stock currently sits.{' '}
+          <Link
+            href="/about/phases"
+            style={{
+              color: t.accent,
+              fontWeight: 500,
+              textDecoration: 'none',
+            }}
+          >
+            How to read phases →
+          </Link>
         </p>
       </Section>
 

@@ -69,6 +69,7 @@ class ResearchRow:
 
     # Distance / context
     dist_from_50dma_pct: float  # decimal
+    dist_from_200dma_pct: float  # decimal; >0 = above 200-DMA (Stage 2-ish)
     dist_from_52wh_pct: float  # decimal; negative = below 52WH
     bars_since_52wh_break: int | None  # None = price never broke 52WH recently
 
@@ -77,6 +78,7 @@ class ResearchRow:
     bb_width_pct: float
     bb_width_over_median: float
     inst_flow_score_30b: int
+    inst_buy_bar_count_5d: int  # # of inst-buy bars in last 5 trading days
     rvol_today: float  # today's volume / 50-bar prior mean
 
     # Score + lifecycle
@@ -96,6 +98,8 @@ class ResearchSnapshot:
     nifty_close_yesterday: float
     nifty_pct_change_today: float
     rows: list[ResearchRow] = field(default_factory=list)
+    # M1 v0 sector aggregates — see saadhana_filter/sectors/strength.py
+    sector_strength: list[dict] = field(default_factory=list)
 
 
 # ──────────────────────────────────────────────────────────────────────────
@@ -183,6 +187,10 @@ def _row_for(
     sma_50_today = float(sma_50.iloc[-1])
     dist_from_50dma_pct = (close_today - sma_50_today) / sma_50_today
 
+    sma_200 = sma(close, 200)
+    sma_200_today = float(sma_200.iloc[-1]) if not pd.isna(sma_200.iloc[-1]) else sma_50_today
+    dist_from_200dma_pct = (close_today - sma_200_today) / sma_200_today
+
     high_52w = high.rolling(252, min_periods=60).max()
     high_52w_today = float(high_52w.iloc[-1])
     dist_from_52wh_pct = (close_today - high_52w_today) / high_52w_today
@@ -210,6 +218,7 @@ def _row_for(
         (buys.rolling(INST_FLOW_LOOKBACK, min_periods=INST_FLOW_LOOKBACK).sum()
          - sells.rolling(INST_FLOW_LOOKBACK, min_periods=INST_FLOW_LOOKBACK).sum()).iloc[-1]
     )
+    inst_buy_bar_count_5d = int(buys.iloc[-5:].sum()) if len(buys) >= 5 else 0
 
     lifecycle = _classify_lifecycle(
         rsi_14=rsi_14,
@@ -229,12 +238,14 @@ def _row_for(
         pct_change_today=pct_change_today,
         pct_change_5d=pct_change_5d,
         dist_from_50dma_pct=dist_from_50dma_pct,
+        dist_from_200dma_pct=dist_from_200dma_pct,
         dist_from_52wh_pct=dist_from_52wh_pct,
         bars_since_52wh_break=bars_since,
         rsi_14=rsi_14,
         bb_width_pct=bbw_today,
         bb_width_over_median=bbw_over_median,
         inst_flow_score_30b=score_30b,
+        inst_buy_bar_count_5d=inst_buy_bar_count_5d,
         rvol_today=rvol_today_val,
         pro_setup_score=score_today,
         lifecycle=lifecycle,
@@ -305,6 +316,7 @@ def snapshot_to_dict(snap: ResearchSnapshot) -> dict:
         "nifty_close_today": snap.nifty_close_today,
         "nifty_close_yesterday": snap.nifty_close_yesterday,
         "nifty_pct_change_today": snap.nifty_pct_change_today,
+        "sector_strength": snap.sector_strength,
         "rows": [
             {
                 "symbol": r.symbol,
@@ -315,12 +327,14 @@ def snapshot_to_dict(snap: ResearchSnapshot) -> dict:
                 "pct_change_today": r.pct_change_today,
                 "pct_change_5d": r.pct_change_5d,
                 "dist_from_50dma_pct": r.dist_from_50dma_pct,
+                "dist_from_200dma_pct": r.dist_from_200dma_pct,
                 "dist_from_52wh_pct": r.dist_from_52wh_pct,
                 "bars_since_52wh_break": r.bars_since_52wh_break,
                 "rsi_14": r.rsi_14,
                 "bb_width_pct": r.bb_width_pct,
                 "bb_width_over_median": r.bb_width_over_median,
                 "inst_flow_score_30b": r.inst_flow_score_30b,
+                "inst_buy_bar_count_5d": r.inst_buy_bar_count_5d,
                 "rvol_today": r.rvol_today,
                 "pro_setup_score": r.pro_setup_score,
                 "lifecycle": r.lifecycle,

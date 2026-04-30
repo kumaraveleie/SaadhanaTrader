@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { useTheme } from '../components/theme';
+import { LIFECYCLE_DISPLAY, LIFECYCLE_ORDER } from '../lib/labels';
 import type { LifecycleTag as LifecycleTagType, ResearchRow } from '../lib/scan-types';
 import { LifecycleTag } from './lifecycle-tag';
 
@@ -15,6 +16,10 @@ export type Column<T> = {
   sortValue: (row: T) => number | string;
   cell: (row: T) => React.ReactNode;
   sortable?: boolean; // default true
+  // Optional slot rendered next to the column label (right-aligned cols
+  // get it before the label, left-aligned after) — used for the "?" icon
+  // on the PHASE column.
+  labelAdornment?: React.ReactNode;
 };
 
 type SortState = { key: string; dir: 'asc' | 'desc' } | null;
@@ -85,7 +90,6 @@ export function SortableTable<T>({
                 <th
                   key={col.key}
                   title={col.tooltip}
-                  onClick={() => onHeaderClick(col)}
                   style={{
                     padding: '12px 14px',
                     textAlign: col.align,
@@ -97,12 +101,26 @@ export function SortableTable<T>({
                     background: t.surface,
                     borderBottom: `1px solid ${t.border}`,
                     whiteSpace: 'nowrap',
-                    cursor: sortable ? 'pointer' : 'default',
                     userSelect: 'none',
                   }}
                 >
-                  {col.label}
-                  {arrow}
+                  <span
+                    onClick={() => onHeaderClick(col)}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: 4,
+                      cursor: sortable ? 'pointer' : 'default',
+                    }}
+                  >
+                    {col.label}
+                    {arrow}
+                  </span>
+                  {col.labelAdornment && (
+                    <span style={{ marginLeft: 6, display: 'inline-flex', alignItems: 'center' }}>
+                      {col.labelAdornment}
+                    </span>
+                  )}
                 </th>
               );
             })}
@@ -145,11 +163,17 @@ export function SortableTable<T>({
 }
 
 // ──────────────────────────────────────────────────────────────────────────
-// Lifecycle distribution chips — sits between panel header and table.
+// Phase distribution chips — sits between panel header and table.
+// Renders [BREAKOUT n] [TRENDING n] [EXTENDED n] [SIDEWAYS n] using
+// LIFECYCLE_DISPLAY to translate internal keys to user-facing labels.
 // ──────────────────────────────────────────────────────────────────────────
-const LIFECYCLE_ORDER: LifecycleTagType[] = ['INITIAL', 'CONFIRMED', 'LATE', 'UNKNOWN'];
-
-export function LifecycleChips({ rows }: { rows: ResearchRow[] }) {
+export function LifecycleChips({
+  rows,
+  onHelp,
+}: {
+  rows: ResearchRow[];
+  onHelp?: () => void;
+}) {
   const { t } = useTheme();
   const counts = LIFECYCLE_ORDER.reduce<Record<LifecycleTagType, number>>(
     (acc, tag) => {
@@ -163,6 +187,7 @@ export function LifecycleChips({ rows }: { rows: ResearchRow[] }) {
       style={{
         display: 'flex',
         flexWrap: 'wrap',
+        alignItems: 'center',
         gap: 8,
         padding: '12px 24px',
         borderBottom: `1px solid ${t.border}`,
@@ -172,6 +197,7 @@ export function LifecycleChips({ rows }: { rows: ResearchRow[] }) {
       {LIFECYCLE_ORDER.map((tag) => (
         <span
           key={tag}
+          title={LIFECYCLE_DISPLAY[tag].hint}
           style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -189,7 +215,47 @@ export function LifecycleChips({ rows }: { rows: ResearchRow[] }) {
           <span style={{ color: t.text, fontWeight: 600 }}>{counts[tag]}</span>
         </span>
       ))}
+      {onHelp && <HelpIcon label="How to read phases" onClick={onHelp} />}
     </div>
+  );
+}
+
+// ──────────────────────────────────────────────────────────────────────────
+// Inline "?" affordance — opens the PhaseDrawer.
+// ──────────────────────────────────────────────────────────────────────────
+export function HelpIcon({
+  label,
+  onClick,
+}: {
+  label: string;
+  onClick: () => void;
+}) {
+  const { t } = useTheme();
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      title={label}
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 16,
+        height: 16,
+        padding: 0,
+        borderRadius: 999,
+        background: 'transparent',
+        border: `1px solid ${t.text3}`,
+        color: t.text2,
+        fontSize: 10,
+        fontWeight: 700,
+        cursor: 'pointer',
+        lineHeight: 1,
+      }}
+    >
+      ?
+    </button>
   );
 }
 

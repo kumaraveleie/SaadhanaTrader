@@ -8,7 +8,7 @@
  * raw internal labels.
  */
 
-import type { Regime, SignalState } from './scan-types';
+import type { LifecycleTag, Regime, SignalState } from './scan-types';
 
 export type PublicLabel = {
   text: string;
@@ -101,3 +101,76 @@ export const PLAIN_LANGUAGE = {
   proSetupScore: 'Pro-Setup Score',
   patternMatch: 'Pattern Match',
 } as const;
+
+// ──────────────────────────────────────────────────────────────────────────
+// Lifecycle (internal canonical) → user-facing Phase labels.
+// Internal keys (INITIAL/CONFIRMED/LATE/UNKNOWN) appear in §17 ledger,
+// CR-008, Python research.py — never rename them. Translate ONLY at the
+// UI boundary via this map.
+// ──────────────────────────────────────────────────────────────────────────
+export type PhaseTone = 'bullish' | 'info' | 'warning' | 'muted';
+
+export type LifecycleDisplay = {
+  label: string;
+  hint: string;
+  tone: PhaseTone;
+};
+
+export const LIFECYCLE_DISPLAY: Record<LifecycleTag, LifecycleDisplay> = {
+  INITIAL: { label: 'Breakout', hint: 'fresh strength', tone: 'bullish' },
+  CONFIRMED: { label: 'Trending', hint: 'trend running', tone: 'info' },
+  LATE: { label: 'Extended', hint: 'stretched — avoid chasing', tone: 'warning' },
+  UNKNOWN: { label: 'Sideways', hint: 'no clear signal', tone: 'muted' },
+};
+
+export function phaseLabel(tag: LifecycleTag): string {
+  return LIFECYCLE_DISPLAY[tag].label;
+}
+
+export type PhaseHelp = {
+  title: string;
+  summary: string;
+  lines: string[];
+};
+
+export const PHASE_HELP: Record<LifecycleTag, PhaseHelp> = {
+  INITIAL: {
+    title: 'Breakout',
+    summary: 'Fresh strength · just emerged from base',
+    lines: [
+      '► Best entry: highest reward, slightly lower hit rate',
+      '► Stop: tight (close to base support)',
+    ],
+  },
+  CONFIRMED: {
+    title: 'Trending',
+    summary: 'Trend running · momentum confirmed',
+    lines: [
+      '► Solid entry: higher hit rate, less upside left',
+      '► Stop: ATR-based, slightly wider than Breakout',
+    ],
+  },
+  LATE: {
+    title: 'Extended',
+    summary: 'Stretched · stop chasing',
+    lines: [
+      '► Avoid new entries — late-stage exhaustion risk',
+      '► Hold-only: tighten stops if already in position',
+    ],
+  },
+  UNKNOWN: {
+    title: 'Sideways',
+    summary: 'No clear direction yet',
+    lines: [
+      '► Wait for the stock to declare — Breakout or breakdown',
+      '► No system signal in this phase',
+    ],
+  },
+};
+
+export const LIFECYCLE_ORDER: LifecycleTag[] = [
+  'INITIAL',
+  'CONFIRMED',
+  'LATE',
+  'UNKNOWN',
+];

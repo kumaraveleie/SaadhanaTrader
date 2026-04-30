@@ -64,15 +64,44 @@ export type ResearchRow = {
   pct_change_today: number; // decimal
   pct_change_5d: number; // decimal — 5-trading-day return
   dist_from_50dma_pct: number; // decimal
+  dist_from_200dma_pct: number; // decimal; >0 = above 200-DMA
   dist_from_52wh_pct: number; // decimal; negative = below 52WH
   bars_since_52wh_break: number | null;
   rsi_14: number;
   bb_width_pct: number;
   bb_width_over_median: number;
   inst_flow_score_30b: number;
+  inst_buy_bar_count_5d: number;
   rvol_today: number; // today's volume / 50-bar prior mean
   pro_setup_score: number;
   lifecycle: LifecycleTag;
+};
+
+// M1 v0 sector aggregate emitted under ``sector_strength`` in research.json.
+export type SectorTopStock = {
+  symbol: string;
+  today_pct: number;
+  pct_change_5d: number;
+  phase: LifecycleTag;
+  inst_flow_score_30b: number;
+};
+
+export type SectorStrength = {
+  sector: string; // slug e.g. "PHARMACEUTICALS"
+  sector_label: string; // human-readable e.g. "Pharmaceuticals"
+  today_pct: number;
+  rs_5d: number | null;
+  rs_20d: number | null;
+  rs_60d: number | null;
+  breadth_above_50dma: number;
+  breadth_above_200dma: number;
+  sector_phase: string; // M1 v0 placeholder
+  sector_phase_note: string;
+  top_stocks: SectorTopStock[];
+  inst_flow_total: number;
+  inst_buy_bar_count_5d: number;
+  sector_count: number;
+  rank_by_inst_flow: number;
 };
 
 export type ResearchSnapshot = {
@@ -83,5 +112,6 @@ export type ResearchSnapshot = {
   nifty_close_today: number;
   nifty_close_yesterday: number;
   nifty_pct_change_today: number;
+  sector_strength: SectorStrength[];
   rows: ResearchRow[];
 };

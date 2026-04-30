@@ -25,6 +25,7 @@ import pandas as pd
 from saadhana_filter import __spec_version__
 from saadhana_filter.data.loader import load_eod
 from saadhana_filter.scan.research import build_research_snapshot, snapshot_to_dict
+from saadhana_filter.sectors.strength import build_sector_strength, sector_to_dict
 from saadhana_filter.signals.tier1 import tier1_filter
 
 NIFTY_INDEX_TICKER = "^NSEI"
@@ -114,6 +115,14 @@ def main(argv: list[str] | None = None) -> int:
         ohlcv_provider=provider,
     )
 
+    # M1 v0 — sector strength aggregator (see thinking_engine.md §3.1)
+    sector_aggs = build_sector_strength(
+        rows=snap.rows,
+        nifty_df=nifty_df,
+        ohlcv_provider=provider,
+    )
+    snap.sector_strength = [sector_to_dict(s) for s in sector_aggs]
+
     args.output.parent.mkdir(parents=True, exist_ok=True)
     payload = json.dumps(snapshot_to_dict(snap), indent=2, default=str)
     tmp = args.output.with_suffix(".json.tmp")
@@ -128,6 +137,11 @@ def main(argv: list[str] | None = None) -> int:
             tag: sum(1 for r in snap.rows if r.lifecycle == tag)
             for tag in ("INITIAL", "CONFIRMED", "LATE", "UNKNOWN")
         },
+        "sector_count": len(snap.sector_strength),
+        "top_3_sectors": [
+            f"{s['sector_label']} {s['today_pct'] * 100:+.2f}%"
+            for s in snap.sector_strength[:3]
+        ],
     }
     print(json.dumps(summary, indent=2), file=sys.stderr)
     return 0
