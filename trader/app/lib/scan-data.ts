@@ -7,20 +7,37 @@
 
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import type { ScanResult } from './scan-types';
+import type { ResearchSnapshot, ScanResult } from './scan-types';
 
-export type { CandidateRow, Regime, ScanResult, SignalState } from './scan-types';
+export type {
+  CandidateRow,
+  LifecycleTag,
+  Regime,
+  ResearchRow,
+  ResearchSnapshot,
+  ScanResult,
+  SignalState,
+} from './scan-types';
 
-function latestJsonPath(): string {
-  // ``trader/`` is the project root for the Next.js app. The scan output
-  // lives at ``<repo-root>/signals/latest.json`` — one level above.
-  return join(process.cwd(), '..', 'signals', 'latest.json');
+function signalsPath(file: string): string {
+  // ``trader/`` is the project root for the Next.js app. Signal files
+  // live at ``<repo-root>/signals/`` — one level above.
+  return join(process.cwd(), '..', 'signals', file);
 }
 
 export async function readLatestScan(): Promise<ScanResult | null> {
   try {
-    const raw = await readFile(latestJsonPath(), 'utf-8');
+    const raw = await readFile(signalsPath('latest.json'), 'utf-8');
     return JSON.parse(raw) as ScanResult;
+  } catch {
+    return null;
+  }
+}
+
+export async function readResearchSnapshot(): Promise<ResearchSnapshot | null> {
+  try {
+    const raw = await readFile(signalsPath('research.json'), 'utf-8');
+    return JSON.parse(raw) as ResearchSnapshot;
   } catch {
     return null;
   }

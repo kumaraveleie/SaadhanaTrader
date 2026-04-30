@@ -6,6 +6,7 @@ import { BrandMark } from './brand-mark';
 
 const NAV_LINKS = [
   { href: '/scanner', label: 'Scanner' },
+  { href: '/research', label: 'Research' },
   { href: '/about', label: 'About' },
 ];
 

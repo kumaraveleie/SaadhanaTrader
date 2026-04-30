@@ -151,6 +151,26 @@ per §19.2, no single-metric degradation > 5%.
   the three required axes with no single-metric degradation > 5%.
 - **Status:** Parked pending Phase H.
 
+### CR-008: Lifecycle phase as conviction-tier modifier
+- **Source:** Strategic conversation Apr 2026 — "start or end of move"
+  question on weak-market strength.
+- **Hypothesis:** Phase 1 (`INITIAL`) BUYs have measurably better hit
+  rate than Phase 3 (`LATE`) BUYs because LATE stocks are at the end
+  of their move and the §5.4 stop will sit in dangerous territory
+  (close to mean-reversion zone with overstretched RSI). Score 13/13
+  + INITIAL phase should be **ELITE** conviction tier (2× sizing per
+  §10). Score 13/13 + LATE phase should downgrade to WATCH (no
+  entry). The K1 lifecycle classifier in `filter/saadhana_filter/scan/research.py`
+  is the v1 placeholder — the formal version ships as M2 / Phase R
+  per `spec/thinking_engine.md` §7.
+- **Test plan:** Phase R + Phase F shadow mode for 60 days. Compare
+  hit rate of `INITIAL`-tagged BUYs vs `CONFIRMED` vs `LATE`. Promote
+  per §19 user-approval flow if `INITIAL`-tagged hit rate exceeds the
+  blended A1 baseline by ≥ 5pp AND `LATE`-tagged hit rate is at least
+  10pp lower than `INITIAL` (the "INITIAL is better than LATE"
+  hypothesis must be falsifiable, not just a relative ranking).
+- **Status:** Parked pending Phase R + F.
+
 ## Retired candidates
 
 (none yet)

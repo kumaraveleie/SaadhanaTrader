@@ -67,6 +67,7 @@ reviews/*.md
 signals/*.json
 !signals/.gitkeep
 !signals/latest.json
+!signals/research.json
 
 # Claude Code runtime artifacts
 .claude/scheduled_tasks.lock

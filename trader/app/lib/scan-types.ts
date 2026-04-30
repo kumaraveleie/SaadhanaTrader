@@ -47,3 +47,38 @@ export function scanAgeDays(scanDateIso: string, now: Date = new Date()): number
   const today = new Date(now.toISOString().slice(0, 10) + 'T00:00:00');
   return Math.max(0, Math.round((today.getTime() - scan.getTime()) / (1000 * 60 * 60 * 24)));
 }
+
+// ──────────────────────────────────────────────────────────────────────────
+// /research page snapshot — emitted by ``scripts/research_scan.py``
+// (mirrors ``ResearchSnapshot`` / ``ResearchRow`` in
+// filter/saadhana_filter/scan/research.py exactly)
+// ──────────────────────────────────────────────────────────────────────────
+export type LifecycleTag = 'INITIAL' | 'CONFIRMED' | 'LATE' | 'UNKNOWN';
+
+export type ResearchRow = {
+  symbol: string;
+  sector: string;
+  close_today: number;
+  close_yesterday: number;
+  pct_change_today: number; // decimal
+  dist_from_50dma_pct: number; // decimal
+  dist_from_52wh_pct: number; // decimal; negative = below 52WH
+  bars_since_52wh_break: number | null;
+  rsi_14: number;
+  bb_width_pct: number;
+  bb_width_over_median: number;
+  inst_flow_score_30b: number;
+  pro_setup_score: number;
+  lifecycle: LifecycleTag;
+};
+
+export type ResearchSnapshot = {
+  scan_date: string;
+  spec_version: string;
+  universe_size: number;
+  tier1_passed: number;
+  nifty_close_today: number;
+  nifty_close_yesterday: number;
+  nifty_pct_change_today: number;
+  rows: ResearchRow[];
+};

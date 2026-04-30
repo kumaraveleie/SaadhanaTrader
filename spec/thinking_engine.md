@@ -269,3 +269,92 @@ Phase Q–T are sequenced after that. CR-005 in
 becomes load-bearing during the v2.1 build window — it reserves the
 schema fields Phase D must emit so M1–M3 don't require migration
 later.
+
+---
+
+## 7. Lifecycle classification (M2 / Phase R)
+
+The full M2 lifecycle classifier uses **six markers** to place each
+candidate's current breakout into one of four buckets (`PRE_BREAKOUT`,
+`INITIAL`, `CONFIRMED`, `LATE`, plus a `FAILED` rollback state).
+Each marker contributes directly to one or more buckets. A bucket
+fires when its required markers all agree; ties resolve toward the
+later bucket (more conservative — a `CONFIRMED` candidate flagged by
+two `LATE` markers is classified `LATE`).
+
+| # | Marker | Threshold | Tells us |
+|---|---|---|---|
+| 1 | `bars_since_pivot_break` | < 5 → `INITIAL` candidate; 5–20 → `CONFIRMED`; > 60 → `LATE` candidate | Where in the move the breakout sits — fresh, mid-cycle, or late |
+| 2 | `dist_from_50dma_pct` | < 5% → `INITIAL`; 5–15% → `CONFIRMED`; > 15% → `LATE` | Distance from the rising 50-DMA — still anchored vs over-extended |
+| 3 | `rsi_14` | 55–70 → `INITIAL`/`CONFIRMED`; > 80 → hard `LATE` flag | Momentum band — constructive vs exhausted |
+| 4 | `bb_width_over_30b_median` | < 1.0× → consolidation (potentially `PRE_BREAKOUT`); 1.0–1.8× → healthy expansion (`CONFIRMED`); > 2.0× combined with `bars_since_pivot_break < 5` → blow-off `LATE` | Volatility regime — quiet pre-move, healthy expansion, or climax |
+| 5 | `inst_flow_score_30b` | > 5 → accumulation continuing (`INITIAL`/`CONFIRMED`); ≤ 0 → distribution (`LATE` or `FAILED`) | Institutional footprint quality |
+| 6 | `pct_above_recent_pivot_low` | 3–8% above prior pivot low → `CONFIRMED`; > 25% → `LATE`; back below → `FAILED` | Trend integrity vs vertical extension vs reversal |
+
+**Bucket fire rules** (M2 design):
+
+- **`PRE_BREAKOUT`** — markers (1) [no pivot break yet], (4) [BB width
+  < 1.0× median, consolidation], (5) [inst flow ≥ 0]. Marker (3) RSI
+  must be 50–60 (rising but not yet momentum band). Surfaces
+  candidates whose Pro-Setup score is 10–12 in tight bases — the M3
+  multi-year-base detector consumes this bucket as input.
+- **`INITIAL`** — markers (1) bars-since-break < 5, (2) close < 5%
+  above 50-DMA, (3) RSI 55–70, (5) inst flow > 0. Fresh strength;
+  paired with CR-008 to define **ELITE** conviction tier.
+- **`CONFIRMED`** — markers (1) bars-since-break 5–20, (2) close
+  5–15% above 50-DMA, (3) RSI 60–75, (5) inst flow > 0. Trend
+  running but not yet stretched.
+- **`LATE`** — any of:
+  - marker (3) RSI > 80
+  - marker (2) > 15% above 50-DMA
+  - marker (4) > 2× BB width AND marker (1) bars-since-break < 5
+    (blow-off climax)
+  - marker (6) > 25% above recent pivot low
+- **`FAILED`** — marker (6) close drops back below the breakout
+  level within 10 bars of the break. Triggers the §8.2 stop-loss
+  re-evaluation.
+
+Bucket transitions are tracked over time — a stock entering
+`CONFIRMED` then deteriorating to `LATE` is a different signal from
+a stock entering `LATE` directly (the former is exhaustion of an
+otherwise-good trade; the latter is a chase).
+
+### 7.1 K1 v1 placeholder
+
+The /research page in K1 ships a **simplified 4-bucket classifier**
+(`INITIAL` / `CONFIRMED` / `LATE` / `UNKNOWN`) implemented in
+`filter/saadhana_filter/scan/research.py::_classify_lifecycle`. This
+is intentionally less rigorous than the M2 design above:
+
+- Uses only markers 1, 2, 3, 4, 5 (skips marker 6 pivot-low context)
+- No `PRE_BREAKOUT` bucket — those candidates resolve to `UNKNOWN`
+  at K1 since the M3 multi-year-base detector that consumes them
+  doesn't exist yet
+- No `FAILED` bucket — exit-side classification is not surfaced on
+  /research at K1
+- Thresholds are blunter (RSI 55–70 instead of 60–75 etc.)
+
+The K1 classifier is good enough to power the `/research` Strength
+Despite Weakness panel (the user can already act on "is this stock
+fresh, running, or extended?"). When M2 ships, the
+`research.py::_classify_lifecycle` function gets replaced by the
+full 6-marker version; the bucket names stay identical so the UI
+side does not need to change.
+
+### 7.2 Validation strategy for M2
+
+Per `§4` validation philosophy of this document — different from
+the §11 statistical gate. M2's classifier validates against the
+historical reference setups in `§2`:
+
+- For each multi-bagger window, the M2 classifier should label the
+  inflection bar (or the bar after) as `INITIAL`, NOT `LATE`.
+- For exhaustion bars (the local top of each PSU/Defense run), M2
+  should label them `LATE`, NOT `CONFIRMED`.
+- Bucket transitions during the multi-bagger run should be
+  monotonic-with-noise (`PRE_BREAKOUT` → `INITIAL` → `CONFIRMED` →
+  optional `LATE` near the top → `FAILED` at trend break), not
+  oscillating.
+
+If the classifier mislabels the inflection bar in any of the four
+reference setups, M2 doesn't ship — re-tune thresholds first.
