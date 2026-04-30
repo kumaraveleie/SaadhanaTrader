@@ -52,6 +52,8 @@ input, select, textarea {
 }
 
 /* Mobile responsive (per design_system.md §7) */
+.saadhana-nav-burger { display: none; }
+
 @media (max-width: 900px) {
   .saadhana-bento {
     grid-template-columns: 1fr !important;
@@ -71,6 +73,7 @@ input, select, textarea {
     grid-template-columns: 1fr !important;
   }
   .saadhana-nav-links { display: none !important; }
+  .saadhana-nav-burger { display: inline-flex !important; }
 }
 @media (max-width: 600px) {
   .saadhana-footer-grid {

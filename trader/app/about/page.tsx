@@ -141,7 +141,7 @@ export default function AboutPage() {
         </p>
       </Section>
 
-      <Section title="Full disclaimer">
+      <Section title="Full disclaimer" id="disclaimer">
         <p style={{ fontSize: 14, color: t.text2 }}>
           Saadhana Trader is an end-of-day research and pattern-detection
           tool for educational and analytical purposes. Information
@@ -170,10 +170,18 @@ export default function AboutPage() {
   );
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({
+  title,
+  id,
+  children,
+}: {
+  title: string;
+  id?: string;
+  children: React.ReactNode;
+}) {
   const { t } = useTheme();
   return (
-    <section style={{ marginTop: 48 }}>
+    <section id={id} style={{ marginTop: 48, scrollMarginTop: 80 }}>
       <h2
         style={{
           fontSize: 22,
