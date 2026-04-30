@@ -1,0 +1,26 @@
+{
+  "_note": "Tiny isolated fixture for unit tests. Different from data/catalysts/bse_filings_fixture.json (the runtime default). Three entries cover: in-window classified, in-window dropped (AGM notice), out-of-window dropped.",
+  "filings": [
+    {
+      "symbol": "ACME",
+      "date": "2026-04-25",
+      "title": "Q4 FY26 Results",
+      "body": "Q4 EPS up 18% YoY, beat estimates by 12%.",
+      "source_url": "https://example.com/acme-q4"
+    },
+    {
+      "symbol": "ACME",
+      "date": "2026-04-24",
+      "title": "Notice of AGM",
+      "body": "Notice of Annual General Meeting on 2026-05-30.",
+      "source_url": "https://example.com/acme-agm"
+    },
+    {
+      "symbol": "BCD",
+      "date": "2025-08-01",
+      "title": "Old buyback",
+      "body": "Board approved buyback of 1 crore shares.",
+      "source_url": "https://example.com/bcd-old"
+    }
+  ]
+}

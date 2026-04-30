@@ -1,0 +1,55 @@
+{
+  "_note": "Phase D1 hand-curated fixture for the BSE/NSE corporate-filings source. Replaced by a live scraper in Phase D2; the schema (symbol/date/title/body/source_url) is the contract any future fetcher must satisfy. Symbols chosen to mix universe constituents and known catalyst types.",
+  "_generated_for": "scan_date 2026-04-30",
+  "filings": [
+    {
+      "symbol": "RPGLIFE",
+      "date": "2026-04-25",
+      "title": "Q4 FY26 Results: Significantly improved performance",
+      "body": "RPG Life Sciences reports Q4 EPS up double-digit YoY, beat estimates by 12%. Revenue growth substantial, ahead of consensus. Management cited strong CRAMS pipeline and US generic launches.",
+      "source_url": "https://www.bseindia.com/corporates/ann.html?scrip=532983&type=AS"
+    },
+    {
+      "symbol": "SUNPHARMA",
+      "date": "2026-04-22",
+      "title": "Board approves share buyback",
+      "body": "Sun Pharma board approved a buyback of up to 1.2 crore equity shares at INR 1750 per share, total deployment ~INR 2100 crore. Buyback ratio 0.8% of paid-up capital. Open-market route.",
+      "source_url": "https://www.bseindia.com/corporates/ann.html?scrip=524715&type=AS"
+    },
+    {
+      "symbol": "INDUSTOWER",
+      "date": "2026-04-18",
+      "title": "Resignation of Managing Director and CEO",
+      "body": "The Board of Indus Towers Ltd. announces the resignation of the Managing Director with effect from 30 April 2026. A senior member of the leadership team has been appointed as the new managing director.",
+      "source_url": "https://www.bseindia.com/corporates/ann.html?scrip=534816&type=AS"
+    },
+    {
+      "symbol": "ATUL",
+      "date": "2026-04-15",
+      "title": "Q4 FY26 Quarterly Results - margin expansion",
+      "body": "Atul Ltd. reports Q4 EPS up double-digit YoY, exceeded consensus estimates. Specialty chemicals segment delivered major margin expansion. EBITDA margin up significantly vs prior year.",
+      "source_url": "https://www.bseindia.com/corporates/ann.html?scrip=500027&type=AS"
+    },
+    {
+      "symbol": "BHARATFORG",
+      "date": "2026-03-28",
+      "title": "Acquisition of US-based defense components subsidiary",
+      "body": "Bharat Forge announced the acquisition of XYZ Defense Components LLC for USD 120 million via scheme of arrangement. Acquired entity manufactures titanium alloy parts for US defense primes; expands the company's US defense segment substantially.",
+      "source_url": "https://www.bseindia.com/corporates/ann.html?scrip=500493&type=AS"
+    },
+    {
+      "symbol": "DIVISLAB",
+      "date": "2026-04-10",
+      "title": "Q4 FY26 quarterly results announcement",
+      "body": "Divis Laboratories Q4 FY26 results filed. Revenue ahead of last year. Management did not provide forward guidance. No exceptional items.",
+      "source_url": "https://www.bseindia.com/corporates/ann.html?scrip=532488&type=AS"
+    },
+    {
+      "symbol": "VEDL",
+      "date": "2026-02-05",
+      "title": "Notice of Annual General Meeting",
+      "body": "Notice is hereby given that the Annual General Meeting of the members will be held on 15 March 2026. Routine board governance matters; no operational catalyst.",
+      "source_url": "https://www.bseindia.com/corporates/ann.html?scrip=500295&type=AS"
+    }
+  ]
+}
