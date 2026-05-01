@@ -3,9 +3,9 @@
   "spec_version": "2.0",
   "universe_size": 399,
   "tier1_passed": 398,
-  "nifty_close_today": 24177.650390625,
-  "nifty_close_yesterday": 23995.69921875,
-  "nifty_pct_change_today": 0.007582657634449142,
+  "nifty_close_today": 23997.55078125,
+  "nifty_close_yesterday": 24177.650390625,
+  "nifty_pct_change_today": -0.007449012061355412,
   "sector_strength": [
     {
       "sector": "TELECOMMUNICATION",
@@ -14,9 +14,9 @@
       "sector_index_change_5d": 0.02575717464010862,
       "sector_index_change_20d": 0.13549407245831915,
       "sector_index_change_60d": 0.12450310154809238,
-      "rs_5d": 1.0342614015174874,
-      "rs_20d": 1.0717137386668807,
-      "rs_60d": 1.1786919124204127,
+      "rs_5d": 1.033258789525324,
+      "rs_20d": 1.056656698193567,
+      "rs_60d": 1.1911062336216858,
       "breadth_above_50dma": 0.7,
       "breadth_above_200dma": 0.4,
       "sector_phase": "Confirming",
@@ -87,9 +87,9 @@
       "sector_index_change_5d": 0.015487924936909632,
       "sector_index_change_20d": 0.09904419406600494,
       "sector_index_change_60d": 0.047462976044970545,
-      "rs_5d": 1.0239070127272845,
-      "rs_20d": 1.0373112381225953,
-      "rs_60d": 1.0979392913406034,
+      "rs_5d": 1.0229144382694981,
+      "rs_20d": 1.0227375355261692,
+      "rs_60d": 1.1095031027815516,
       "breadth_above_50dma": 0.7058823529411765,
       "breadth_above_200dma": 0.35294117647058826,
       "sector_phase": "Confirming",
@@ -136,10 +136,21 @@
       "sector_count": 17,
       "rank_by_inst_flow": 13,
       "catalyst_rollup": {
-        "fresh_count": 0,
+        "fresh_count": 1,
         "recent_count": 0,
         "high_conviction_count": 0,
-        "highlights": []
+        "highlights": [
+          {
+            "symbol": "RELIANCE",
+            "type": "fii_increase",
+            "date": "2026-04-21",
+            "days_old": 10,
+            "freshness": "FRESH",
+            "source_url": "https://www.nseindia.com/companies-listing/corporate-filings-shareholding-pattern?symbol=RELIANCE",
+            "detail": "FII +0.8pp QoQ to 23.5% (Q4 FY26)",
+            "magnitude_score": 2
+          }
+        ]
       }
     },
     {
@@ -149,9 +160,9 @@
       "sector_index_change_5d": 0.02338455935717105,
       "sector_index_change_20d": 0.18236749473742225,
       "sector_index_change_60d": 0.13446567914135987,
-      "rs_5d": 1.0318691156349598,
-      "rs_20d": 1.115954296018353,
-      "rs_60d": 1.1891345778251403,
+      "rs_5d": 1.0308688227223939,
+      "rs_20d": 1.100275697904627,
+      "rs_60d": 1.2016588841727995,
       "breadth_above_50dma": 1.0,
       "breadth_above_200dma": 0.9411764705882353,
       "sector_phase": "Confirming",
@@ -211,9 +222,9 @@
       "sector_index_change_5d": 0.04196360524383791,
       "sector_index_change_20d": 0.23526356761624334,
       "sector_index_change_60d": 0.3218074853700906,
-      "rs_5d": 1.0506021944889719,
-      "rs_20d": 1.1658792136385971,
-      "rs_60d": 1.3855042201640886,
+      "rs_5d": 1.049583741748067,
+      "rs_20d": 1.1494991954738696,
+      "rs_60d": 1.4000967478921498,
       "breadth_above_50dma": 1.0,
       "breadth_above_200dma": 0.8823529411764706,
       "sector_phase": "Confirming",
@@ -260,61 +271,10 @@
       "sector_count": 17,
       "rank_by_inst_flow": 2,
       "catalyst_rollup": {
-        "fresh_count": 17,
+        "fresh_count": 0,
         "recent_count": 0,
-        "high_conviction_count": 17,
-        "highlights": [
-          {
-            "symbol": "ACMESOLAR",
-            "type": "sector_momentum",
-            "date": "2026-05-01",
-            "days_old": 0,
-            "freshness": "FRESH",
-            "source_url": "https://www.nseindia.com/market-data/sectors-overview?sector=POWER",
-            "detail": "Power +4.20% over 5d, 100% of constituents above 50-DMA",
-            "magnitude_score": 10
-          },
-          {
-            "symbol": "ADANIENSOL",
-            "type": "sector_momentum",
-            "date": "2026-05-01",
-            "days_old": 0,
-            "freshness": "FRESH",
-            "source_url": "https://www.nseindia.com/market-data/sectors-overview?sector=POWER",
-            "detail": "Power +4.20% over 5d, 100% of constituents above 50-DMA",
-            "magnitude_score": 10
-          },
-          {
-            "symbol": "ADANIGREEN",
-            "type": "sector_momentum",
-            "date": "2026-05-01",
-            "days_old": 0,
-            "freshness": "FRESH",
-            "source_url": "https://www.nseindia.com/market-data/sectors-overview?sector=POWER",
-            "detail": "Power +4.20% over 5d, 100% of constituents above 50-DMA",
-            "magnitude_score": 10
-          },
-          {
-            "symbol": "ADANIPOWER",
-            "type": "sector_momentum",
-            "date": "2026-05-01",
-            "days_old": 0,
-            "freshness": "FRESH",
-            "source_url": "https://www.nseindia.com/market-data/sectors-overview?sector=POWER",
-            "detail": "Power +4.20% over 5d, 100% of constituents above 50-DMA",
-            "magnitude_score": 10
-          },
-          {
-            "symbol": "CESC",
-            "type": "sector_momentum",
-            "date": "2026-05-01",
-            "days_old": 0,
-            "freshness": "FRESH",
-            "source_url": "https://www.nseindia.com/market-data/sectors-overview?sector=POWER",
-            "detail": "Power +4.20% over 5d, 100% of constituents above 50-DMA",
-            "magnitude_score": 10
-          }
-        ]
+        "high_conviction_count": 0,
+        "highlights": []
       }
     },
     {
@@ -324,9 +284,9 @@
       "sector_index_change_5d": 0.022205016831324722,
       "sector_index_change_20d": 0.10801884412670915,
       "sector_index_change_60d": 0.09480377210370036,
-      "rs_5d": 1.0306797938967431,
-      "rs_20d": 1.0457817850000095,
-      "rs_60d": 1.1475613985319035,
+      "rs_5d": 1.0296806539115082,
+      "rs_20d": 1.0310890754686506,
+      "rs_60d": 1.1596478442344986,
       "breadth_above_50dma": 0.7692307692307693,
       "breadth_above_200dma": 0.38461538461538464,
       "sector_phase": "Confirming",
@@ -397,9 +357,9 @@
       "sector_index_change_5d": 0.0030547650177704475,
       "sector_index_change_20d": 0.16155092601274845,
       "sector_index_change_60d": 0.06501635233604941,
-      "rs_5d": 1.0113707734289614,
-      "rs_20d": 1.0963069872078042,
-      "rs_60d": 1.116338549325293,
+      "rs_5d": 1.0103903515893033,
+      "rs_20d": 1.0809044239280818,
+      "rs_60d": 1.1280961470271633,
       "breadth_above_50dma": 0.7272727272727273,
       "breadth_above_200dma": 0.18181818181818182,
       "sector_phase": "Confirming",
@@ -459,9 +419,9 @@
       "sector_index_change_5d": -0.015218792460107126,
       "sector_index_change_20d": 0.07805995030404089,
       "sector_index_change_60d": 0.039687687370305154,
-      "rs_5d": 0.99294571569109,
-      "rs_20d": 1.0175056725272213,
-      "rs_60d": 1.089789318374815,
+      "rs_5d": 0.9919831550844017,
+      "rs_20d": 1.0032102281932462,
+      "rs_60d": 1.1012672919635538,
       "breadth_above_50dma": 0.5151515151515151,
       "breadth_above_200dma": 0.45454545454545453,
       "sector_phase": "Confirming",
@@ -532,9 +492,9 @@
       "sector_index_change_5d": 0.017377442598579013,
       "sector_index_change_20d": 0.12377336760564017,
       "sector_index_change_60d": 0.14568505659794723,
-      "rs_5d": 1.025812195779634,
-      "rs_20d": 1.0606513820045682,
-      "rs_60d": 1.2008946071681148,
+      "rs_5d": 1.0248177744392584,
+      "rs_20d": 1.0457497620936538,
+      "rs_60d": 1.2135427735169004,
       "breadth_above_50dma": 1.0,
       "breadth_above_200dma": 0.4,
       "sector_phase": "Confirming",
@@ -594,9 +554,9 @@
       "sector_index_change_5d": 0.00412173592681027,
       "sector_index_change_20d": 0.11606224414926894,
       "sector_index_change_60d": 0.12272534635713983,
-      "rs_5d": 1.012446590254858,
-      "rs_20d": 1.053373389851903,
-      "rs_60d": 1.1768284887776015,
+      "rs_5d": 1.0114651255194198,
+      "rs_20d": 1.0385740220802058,
+      "rs_60d": 1.189223183866748,
       "breadth_above_50dma": 0.8571428571428571,
       "breadth_above_200dma": 0.35714285714285715,
       "sector_phase": "Confirming",
@@ -656,9 +616,9 @@
       "sector_index_change_5d": 0.021201521408039884,
       "sector_index_change_20d": 0.18510194364528543,
       "sector_index_change_60d": 0.24887031195020773,
-      "rs_5d": 1.0296679788116891,
-      "rs_20d": 1.118535151817886,
-      "rs_60d": 1.309052268803113,
+      "rs_5d": 1.0286698196790094,
+      "rs_20d": 1.102820293974694,
+      "rs_60d": 1.322839582657508,
       "breadth_above_50dma": 0.864406779661017,
       "breadth_above_200dma": 0.711864406779661,
       "sector_phase": "Confirming",
@@ -718,9 +678,9 @@
       "sector_index_change_5d": 0.018596479542278093,
       "sector_index_change_20d": 0.06987037424084595,
       "sector_index_change_60d": 0.08278178171811686,
-      "rs_5d": 1.0270413393713755,
-      "rs_20d": 1.0097761022954879,
-      "rs_60d": 1.1349600790520595,
+      "rs_5d": 1.0260457265004028,
+      "rs_20d": 0.9955892545462365,
+      "rs_60d": 1.1469138040445739,
       "breadth_above_50dma": 0.782608695652174,
       "breadth_above_200dma": 0.43478260869565216,
       "sector_phase": "Confirming",
@@ -767,7 +727,7 @@
       "sector_count": 46,
       "rank_by_inst_flow": 16,
       "catalyst_rollup": {
-        "fresh_count": 0,
+        "fresh_count": 1,
         "recent_count": 1,
         "high_conviction_count": 0,
         "highlights": [
@@ -780,6 +740,16 @@
             "source_url": "https://www.bseindia.com/corporates/ann.html?scrip=524715&type=AS",
             "detail": "Sun Pharma board approved a buyback of up to 1.2 crore equity shares at INR 1750 per share, total deployment ~INR 2100 crore. Buyback ratio 0.8% of paid-up capital. Open-market route.",
             "magnitude_score": 6
+          },
+          {
+            "symbol": "DIVISLAB",
+            "type": "fii_increase",
+            "date": "2026-04-21",
+            "days_old": 10,
+            "freshness": "FRESH",
+            "source_url": "https://www.nseindia.com/companies-listing/corporate-filings-shareholding-pattern?symbol=DIVISLAB",
+            "detail": "FII +1.4pp QoQ to 24.8% (Q4 FY26)",
+            "magnitude_score": 3
           }
         ]
       }
@@ -791,9 +761,9 @@
       "sector_index_change_5d": -0.01573703523566692,
       "sector_index_change_20d": 0.08897490958055157,
       "sector_index_change_60d": 0.03735651252716061,
-      "rs_5d": 0.9924231763293109,
-      "rs_20d": 1.027807542081063,
-      "rs_60d": 1.0873458062757648,
+      "rs_5d": 0.9914611222717694,
+      "rs_20d": 1.0133673616471142,
+      "rs_60d": 1.0987980440944205,
       "breadth_above_50dma": 0.7142857142857143,
       "breadth_above_200dma": 0.5,
       "sector_phase": "Confirming",
@@ -853,9 +823,9 @@
       "sector_index_change_5d": 0.003510596933725422,
       "sector_index_change_20d": 0.09054585419621296,
       "sector_index_change_60d": 0.043298648934506,
-      "rs_5d": 1.0118303845025254,
-      "rs_20d": 1.0292902472471446,
-      "rs_60d": 1.0935742889862123,
+      "rs_5d": 1.0108495171163414,
+      "rs_20d": 1.0148292355493143,
+      "rs_60d": 1.1050921269707374,
       "breadth_above_50dma": 0.7777777777777778,
       "breadth_above_200dma": 0.4444444444444444,
       "sector_phase": "Confirming",
@@ -902,10 +872,21 @@
       "sector_count": 27,
       "rank_by_inst_flow": 9,
       "catalyst_rollup": {
-        "fresh_count": 0,
+        "fresh_count": 1,
         "recent_count": 0,
         "high_conviction_count": 0,
-        "highlights": []
+        "highlights": [
+          {
+            "symbol": "HINDUNILVR",
+            "type": "dii_increase",
+            "date": "2026-04-21",
+            "days_old": 10,
+            "freshness": "FRESH",
+            "source_url": "https://www.nseindia.com/companies-listing/corporate-filings-shareholding-pattern?symbol=HINDUNILVR",
+            "detail": "DII +0.7pp QoQ to 14.4% (Q4 FY26)",
+            "magnitude_score": 1
+          }
+        ]
       }
     },
     {
@@ -915,9 +896,9 @@
       "sector_index_change_5d": -0.030637566753988328,
       "sector_index_change_20d": 0.06601571547899517,
       "sector_index_change_60d": -0.16859719975401954,
-      "rs_5d": 0.9773991092376997,
-      "rs_20d": 1.0061379584661638,
-      "rs_60d": 0.8714673665768543,
+      "rs_5d": 0.9764516194961184,
+      "rs_20d": 0.992002224812878,
+      "rs_60d": 0.8806459107673347,
       "breadth_above_50dma": 0.46153846153846156,
       "breadth_above_200dma": 0.07692307692307693,
       "sector_phase": "Confirming",
@@ -964,10 +945,21 @@
       "sector_count": 26,
       "rank_by_inst_flow": 8,
       "catalyst_rollup": {
-        "fresh_count": 0,
+        "fresh_count": 1,
         "recent_count": 0,
         "high_conviction_count": 0,
-        "highlights": []
+        "highlights": [
+          {
+            "symbol": "TCS",
+            "type": "dii_increase",
+            "date": "2026-04-21",
+            "days_old": 10,
+            "freshness": "FRESH",
+            "source_url": "https://www.nseindia.com/companies-listing/corporate-filings-shareholding-pattern?symbol=TCS",
+            "detail": "DII +1.1pp QoQ to 18.2% (Q4 FY26)",
+            "magnitude_score": 2
+          }
+        ]
       }
     },
     {
@@ -977,9 +969,9 @@
       "sector_index_change_5d": 0.00980491188049033,
       "sector_index_change_20d": 0.1557113632134952,
       "sector_index_change_60d": 0.10399150983010087,
-      "rs_5d": 1.0181768836149665,
-      "rs_20d": 1.0907954307571233,
-      "rs_60d": 1.157191885221215,
+      "rs_5d": 1.0171898639387436,
+      "rs_20d": 1.075470302081022,
+      "rs_60d": 1.1693797619710802,
       "breadth_above_50dma": 1.0,
       "breadth_above_200dma": 0.4166666666666667,
       "sector_phase": "Confirming",
@@ -1039,9 +1031,9 @@
       "sector_index_change_5d": -0.02381858094545913,
       "sector_index_change_20d": 0.08214160822272966,
       "sector_index_change_60d": -0.030313177235186547,
-      "rs_5d": 0.9842746290913451,
-      "rs_20d": 1.021358065044363,
-      "rs_60d": 1.016415173955525,
+      "rs_5d": 0.983320474227535,
+      "rs_20d": 1.0070084965278225,
+      "rs_60d": 1.0271203500158415,
       "breadth_above_50dma": 0.6818181818181818,
       "breadth_above_200dma": 0.09090909090909091,
       "sector_phase": "Confirming",
@@ -1101,9 +1093,9 @@
       "sector_index_change_5d": -0.02314752145279205,
       "sector_index_change_20d": 0.0492083671613785,
       "sector_index_change_60d": -0.08830710448089973,
-      "rs_5d": 0.9849512521250868,
-      "rs_20d": 0.9902746734526611,
-      "rs_60d": 0.9556265705982612,
+      "rs_5d": 0.9839964413435689,
+      "rs_20d": 0.9763618109970378,
+      "rs_60d": 0.9656915036574153,
       "breadth_above_50dma": 0.4,
       "breadth_above_200dma": 0.2,
       "sector_phase": "Confirming",
@@ -1253,20 +1245,10 @@
       "rvol_today": 0.5027250843045401,
       "pro_setup_score": 6,
       "lifecycle": "LATE",
-      "catalysts": [
-        {
-          "type": "sector_momentum",
-          "date": "2026-05-01",
-          "days_old": 0,
-          "freshness": "FRESH",
-          "source_url": "https://www.nseindia.com/market-data/sectors-overview?sector=POWER",
-          "detail": "Power +4.20% over 5d, 100% of constituents above 50-DMA",
-          "magnitude_score": 10
-        }
-      ],
-      "catalyst_count_fresh": 1,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
       "catalyst_count_recent": 0,
-      "has_high_conviction_catalyst": true
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "AIAENG",
@@ -1438,20 +1420,10 @@
       "rvol_today": 0.9947912790539835,
       "pro_setup_score": 7,
       "lifecycle": "LATE",
-      "catalysts": [
-        {
-          "type": "sector_momentum",
-          "date": "2026-05-01",
-          "days_old": 0,
-          "freshness": "FRESH",
-          "source_url": "https://www.nseindia.com/market-data/sectors-overview?sector=POWER",
-          "detail": "Power +4.20% over 5d, 100% of constituents above 50-DMA",
-          "magnitude_score": 10
-        }
-      ],
-      "catalyst_count_fresh": 1,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
       "catalyst_count_recent": 0,
-      "has_high_conviction_catalyst": true
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ADANIENT",
@@ -1498,20 +1470,10 @@
       "rvol_today": 1.0271706463251193,
       "pro_setup_score": 7,
       "lifecycle": "LATE",
-      "catalysts": [
-        {
-          "type": "sector_momentum",
-          "date": "2026-05-01",
-          "days_old": 0,
-          "freshness": "FRESH",
-          "source_url": "https://www.nseindia.com/market-data/sectors-overview?sector=POWER",
-          "detail": "Power +4.20% over 5d, 100% of constituents above 50-DMA",
-          "magnitude_score": 10
-        }
-      ],
-      "catalyst_count_fresh": 1,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
       "catalyst_count_recent": 0,
-      "has_high_conviction_catalyst": true
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ADANIPORTS",
@@ -1558,20 +1520,10 @@
       "rvol_today": 1.195414181854077,
       "pro_setup_score": 9,
       "lifecycle": "LATE",
-      "catalysts": [
-        {
-          "type": "sector_momentum",
-          "date": "2026-05-01",
-          "days_old": 0,
-          "freshness": "FRESH",
-          "source_url": "https://www.nseindia.com/market-data/sectors-overview?sector=POWER",
-          "detail": "Power +4.20% over 5d, 100% of constituents above 50-DMA",
-          "magnitude_score": 10
-        }
-      ],
-      "catalyst_count_fresh": 1,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
       "catalyst_count_recent": 0,
-      "has_high_conviction_catalyst": true
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ATGL",
@@ -2938,20 +2890,10 @@
       "rvol_today": 1.5501010153881787,
       "pro_setup_score": 8,
       "lifecycle": "LATE",
-      "catalysts": [
-        {
-          "type": "sector_momentum",
-          "date": "2026-05-01",
-          "days_old": 0,
-          "freshness": "FRESH",
-          "source_url": "https://www.nseindia.com/market-data/sectors-overview?sector=POWER",
-          "detail": "Power +4.20% over 5d, 100% of constituents above 50-DMA",
-          "magnitude_score": 10
-        }
-      ],
-      "catalyst_count_fresh": 1,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
       "catalyst_count_recent": 0,
-      "has_high_conviction_catalyst": true
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "CGPOWER",
@@ -3773,8 +3715,18 @@
       "rvol_today": 0.8399141079115169,
       "pro_setup_score": 8,
       "lifecycle": "UNKNOWN",
-      "catalysts": [],
-      "catalyst_count_fresh": 0,
+      "catalysts": [
+        {
+          "type": "fii_increase",
+          "date": "2026-04-21",
+          "days_old": 10,
+          "freshness": "FRESH",
+          "source_url": "https://www.nseindia.com/companies-listing/corporate-filings-shareholding-pattern?symbol=DIVISLAB",
+          "detail": "FII +1.4pp QoQ to 24.8% (Q4 FY26)",
+          "magnitude_score": 3
+        }
+      ],
+      "catalyst_count_fresh": 1,
       "catalyst_count_recent": 0,
       "has_high_conviction_catalyst": false
     },
@@ -5248,8 +5200,18 @@
       "rvol_today": 0.7762089147006856,
       "pro_setup_score": 8,
       "lifecycle": "UNKNOWN",
-      "catalysts": [],
-      "catalyst_count_fresh": 0,
+      "catalysts": [
+        {
+          "type": "dii_increase",
+          "date": "2026-04-21",
+          "days_old": 10,
+          "freshness": "FRESH",
+          "source_url": "https://www.nseindia.com/companies-listing/corporate-filings-shareholding-pattern?symbol=HINDUNILVR",
+          "detail": "DII +0.7pp QoQ to 14.4% (Q4 FY26)",
+          "magnitude_score": 1
+        }
+      ],
+      "catalyst_count_fresh": 1,
       "catalyst_count_recent": 0,
       "has_high_conviction_catalyst": false
     },
@@ -6008,20 +5970,10 @@
       "rvol_today": 1.34254035890046,
       "pro_setup_score": 10,
       "lifecycle": "LATE",
-      "catalysts": [
-        {
-          "type": "sector_momentum",
-          "date": "2026-05-01",
-          "days_old": 0,
-          "freshness": "FRESH",
-          "source_url": "https://www.nseindia.com/market-data/sectors-overview?sector=POWER",
-          "detail": "Power +4.20% over 5d, 100% of constituents above 50-DMA",
-          "magnitude_score": 10
-        }
-      ],
-      "catalyst_count_fresh": 1,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
       "catalyst_count_recent": 0,
-      "has_high_conviction_catalyst": true
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "JSWINFRA",
@@ -6093,20 +6045,10 @@
       "rvol_today": 1.0218658501431384,
       "pro_setup_score": 11,
       "lifecycle": "LATE",
-      "catalysts": [
-        {
-          "type": "sector_momentum",
-          "date": "2026-05-01",
-          "days_old": 0,
-          "freshness": "FRESH",
-          "source_url": "https://www.nseindia.com/market-data/sectors-overview?sector=POWER",
-          "detail": "Power +4.20% over 5d, 100% of constituents above 50-DMA",
-          "magnitude_score": 10
-        }
-      ],
-      "catalyst_count_fresh": 1,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
       "catalyst_count_recent": 0,
-      "has_high_conviction_catalyst": true
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "JINDALSAW",
@@ -7228,20 +7170,10 @@
       "rvol_today": 1.7224107544835179,
       "pro_setup_score": 9,
       "lifecycle": "UNKNOWN",
-      "catalysts": [
-        {
-          "type": "sector_momentum",
-          "date": "2026-05-01",
-          "days_old": 0,
-          "freshness": "FRESH",
-          "source_url": "https://www.nseindia.com/market-data/sectors-overview?sector=POWER",
-          "detail": "Power +4.20% over 5d, 100% of constituents above 50-DMA",
-          "magnitude_score": 10
-        }
-      ],
-      "catalyst_count_fresh": 1,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
       "catalyst_count_recent": 0,
-      "has_high_conviction_catalyst": true
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "NLCINDIA",
@@ -7263,20 +7195,10 @@
       "rvol_today": 1.9982047094350208,
       "pro_setup_score": 9,
       "lifecycle": "LATE",
-      "catalysts": [
-        {
-          "type": "sector_momentum",
-          "date": "2026-05-01",
-          "days_old": 0,
-          "freshness": "FRESH",
-          "source_url": "https://www.nseindia.com/market-data/sectors-overview?sector=POWER",
-          "detail": "Power +4.20% over 5d, 100% of constituents above 50-DMA",
-          "magnitude_score": 10
-        }
-      ],
-      "catalyst_count_fresh": 1,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
       "catalyst_count_recent": 0,
-      "has_high_conviction_catalyst": true
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "NMDC",
@@ -7348,20 +7270,10 @@
       "rvol_today": 0.6735911824898563,
       "pro_setup_score": 11,
       "lifecycle": "CONFIRMED",
-      "catalysts": [
-        {
-          "type": "sector_momentum",
-          "date": "2026-05-01",
-          "days_old": 0,
-          "freshness": "FRESH",
-          "source_url": "https://www.nseindia.com/market-data/sectors-overview?sector=POWER",
-          "detail": "Power +4.20% over 5d, 100% of constituents above 50-DMA",
-          "magnitude_score": 10
-        }
-      ],
-      "catalyst_count_fresh": 1,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
       "catalyst_count_recent": 0,
-      "has_high_conviction_catalyst": true
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "NTPC",
@@ -7383,20 +7295,10 @@
       "rvol_today": 0.6054051505935885,
       "pro_setup_score": 6,
       "lifecycle": "UNKNOWN",
-      "catalysts": [
-        {
-          "type": "sector_momentum",
-          "date": "2026-05-01",
-          "days_old": 0,
-          "freshness": "FRESH",
-          "source_url": "https://www.nseindia.com/market-data/sectors-overview?sector=POWER",
-          "detail": "Power +4.20% over 5d, 100% of constituents above 50-DMA",
-          "magnitude_score": 10
-        }
-      ],
-      "catalyst_count_fresh": 1,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
       "catalyst_count_recent": 0,
-      "has_high_conviction_catalyst": true
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "NH",
@@ -7468,20 +7370,10 @@
       "rvol_today": 0.6538461478439034,
       "pro_setup_score": 7,
       "lifecycle": "UNKNOWN",
-      "catalysts": [
-        {
-          "type": "sector_momentum",
-          "date": "2026-05-01",
-          "days_old": 0,
-          "freshness": "FRESH",
-          "source_url": "https://www.nseindia.com/market-data/sectors-overview?sector=POWER",
-          "detail": "Power +4.20% over 5d, 100% of constituents above 50-DMA",
-          "magnitude_score": 10
-        }
-      ],
-      "catalyst_count_fresh": 1,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
       "catalyst_count_recent": 0,
-      "has_high_conviction_catalyst": true
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "NAVINFLUOR",
@@ -8228,20 +8120,10 @@
       "rvol_today": 0.581676548362455,
       "pro_setup_score": 6,
       "lifecycle": "UNKNOWN",
-      "catalysts": [
-        {
-          "type": "sector_momentum",
-          "date": "2026-05-01",
-          "days_old": 0,
-          "freshness": "FRESH",
-          "source_url": "https://www.nseindia.com/market-data/sectors-overview?sector=POWER",
-          "detail": "Power +4.20% over 5d, 100% of constituents above 50-DMA",
-          "magnitude_score": 10
-        }
-      ],
-      "catalyst_count_fresh": 1,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
       "catalyst_count_recent": 0,
-      "has_high_conviction_catalyst": true
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "PREMIERENE",
@@ -8538,8 +8420,18 @@
       "rvol_today": 2.311339909676559,
       "pro_setup_score": 9,
       "lifecycle": "UNKNOWN",
-      "catalysts": [],
-      "catalyst_count_fresh": 0,
+      "catalysts": [
+        {
+          "type": "fii_increase",
+          "date": "2026-04-21",
+          "days_old": 10,
+          "freshness": "FRESH",
+          "source_url": "https://www.nseindia.com/companies-listing/corporate-filings-shareholding-pattern?symbol=RELIANCE",
+          "detail": "FII +0.8pp QoQ to 23.5% (Q4 FY26)",
+          "magnitude_score": 2
+        }
+      ],
+      "catalyst_count_fresh": 1,
       "catalyst_count_recent": 0,
       "has_high_conviction_catalyst": false
     },
@@ -8563,20 +8455,10 @@
       "rvol_today": 0.8016049690628682,
       "pro_setup_score": 8,
       "lifecycle": "LATE",
-      "catalysts": [
-        {
-          "type": "sector_momentum",
-          "date": "2026-05-01",
-          "days_old": 0,
-          "freshness": "FRESH",
-          "source_url": "https://www.nseindia.com/market-data/sectors-overview?sector=POWER",
-          "detail": "Power +4.20% over 5d, 100% of constituents above 50-DMA",
-          "magnitude_score": 10
-        }
-      ],
-      "catalyst_count_fresh": 1,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
       "catalyst_count_recent": 0,
-      "has_high_conviction_catalyst": true
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "SJVN",
@@ -8598,20 +8480,10 @@
       "rvol_today": 1.2208425641781109,
       "pro_setup_score": 10,
       "lifecycle": "UNKNOWN",
-      "catalysts": [
-        {
-          "type": "sector_momentum",
-          "date": "2026-05-01",
-          "days_old": 0,
-          "freshness": "FRESH",
-          "source_url": "https://www.nseindia.com/market-data/sectors-overview?sector=POWER",
-          "detail": "Power +4.20% over 5d, 100% of constituents above 50-DMA",
-          "magnitude_score": 10
-        }
-      ],
-      "catalyst_count_fresh": 1,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
       "catalyst_count_recent": 0,
-      "has_high_conviction_catalyst": true
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "SRF",
@@ -9468,8 +9340,18 @@
       "rvol_today": 1.037663971368157,
       "pro_setup_score": 2,
       "lifecycle": "UNKNOWN",
-      "catalysts": [],
-      "catalyst_count_fresh": 0,
+      "catalysts": [
+        {
+          "type": "dii_increase",
+          "date": "2026-04-21",
+          "days_old": 10,
+          "freshness": "FRESH",
+          "source_url": "https://www.nseindia.com/companies-listing/corporate-filings-shareholding-pattern?symbol=TCS",
+          "detail": "DII +1.1pp QoQ to 18.2% (Q4 FY26)",
+          "magnitude_score": 2
+        }
+      ],
+      "catalyst_count_fresh": 1,
       "catalyst_count_recent": 0,
       "has_high_conviction_catalyst": false
     },
@@ -9543,20 +9425,10 @@
       "rvol_today": 1.9969765460525357,
       "pro_setup_score": 10,
       "lifecycle": "LATE",
-      "catalysts": [
-        {
-          "type": "sector_momentum",
-          "date": "2026-05-01",
-          "days_old": 0,
-          "freshness": "FRESH",
-          "source_url": "https://www.nseindia.com/market-data/sectors-overview?sector=POWER",
-          "detail": "Power +4.20% over 5d, 100% of constituents above 50-DMA",
-          "magnitude_score": 10
-        }
-      ],
-      "catalyst_count_fresh": 1,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
       "catalyst_count_recent": 0,
-      "has_high_conviction_catalyst": true
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "TATASTEEL",
@@ -9903,20 +9775,10 @@
       "rvol_today": 1.2409486844833317,
       "pro_setup_score": 7,
       "lifecycle": "LATE",
-      "catalysts": [
-        {
-          "type": "sector_momentum",
-          "date": "2026-05-01",
-          "days_old": 0,
-          "freshness": "FRESH",
-          "source_url": "https://www.nseindia.com/market-data/sectors-overview?sector=POWER",
-          "detail": "Power +4.20% over 5d, 100% of constituents above 50-DMA",
-          "magnitude_score": 10
-        }
-      ],
-      "catalyst_count_fresh": 1,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
       "catalyst_count_recent": 0,
-      "has_high_conviction_catalyst": true
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "TARIL",

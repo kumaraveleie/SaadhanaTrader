@@ -1,0 +1,69 @@
+{
+  "_note": "Phase D1 fixture for the NSE shareholding-pattern source. Replaced by a live NSE scraper in Phase D2; the schema (symbol/filing_date/quarter/category/delta_pp/new_pct/source_url) is the contract any future fetcher must satisfy.",
+  "_generated_for": "scan_date 2026-05-01",
+  "disclosures": [
+    {
+      "symbol": "DIVISLAB",
+      "filing_date": "2026-04-21",
+      "quarter": "Q4 FY26",
+      "category": "FII",
+      "delta_pp": 1.4,
+      "new_pct": 24.8,
+      "source_url": "https://www.nseindia.com/companies-listing/corporate-filings-shareholding-pattern?symbol=DIVISLAB"
+    },
+    {
+      "symbol": "RELIANCE",
+      "filing_date": "2026-04-21",
+      "quarter": "Q4 FY26",
+      "category": "FII",
+      "delta_pp": 0.8,
+      "new_pct": 23.5,
+      "source_url": "https://www.nseindia.com/companies-listing/corporate-filings-shareholding-pattern?symbol=RELIANCE"
+    },
+    {
+      "symbol": "TCS",
+      "filing_date": "2026-04-21",
+      "quarter": "Q4 FY26",
+      "category": "DII",
+      "delta_pp": 1.1,
+      "new_pct": 18.2,
+      "source_url": "https://www.nseindia.com/companies-listing/corporate-filings-shareholding-pattern?symbol=TCS"
+    },
+    {
+      "symbol": "HINDUNILVR",
+      "filing_date": "2026-04-21",
+      "quarter": "Q4 FY26",
+      "category": "DII",
+      "delta_pp": 0.7,
+      "new_pct": 14.4,
+      "source_url": "https://www.nseindia.com/companies-listing/corporate-filings-shareholding-pattern?symbol=HINDUNILVR"
+    },
+    {
+      "symbol": "ITC",
+      "filing_date": "2026-04-21",
+      "quarter": "Q4 FY26",
+      "category": "PROMOTER",
+      "delta_pp": 2.5,
+      "new_pct": 31.5,
+      "source_url": "https://www.nseindia.com/companies-listing/corporate-filings-shareholding-pattern?symbol=ITC"
+    },
+    {
+      "symbol": "M_AND_M",
+      "filing_date": "2026-04-21",
+      "quarter": "Q4 FY26",
+      "category": "PROMOTER",
+      "delta_pp": 0.6,
+      "new_pct": 19.8,
+      "source_url": "https://www.nseindia.com/companies-listing/corporate-filings-shareholding-pattern?symbol=M%26M"
+    },
+    {
+      "symbol": "INFY",
+      "filing_date": "2026-04-21",
+      "quarter": "Q4 FY26",
+      "category": "FII",
+      "delta_pp": 0.2,
+      "new_pct": 33.2,
+      "source_url": "https://www.nseindia.com/companies-listing/corporate-filings-shareholding-pattern?symbol=INFY"
+    }
+  ]
+}

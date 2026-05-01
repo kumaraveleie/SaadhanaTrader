@@ -30,6 +30,10 @@ from saadhana_filter.catalysts.sources.bse_filings import (
 from saadhana_filter.catalysts.sources.sector_momentum import (
     build_sector_momentum_catalysts,
 )
+from saadhana_filter.catalysts.sources.shareholding import (
+    build_shareholding_catalysts,
+    fixture_fetcher as shareholding_fixture_fetcher,
+)
 from saadhana_filter.catalysts.types import Catalyst, CatalystSummary
 
 
@@ -52,6 +56,12 @@ def build_all_catalysts(
         fetcher=bse_fixture_fetcher(),
     )
 
+    # Source 2 — NSE shareholding pattern QoQ deltas
+    shareholding = build_shareholding_catalysts(
+        today=today,
+        fetcher=shareholding_fixture_fetcher(),
+    )
+
     # Source 5 — sector momentum (only when caller provides sector data)
     sector_momentum: dict[str, list[Catalyst]] = {}
     if sector_aggregates is not None and sector_constituents is not None:
@@ -61,7 +71,11 @@ def build_all_catalysts(
             sector_constituents=sector_constituents,
         )
 
-    sources: list[dict[str, list[Catalyst]]] = [bse_filings, sector_momentum]
+    sources: list[dict[str, list[Catalyst]]] = [
+        bse_filings,
+        shareholding,
+        sector_momentum,
+    ]
 
     all_symbols: set[str] = set()
     for source in sources:

@@ -39,13 +39,24 @@ FRESH_DAYS = 7
 RECENT_DAYS = 30
 
 
-def freshness_for(days_old: int) -> FreshnessTag:
-    """Map a non-negative ``days_old`` to its freshness bucket."""
+def freshness_for(
+    days_old: int,
+    *,
+    fresh_days: int = FRESH_DAYS,
+    recent_days: int = RECENT_DAYS,
+) -> FreshnessTag:
+    """Map a non-negative ``days_old`` to its freshness bucket.
+
+    Default ``fresh_days`` / ``recent_days`` are the canonical
+    type-level constants (used by Source 1 and Source 5). Sources with
+    different cadences override — e.g. Source 2 (NSE shareholding,
+    quarterly) uses 30/90; Source 4 (SEBI insider, daily) uses 14/60.
+    """
     if days_old < 0:
         raise ValueError(f"days_old must be >= 0, got {days_old}")
-    if days_old < FRESH_DAYS:
+    if days_old < fresh_days:
         return "FRESH"
-    if days_old < RECENT_DAYS:
+    if days_old < recent_days:
         return "RECENT"
     return "STALE"
 
