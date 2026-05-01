@@ -997,6 +997,38 @@ Before public launch: ₹15–25k consultation with Indian securities law
 firm. Obtain written opinion that the public framing complies with
 research-analyst safe harbor. File the letter.
 
+### 21.4 Information architecture (routes shipped + reserved)
+
+**Routes shipped (K1)**
+
+| Route | Purpose |
+|---|---|
+| `/` | Home — hero + regime ribbon ("● {regime} · Nifty {pct}% / Strongest today: A · B · C") |
+| `/scanner` | Daily BUY/HOLD/SELL/WATCH candidates from `latest.json` |
+| `/markets` | Market pulse — sector strength, divergent strength, breakout watch (formerly `/research`, renamed for clarity in K1 IA cleanup; permanent 301 in `next.config.js`) |
+| `/stock/[symbol]` | Per-symbol detail — pattern card + catalyst card; renders for any Tier-1-passing symbol regardless of pattern-match status |
+| `/about` | Disclaimer, methodology, phases reference |
+| `/about/phases` | Phase guidance reference (Layer 3 of the three-layer phase explanation) |
+
+**Routes reserved (post-MVP)**
+
+| Route | Purpose | Phase |
+|---|---|---|
+| `/watchlist` | Personal saved stocks | After Phase F + Personal mode (K2) |
+| `/stocks` | Browse all Nifty 500 — search + mini cards + sector filter | Post-K1 |
+| `/research` | **TRUE research** — broker reports, peer comparison, target prices, fundamentals deep-dive | Phase D2/E + new fundamentals data layer |
+| `/learning` | Forensics review, weekly retros, rule-promotion proposals | Phase L (Personal-only) |
+
+**Naming discipline.** Never use "Research" for market-pulse content;
+"Research" is reserved for the future fundamental analysis layer once
+we have broker reports + peer comparison + target prices feeding it.
+Industry convention: market-pulse content is "Markets" / "Today" /
+"Pulse" — pick one and stick to it. We picked **Markets** in K1.
+Component / file / type names that reference the legacy term
+(`research-header.tsx`, `ResearchSnapshot`, `signals/research.json`)
+intentionally stay as-is to keep the diff narrow; only user-facing
+copy renames.
+
 ---
 
 ## 22. Thinking Engine (post-MVP roadmap, future Phases Q/R/S/T)

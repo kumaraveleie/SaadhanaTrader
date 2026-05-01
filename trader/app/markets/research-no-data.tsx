@@ -18,7 +18,7 @@ export function ResearchNoData() {
           marginBottom: 16,
         }}
       >
-        Research data unavailable
+        Market data unavailable
       </div>
       <h1
         style={{
@@ -29,12 +29,11 @@ export function ResearchNoData() {
           letterSpacing: '-0.03em',
         }}
       >
-        No research snapshot to display
+        Today&apos;s market snapshot couldn&apos;t be loaded
       </h1>
       <p style={{ fontSize: 15, color: t.text2, lineHeight: 1.6 }}>
-        The latest research snapshot (<code style={{ color: t.text3 }}>signals/research.json</code>)
-        could not be read. Run <code style={{ color: t.text3 }}>scripts/research_scan.py</code> to
-        regenerate it, or check back after the next end-of-day update.
+        The nightly end-of-day update may not have completed yet. Check
+        back after the next session close.
       </p>
     </div>
   );

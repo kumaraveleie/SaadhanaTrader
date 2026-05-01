@@ -10,13 +10,13 @@ type NavItem = { href: string; label: string };
 
 const NAV_LINKS: NavItem[] = [
   { href: '/scanner', label: 'Scanner' },
-  { href: '/research', label: 'Research' },
+  { href: '/markets', label: 'Markets' },
   { href: '/about', label: 'About' },
 ];
 
 const MOBILE_LINKS: NavItem[] = [
   { href: '/scanner', label: 'Scanner' },
-  { href: '/research', label: 'Research' },
+  { href: '/markets', label: 'Markets' },
   { href: '/about', label: 'About' },
   { href: '/about/phases', label: 'Phases' },
   { href: '/about#disclaimer', label: 'Disclaimer' },

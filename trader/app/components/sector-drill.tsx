@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useTheme } from './theme';
-import { LifecycleTag } from '../research/lifecycle-tag';
+import { LifecycleTag } from '../markets/lifecycle-tag';
 import { CatalystChip } from './catalyst-chip';
 import { PhaseTooltip } from './phase-tooltip';
 import type { SectorStrength } from '../lib/scan-types';

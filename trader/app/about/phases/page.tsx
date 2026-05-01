@@ -113,7 +113,7 @@ export default function PhasesPage() {
           </li>
           <li>
             No match but the stock shows <strong style={{ color: t.text }}>Trending</strong>
-            {' '}on /research → that&apos;s information, not action.
+            {' '}on /markets → that&apos;s information, not action.
           </li>
         </ul>
       </Section>
