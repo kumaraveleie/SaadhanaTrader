@@ -4,20 +4,52 @@ import Link from 'next/link';
 import { useTheme } from '../../components/theme';
 import { SignalPill } from '../../components/signal-pill';
 import { FreshnessIndicator } from '../../components/freshness-indicator';
-import { publicLabel } from '../../lib/labels';
-import type { CandidateRow } from '../../lib/scan-types';
+import { publicLabel, regimeLabel } from '../../lib/labels';
+import type { CandidateRow, Regime, ResearchRow } from '../../lib/scan-types';
 
 const FONT_MONO = 'var(--font-mono), "JetBrains Mono", ui-monospace, monospace';
 
+/**
+ * /stock/[symbol] header. Renders for any symbol that exists in either
+ * the daily scan (`latest.json` candidates) OR the research snapshot
+ * (`research.json` rows) — pattern-match status is independent of
+ * sector / price / catalyst data.
+ *
+ * Fallback chain for each field: candidate → research row → null.
+ * The signal pill is omitted when the symbol isn't a candidate today.
+ */
 export function StockHeader({
+  symbol,
   candidate,
+  researchRow,
+  regime,
   scanDate,
 }: {
-  candidate: CandidateRow;
+  symbol: string;
+  candidate: CandidateRow | null;
+  researchRow: ResearchRow | null;
+  regime: Regime;
   scanDate: string;
 }) {
   const { t } = useTheme();
-  const label = publicLabel(candidate.signal);
+  const description = candidate
+    ? publicLabel(candidate.signal).description
+    : `End-of-day snapshot for ${symbol} on ${scanDate}. Pattern, catalyst, and sector context below.`;
+
+  const proSetupScore =
+    candidate?.pro_setup_score ?? researchRow?.pro_setup_score ?? null;
+  const sector = researchRow?.sub_industry ?? null;
+  const closeToday = researchRow?.close_today ?? null;
+  const pctChange = researchRow?.pct_change_today ?? null;
+  const pctTone =
+    pctChange === null
+      ? t.text2
+      : pctChange > 0
+      ? t.bullish
+      : pctChange < 0
+      ? t.bearish
+      : t.text2;
+  const regimeText = regimeLabel(regime).text;
 
   return (
     <div>
@@ -30,6 +62,7 @@ export function StockHeader({
           fontSize: 13,
           color: t.text2,
           marginBottom: 12,
+          textDecoration: 'none',
         }}
       >
         ← Back to scanner
@@ -63,9 +96,24 @@ export function StockHeader({
                 marginBottom: 6,
               }}
             >
-              {candidate.symbol}
+              {symbol}
             </div>
-            <SignalPill signal={candidate.signal} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+              {candidate && <SignalPill signal={candidate.signal} />}
+              {sector && (
+                <span
+                  style={{
+                    fontSize: 12,
+                    color: t.text3,
+                    fontFamily: FONT_MONO,
+                    letterSpacing: '0.04em',
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  {sector}
+                </span>
+              )}
+            </div>
           </div>
           <FreshnessIndicator scanDate={scanDate} />
         </div>
@@ -79,7 +127,7 @@ export function StockHeader({
             maxWidth: 720,
           }}
         >
-          {label.description}
+          {description}
         </p>
 
         <div
@@ -90,16 +138,33 @@ export function StockHeader({
             gap: 12,
           }}
         >
-          <KV
-            label="Pro-Setup score"
-            value={`${candidate.pro_setup_score}/13`}
-            valueColor={candidate.pro_setup_score === 13 ? t.bullish : t.text}
-          />
-          <KV
-            label="Drawdown resistance"
-            value={`${Math.round(candidate.drs)} / 100`}
-          />
-          <KV label="Regime" value={candidate.regime.replace('_', '-')} />
+          {closeToday !== null && (
+            <KV
+              label="Close"
+              value={`₹${closeToday.toFixed(2)}`}
+            />
+          )}
+          {pctChange !== null && (
+            <KV
+              label="Today"
+              value={`${pctChange >= 0 ? '+' : ''}${(pctChange * 100).toFixed(2)}%`}
+              valueColor={pctTone}
+            />
+          )}
+          {proSetupScore !== null && (
+            <KV
+              label="Pro-Setup score"
+              value={`${proSetupScore}/13`}
+              valueColor={proSetupScore === 13 ? t.bullish : t.text}
+            />
+          )}
+          {candidate && (
+            <KV
+              label="Drawdown resistance"
+              value={`${Math.round(candidate.drs)} / 100`}
+            />
+          )}
+          <KV label="Market" value={regimeText} />
         </div>
       </div>
     </div>
