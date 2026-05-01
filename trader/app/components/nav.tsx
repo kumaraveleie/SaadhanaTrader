@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme } from './theme';
 import { BrandMark } from './brand-mark';
+import { SymbolSearch } from './symbol-search';
 
 type NavItem = { href: string; label: string };
 
@@ -118,6 +119,13 @@ export function Nav() {
         ))}
       </div>
 
+      <div
+        className="saadhana-nav-search"
+        style={{ display: 'flex', alignItems: 'center' }}
+      >
+        <SymbolSearch />
+      </div>
+
       <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
         <Link
           href="/scanner"
@@ -179,6 +187,12 @@ export function Nav() {
             boxShadow: '0 12px 24px rgba(0,0,0,0.35)',
           }}
         >
+          <div style={{ marginBottom: 8 }}>
+            <SymbolSearch
+              variant="mobile"
+              onNavigate={() => setMenuOpen(false)}
+            />
+          </div>
           {MOBILE_LINKS.map((l) => {
             const active = isActive(l.href);
             return (

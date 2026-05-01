@@ -5,6 +5,7 @@ import { useTheme } from './theme';
 import { LifecycleTag } from '../markets/lifecycle-tag';
 import { CatalystChip } from './catalyst-chip';
 import { PhaseTooltip } from './phase-tooltip';
+import { SymbolCell } from './symbol-cell';
 import type { SectorStrength } from '../lib/scan-types';
 
 const FONT_MONO = 'var(--font-mono), "JetBrains Mono", ui-monospace, monospace';
@@ -213,17 +214,7 @@ export function SectorDrill({
                   {sector.top_stocks.map((s) => (
                     <tr key={s.symbol} style={{ borderTop: `1px solid ${t.border}` }}>
                       <td style={{ padding: '10px 12px' }}>
-                        <Link
-                          href={`/stock/${encodeURIComponent(s.symbol)}`}
-                          style={{
-                            color: t.text,
-                            fontWeight: 600,
-                            fontFamily: FONT_MONO,
-                            textDecoration: 'none',
-                          }}
-                        >
-                          {s.symbol}
-                        </Link>
+                        <SymbolCell symbol={s.symbol} />
                       </td>
                       <td style={{ padding: '10px 12px', textAlign: 'right', fontFamily: FONT_MONO }}>
                         <PctSpan value={s.today_pct} />

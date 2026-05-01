@@ -1029,6 +1029,48 @@ Component / file / type names that reference the legacy term
 intentionally stay as-is to keep the diff narrow; only user-facing
 copy renames.
 
+### 21.5 Navigation map (how users reach `/stock/[symbol]`)
+
+The detail page is the conceptual centre of the app — it carries
+the per-symbol pattern checklist, risk levels, catalysts, and
+(future) chart. Discoverability is enforced by these paths:
+
+1. **Click symbol in any /markets panel** — Strength Despite
+   Weakness, 52-Week High Breakout Watch, and the sector drill-
+   down's "Top stocks" sub-table all use the shared
+   `<SymbolCell>` (`trader/app/components/symbol-cell.tsx`).
+2. **Click symbol in /scanner** — every candidate row uses
+   `<SymbolCell>` next to the catalyst-chip count.
+3. **Search via the nav search bar** — `<SymbolSearch>`
+   (`trader/app/components/symbol-search.tsx`) sits in the
+   desktop nav between the link group and the CTA, and at the
+   top of the mobile drawer. Lazily fetches `/api/universe`
+   on first focus; matches symbol prefix → symbol substring →
+   company-name substring. Keyboard: ↓/↑ to navigate, Enter to
+   open, Escape to clear.
+4. **Direct URL** — `/stock/{symbol}` is a stable URL surface
+   meant to survive shares, bookmarks, and the eventual
+   `/research` (true research) cross-links.
+5. **Future routes:** `/watchlist` (Phase F + Personal mode),
+   `/research` broker-report links (Phase D2+), `/learning`
+   forensics review (Phase L) all link into the same detail
+   page; no other discoverability path replaces them.
+
+**Affordance contract for `<SymbolCell>`.** Default: theme text +
+JetBrains Mono + fontWeight 500. Hover: accent color tint +
+underline + visible ↗ arrow. The arrow is `opacity: 0` by default
+and `0.7` on hover — it reinforces "this is a drill-into-detail
+link" without adding visual noise to the steady state. Hover
+styles live in `globals.css` (the `.saadhana-symbol-cell` class)
+because inline styles can't express `:hover`.
+
+**Universe data source.** `/api/universe` reads
+`signals/research.json` (the canonical universe — Tier-1-passing
+symbols scanned today) and joins on `data/nifty500_constituents.csv`
+to pick up the `Company Name` column. Server-side only; the CSV
+never leaves the server. Response cached `s-maxage=300` since the
+scan rotates only daily.
+
 ---
 
 ## 22. Thinking Engine (post-MVP roadmap, future Phases Q/R/S/T)

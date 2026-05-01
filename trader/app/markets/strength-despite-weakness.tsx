@@ -1,9 +1,9 @@
 'use client';
 
-import Link from 'next/link';
 import { useTheme } from '../components/theme';
 import { LifecycleTag } from './lifecycle-tag';
 import { PhaseTooltip } from '../components/phase-tooltip';
+import { SymbolCell } from '../components/symbol-cell';
 import {
   type Column,
   Dist50DmaCell,
@@ -163,23 +163,6 @@ function buildColumns({
       cell: (r) => <RvolCell value={r.rvol_today} />,
     },
   ];
-}
-
-function SymbolCell({ symbol }: { symbol: string }) {
-  const { t } = useTheme();
-  return (
-    <Link
-      href={`/stock/${encodeURIComponent(symbol)}`}
-      style={{
-        color: t.text,
-        fontWeight: 600,
-        fontFamily: FONT_MONO,
-        textDecoration: 'none',
-      }}
-    >
-      {symbol}
-    </Link>
-  );
 }
 
 function SubsectorCell({ value }: { value: string }) {

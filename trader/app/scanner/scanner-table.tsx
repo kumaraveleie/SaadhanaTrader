@@ -1,10 +1,10 @@
 'use client';
 
-import Link from 'next/link';
 import { useState } from 'react';
 import { useTheme } from '../components/theme';
 import { CatalystChipCount } from '../components/catalyst-chip';
 import { SignalPill } from '../components/signal-pill';
+import { SymbolCell } from '../components/symbol-cell';
 import type { CandidateRow } from '../lib/scan-types';
 
 const FONT_MONO = 'var(--font-mono), "JetBrains Mono", ui-monospace, monospace';
@@ -100,17 +100,7 @@ export function ScannerTable({ candidates }: { candidates: CandidateRow[] }) {
             >
               <td style={{ padding: '14px 16px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                  <Link
-                    href={`/stock/${encodeURIComponent(c.symbol)}`}
-                    style={{
-                      color: t.text,
-                      fontWeight: 600,
-                      fontFamily: FONT_MONO,
-                      letterSpacing: '0.02em',
-                    }}
-                  >
-                    {c.symbol}
-                  </Link>
+                  <SymbolCell symbol={c.symbol} />
                   <CatalystChipCount
                     freshCount={c.catalyst_count_fresh ?? 0}
                     recentCount={c.catalyst_count_recent ?? 0}

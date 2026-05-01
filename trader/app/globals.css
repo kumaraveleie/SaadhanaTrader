@@ -51,6 +51,22 @@ input, select, textarea {
   50%      { opacity: 0.4; transform: scale(0.85); }
 }
 
+/* Shared symbol-cell affordance — every table that links into
+   /stock/[symbol] uses this. Default: theme text. Hover: accent
+   tint + underline + visible ↗ arrow so the click target is
+   discoverable. Color tokens match trader/app/components/theme.tsx. */
+.saadhana-symbol-cell {
+  color: #F0F0F4;
+}
+.saadhana-symbol-cell:hover {
+  color: #00FF88;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.saadhana-symbol-cell:hover .saadhana-symbol-arrow {
+  opacity: 0.7;
+}
+
 /* Mobile responsive (per design_system.md §7) */
 .saadhana-nav-burger { display: none; }
 
@@ -73,6 +89,7 @@ input, select, textarea {
     grid-template-columns: 1fr !important;
   }
   .saadhana-nav-links { display: none !important; }
+  .saadhana-nav-search { display: none !important; }
   .saadhana-nav-burger { display: inline-flex !important; }
 }
 @media (max-width: 600px) {
