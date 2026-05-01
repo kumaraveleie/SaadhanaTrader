@@ -1,0 +1,76 @@
+{
+  "_note": "Phase D1 fixture for the SEBI insider-trades source. Replaced by a live SEBI/BSE Reg 7(2) scraper in Phase D2; the schema (symbol/trade_date/insider_name/role/action/value_cr/is_esop_exercise/source_url) is the contract any future fetcher must satisfy.",
+  "_generated_for": "scan_date 2026-05-01",
+  "disclosures": [
+    {
+      "symbol": "JSWENERGY",
+      "trade_date": "2026-04-23",
+      "insider_name": "Sajjan Jindal",
+      "role": "promoter",
+      "action": "BUY",
+      "value_cr": 12.0,
+      "is_esop_exercise": false,
+      "source_url": "https://www.bseindia.com/corporates/Insider_Trading_new.aspx?expandable=4"
+    },
+    {
+      "symbol": "TATAPOWER",
+      "trade_date": "2026-04-26",
+      "insider_name": "Natarajan Chandrasekaran",
+      "role": "promoter",
+      "action": "BUY",
+      "value_cr": 8.5,
+      "is_esop_exercise": false,
+      "source_url": "https://www.bseindia.com/corporates/Insider_Trading_new.aspx?expandable=4"
+    },
+    {
+      "symbol": "JSWENERGY",
+      "trade_date": "2026-04-19",
+      "insider_name": "JSW Group Trust",
+      "role": "promoter",
+      "action": "BUY",
+      "value_cr": 6.0,
+      "is_esop_exercise": false,
+      "source_url": "https://www.bseindia.com/corporates/Insider_Trading_new.aspx?expandable=4"
+    },
+    {
+      "symbol": "BHARATFORG",
+      "trade_date": "2026-04-25",
+      "insider_name": "Mr. Suresh Sharma",
+      "role": "director",
+      "action": "BUY",
+      "value_cr": 3.5,
+      "is_esop_exercise": false,
+      "source_url": "https://www.bseindia.com/corporates/Insider_Trading_new.aspx?expandable=4"
+    },
+    {
+      "symbol": "VEDL",
+      "trade_date": "2026-04-15",
+      "insider_name": "Anil Agarwal",
+      "role": "promoter",
+      "action": "SELL",
+      "value_cr": 25.0,
+      "is_esop_exercise": false,
+      "source_url": "https://www.bseindia.com/corporates/Insider_Trading_new.aspx?expandable=4"
+    },
+    {
+      "symbol": "TCS",
+      "trade_date": "2026-04-22",
+      "insider_name": "Director X (ESOP)",
+      "role": "kmp",
+      "action": "BUY",
+      "value_cr": 1.5,
+      "is_esop_exercise": true,
+      "source_url": "https://www.bseindia.com/corporates/Insider_Trading_new.aspx?expandable=4"
+    },
+    {
+      "symbol": "INFY",
+      "trade_date": "2026-02-12",
+      "insider_name": "Old Promoter Disclosure",
+      "role": "promoter",
+      "action": "BUY",
+      "value_cr": 10.0,
+      "is_esop_exercise": false,
+      "source_url": "https://www.bseindia.com/corporates/Insider_Trading_new.aspx?expandable=4"
+    }
+  ]
+}

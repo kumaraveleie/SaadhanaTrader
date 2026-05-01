@@ -31,6 +31,10 @@ from saadhana_filter.catalysts.sources.bse_filings import (
     build_filing_catalysts,
     fixture_fetcher as bse_fixture_fetcher,
 )
+from saadhana_filter.catalysts.sources.insider_trades import (
+    build_insider_trade_catalysts,
+    fixture_fetcher as insider_trades_fixture_fetcher,
+)
 from saadhana_filter.catalysts.sources.sector_momentum import (
     build_sector_momentum_catalysts,
 )
@@ -72,6 +76,12 @@ def build_all_catalysts(
         fetcher=block_deals_fixture_fetcher(),
     )
 
+    # Source 4 — SEBI insider trading disclosures
+    insider_trades = build_insider_trade_catalysts(
+        today=today,
+        fetcher=insider_trades_fixture_fetcher(),
+    )
+
     # Source 5 — sector momentum (only when caller provides sector data)
     sector_momentum: dict[str, list[Catalyst]] = {}
     if sector_aggregates is not None and sector_constituents is not None:
@@ -85,6 +95,7 @@ def build_all_catalysts(
         bse_filings,
         shareholding,
         block_deals,
+        insider_trades,
         sector_momentum,
     ]
 

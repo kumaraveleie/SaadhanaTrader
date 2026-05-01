@@ -220,9 +220,20 @@
       "rank_by_inst_flow": 4,
       "catalyst_rollup": {
         "fresh_count": 0,
-        "recent_count": 0,
+        "recent_count": 1,
         "high_conviction_count": 0,
-        "highlights": []
+        "highlights": [
+          {
+            "symbol": "VEDL",
+            "type": "promoter_selling",
+            "date": "2026-04-15",
+            "days_old": 16,
+            "freshness": "RECENT",
+            "source_url": "https://www.bseindia.com/corporates/Insider_Trading_new.aspx?expandable=4",
+            "detail": "Promoter Anil Agarwal sells \u20b925.0 Cr in VEDL (16 days ago)",
+            "magnitude_score": 10
+          }
+        ]
       }
     },
     {
@@ -281,10 +292,41 @@
       "sector_count": 17,
       "rank_by_inst_flow": 2,
       "catalyst_rollup": {
-        "fresh_count": 0,
+        "fresh_count": 3,
         "recent_count": 0,
-        "high_conviction_count": 0,
-        "highlights": []
+        "high_conviction_count": 2,
+        "highlights": [
+          {
+            "symbol": "TATAPOWER",
+            "type": "promoter_buying",
+            "date": "2026-04-26",
+            "days_old": 5,
+            "freshness": "FRESH",
+            "source_url": "https://www.bseindia.com/corporates/Insider_Trading_new.aspx?expandable=4",
+            "detail": "Promoter Natarajan Chandrasekaran buys \u20b98.5 Cr in TATAPOWER (5 days ago)",
+            "magnitude_score": 10
+          },
+          {
+            "symbol": "JSWENERGY",
+            "type": "promoter_buying",
+            "date": "2026-04-23",
+            "days_old": 8,
+            "freshness": "FRESH",
+            "source_url": "https://www.bseindia.com/corporates/Insider_Trading_new.aspx?expandable=4",
+            "detail": "Promoter Sajjan Jindal buys \u20b912.0 Cr in JSWENERGY (8 days ago)",
+            "magnitude_score": 10
+          },
+          {
+            "symbol": "JSWENERGY",
+            "type": "promoter_buying",
+            "date": "2026-04-19",
+            "days_old": 12,
+            "freshness": "FRESH",
+            "source_url": "https://www.bseindia.com/corporates/Insider_Trading_new.aspx?expandable=4",
+            "detail": "Promoter JSW Group Trust buys \u20b96.0 Cr in JSWENERGY (12 days ago)",
+            "magnitude_score": 10
+          }
+        ]
       }
     },
     {
@@ -478,10 +520,20 @@
       "sector_count": 33,
       "rank_by_inst_flow": 5,
       "catalyst_rollup": {
-        "fresh_count": 0,
+        "fresh_count": 1,
         "recent_count": 0,
         "high_conviction_count": 0,
         "highlights": [
+          {
+            "symbol": "BHARATFORG",
+            "type": "insider_buying",
+            "date": "2026-04-25",
+            "days_old": 6,
+            "freshness": "FRESH",
+            "source_url": "https://www.bseindia.com/corporates/Insider_Trading_new.aspx?expandable=4",
+            "detail": "Director Mr. Suresh Sharma buys \u20b93.5 Cr in BHARATFORG (6 days ago)",
+            "magnitude_score": 4
+          },
           {
             "symbol": "BHARATFORG",
             "type": "m_and_a",
@@ -2472,6 +2524,15 @@
       "lifecycle": "UNKNOWN",
       "catalysts": [
         {
+          "type": "insider_buying",
+          "date": "2026-04-25",
+          "days_old": 6,
+          "freshness": "FRESH",
+          "source_url": "https://www.bseindia.com/corporates/Insider_Trading_new.aspx?expandable=4",
+          "detail": "Director Mr. Suresh Sharma buys \u20b93.5 Cr in BHARATFORG (6 days ago)",
+          "magnitude_score": 4
+        },
+        {
           "type": "m_and_a",
           "date": "2026-03-28",
           "days_old": 34,
@@ -2481,7 +2542,7 @@
           "magnitude_score": 9
         }
       ],
-      "catalyst_count_fresh": 0,
+      "catalyst_count_fresh": 1,
       "catalyst_count_recent": 0,
       "has_high_conviction_catalyst": false
     },
@@ -6028,10 +6089,29 @@
       "rvol_today": 1.34254035890046,
       "pro_setup_score": 10,
       "lifecycle": "LATE",
-      "catalysts": [],
-      "catalyst_count_fresh": 0,
+      "catalysts": [
+        {
+          "type": "promoter_buying",
+          "date": "2026-04-23",
+          "days_old": 8,
+          "freshness": "FRESH",
+          "source_url": "https://www.bseindia.com/corporates/Insider_Trading_new.aspx?expandable=4",
+          "detail": "Promoter Sajjan Jindal buys \u20b912.0 Cr in JSWENERGY (8 days ago)",
+          "magnitude_score": 10
+        },
+        {
+          "type": "promoter_buying",
+          "date": "2026-04-19",
+          "days_old": 12,
+          "freshness": "FRESH",
+          "source_url": "https://www.bseindia.com/corporates/Insider_Trading_new.aspx?expandable=4",
+          "detail": "Promoter JSW Group Trust buys \u20b96.0 Cr in JSWENERGY (12 days ago)",
+          "magnitude_score": 10
+        }
+      ],
+      "catalyst_count_fresh": 2,
       "catalyst_count_recent": 0,
-      "has_high_conviction_catalyst": false
+      "has_high_conviction_catalyst": true
     },
     {
       "symbol": "JSWINFRA",
@@ -9501,10 +9581,20 @@
       "rvol_today": 1.9969765460525357,
       "pro_setup_score": 10,
       "lifecycle": "LATE",
-      "catalysts": [],
-      "catalyst_count_fresh": 0,
+      "catalysts": [
+        {
+          "type": "promoter_buying",
+          "date": "2026-04-26",
+          "days_old": 5,
+          "freshness": "FRESH",
+          "source_url": "https://www.bseindia.com/corporates/Insider_Trading_new.aspx?expandable=4",
+          "detail": "Promoter Natarajan Chandrasekaran buys \u20b98.5 Cr in TATAPOWER (5 days ago)",
+          "magnitude_score": 10
+        }
+      ],
+      "catalyst_count_fresh": 1,
       "catalyst_count_recent": 0,
-      "has_high_conviction_catalyst": false
+      "has_high_conviction_catalyst": true
     },
     {
       "symbol": "TATASTEEL",
@@ -10201,9 +10291,19 @@
       "rvol_today": 2.569734619749963,
       "pro_setup_score": 10,
       "lifecycle": "UNKNOWN",
-      "catalysts": [],
+      "catalysts": [
+        {
+          "type": "promoter_selling",
+          "date": "2026-04-15",
+          "days_old": 16,
+          "freshness": "RECENT",
+          "source_url": "https://www.bseindia.com/corporates/Insider_Trading_new.aspx?expandable=4",
+          "detail": "Promoter Anil Agarwal sells \u20b925.0 Cr in VEDL (16 days ago)",
+          "magnitude_score": 10
+        }
+      ],
       "catalyst_count_fresh": 0,
-      "catalyst_count_recent": 0,
+      "catalyst_count_recent": 1,
       "has_high_conviction_catalyst": false
     },
     {
