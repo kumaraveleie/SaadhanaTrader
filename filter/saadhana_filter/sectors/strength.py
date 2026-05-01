@@ -21,9 +21,11 @@ from dataclasses import dataclass, field
 
 import pandas as pd
 
+from saadhana_filter.catalysts.types import catalyst_to_dict
 from saadhana_filter.scan.research import LifecycleTag, ResearchRow
 
 MIN_SECTOR_SIZE = 5  # below this, the sector aggregate is too noisy to surface
+TRIGGER_HIGHLIGHTS = 5  # top-N catalysts surfaced per sector for the drill-down
 
 
 @dataclass
@@ -52,6 +54,9 @@ class SectorStrength:
     inst_buy_bar_count_5d: int = 0
     sector_count: int = 0
     rank_by_inst_flow: int = 0
+    # §13 catalyst rollup across sector constituents — populates the
+    # /research drill-down "Triggers" section.
+    catalyst_rollup: dict = field(default_factory=dict)
 
 
 def _slugify(label: str) -> str:
@@ -101,6 +106,36 @@ def _stock_window_return(
     if past == 0:
         return None
     return (today - past) / past
+
+
+def _catalyst_rollup_for(members: list[ResearchRow]) -> dict:
+    """Aggregate catalysts across sector constituents.
+
+    Returns a dict with summary counts + the top-N most-recent catalysts
+    (one entry per (symbol, catalyst) pair, tagged with the source
+    symbol so the UI can route to /stock/[symbol]).
+    """
+    fresh = sum(r.catalyst_count_fresh for r in members)
+    recent = sum(r.catalyst_count_recent for r in members)
+    high = sum(1 for r in members if r.has_high_conviction_catalyst)
+
+    flat: list[tuple[str, dict]] = []
+    for r in members:
+        for c in r.catalysts:
+            flat.append((r.symbol, catalyst_to_dict(c)))
+
+    # Sort by date desc (most recent first); ties broken by magnitude desc
+    flat.sort(key=lambda pair: (pair[1]["date"], pair[1]["magnitude_score"]), reverse=True)
+    highlights = [
+        {"symbol": symbol, **catalyst}
+        for symbol, catalyst in flat[:TRIGGER_HIGHLIGHTS]
+    ]
+    return {
+        "fresh_count": fresh,
+        "recent_count": recent,
+        "high_conviction_count": high,
+        "highlights": highlights,
+    }
 
 
 def build_sector_strength(
@@ -202,6 +237,7 @@ def build_sector_strength(
                 inst_flow_total=inst_total,
                 inst_buy_bar_count_5d=inst_buy_count,
                 sector_count=len(members),
+                catalyst_rollup=_catalyst_rollup_for(members),
             )
         )
 
@@ -240,4 +276,5 @@ def sector_to_dict(s: SectorStrength) -> dict:
         "inst_buy_bar_count_5d": s.inst_buy_bar_count_5d,
         "sector_count": s.sector_count,
         "rank_by_inst_flow": s.rank_by_inst_flow,
+        "catalyst_rollup": s.catalyst_rollup,
     }

@@ -11,11 +11,16 @@ import type { ResearchSnapshot, ScanResult } from './scan-types';
 
 export type {
   CandidateRow,
+  Catalyst,
+  CatalystRollup,
+  CatalystType,
+  FreshnessTag,
   LifecycleTag,
   Regime,
   ResearchRow,
   ResearchSnapshot,
   ScanResult,
+  SectorCatalystHighlight,
   SectorStrength,
   SectorTopStock,
   SignalState,

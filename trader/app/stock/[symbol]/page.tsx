@@ -3,6 +3,7 @@ import { StockHeader } from './stock-header';
 import { ConditionChecklist } from './condition-checklist';
 import { RiskLevelsCard } from './risk-levels-card';
 import { StockNotMatched } from './stock-not-matched';
+import { CatalystCard } from './catalyst-card';
 
 export const dynamic = 'force-dynamic';
 
@@ -31,6 +32,7 @@ export default async function StockDetailPage({ params }: { params: Params }) {
     );
   }
 
+  const catalysts = candidate.catalysts ?? [];
   return (
     <div style={{ maxWidth: 1100, margin: '20px auto 60px' }}>
       <StockHeader candidate={candidate} scanDate={scan.scan_date} />
@@ -46,6 +48,14 @@ export default async function StockDetailPage({ params }: { params: Params }) {
         <ConditionChecklist failedConditions={candidate.failed_conditions} />
         <RiskLevelsCard candidate={candidate} />
       </div>
+      {catalysts.length > 0 && (
+        <div style={{ marginTop: 24 }}>
+          <CatalystCard
+            catalysts={catalysts}
+            highConviction={candidate.has_high_conviction_catalyst ?? false}
+          />
+        </div>
+      )}
     </div>
   );
 }

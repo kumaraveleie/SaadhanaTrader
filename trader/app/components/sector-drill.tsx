@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useTheme } from './theme';
 import { LifecycleTag } from '../research/lifecycle-tag';
+import { CatalystChip } from './catalyst-chip';
 import { PhaseTooltip } from './phase-tooltip';
 import type { SectorStrength } from '../lib/scan-types';
 
@@ -95,13 +96,43 @@ export function SectorDrill({
       </header>
 
       <div style={{ padding: '8px 0' }}>
-        <Block title="Triggers" hint="Phase D pending">
-          <p style={{ fontSize: 13, color: t.text3, lineHeight: 1.6, margin: 0 }}>
-            Fundamental triggers, news catalysts, FII flow narrative, and
-            management commentary will appear here once the catalyst engine
-            ships in Phase D. Until then, see Technical and Top Stocks
-            below for the deterministic signals.
-          </p>
+        <Block
+          title="Triggers"
+          hint={
+            sector.catalyst_rollup.fresh_count +
+              sector.catalyst_rollup.recent_count ===
+            0
+              ? 'no recent catalysts'
+              : undefined
+          }
+        >
+          {sector.catalyst_rollup.highlights.length === 0 ? (
+            <p style={{ fontSize: 13, color: t.text3, lineHeight: 1.6, margin: 0 }}>
+              No fresh catalysts yet — additional sources (shareholding,
+              block deals, insider trades, sector momentum) land in
+              upcoming commits.
+            </p>
+          ) : (
+            <>
+              <RollupSummary rollup={sector.catalyst_rollup} />
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 6,
+                  marginTop: 10,
+                }}
+              >
+                {sector.catalyst_rollup.highlights.map((h, i) => (
+                  <CatalystChip
+                    key={`${h.symbol}-${h.type}-${i}`}
+                    catalyst={h}
+                    showSymbol
+                  />
+                ))}
+              </div>
+            </>
+          )}
         </Block>
 
         <Block title="Technical">
@@ -280,6 +311,47 @@ export function SectorDrill({
         </div>
       </div>
     </section>
+  );
+}
+
+function RollupSummary({
+  rollup,
+}: {
+  rollup: SectorStrength['catalyst_rollup'];
+}) {
+  const { t } = useTheme();
+  return (
+    <div
+      style={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: 14,
+        fontSize: 12,
+        color: t.text2,
+        marginBottom: 4,
+      }}
+    >
+      <span>
+        <span style={{ color: t.bullish, fontWeight: 600 }}>
+          {rollup.fresh_count}
+        </span>{' '}
+        fresh
+      </span>
+      <span>
+        <span style={{ color: t.text, fontWeight: 600 }}>
+          {rollup.recent_count}
+        </span>{' '}
+        recent
+      </span>
+      {rollup.high_conviction_count > 0 && (
+        <span>
+          <span style={{ color: t.bullish, fontWeight: 600 }}>
+            {rollup.high_conviction_count}
+          </span>{' '}
+          high-conviction
+        </span>
+      )}
+    </div>
   );
 }
 

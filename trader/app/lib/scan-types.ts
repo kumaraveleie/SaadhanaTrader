@@ -9,6 +9,47 @@
 export type Regime = 'Risk_On' | 'Caution' | 'Risk_Off';
 export type SignalState = 'BUY' | 'HOLD' | 'SELL' | 'WATCH' | 'WAIT';
 
+// ──────────────────────────────────────────────────────────────────────────
+// §13 Phase D catalyst types — mirrors the Python dataclasses in
+// filter/saadhana_filter/catalysts/types.py.
+// ──────────────────────────────────────────────────────────────────────────
+export type CatalystType =
+  | 'earnings_beat'
+  | 'guidance_raise'
+  | 'buyback'
+  | 'management_change'
+  | 'm_and_a'
+  | 'policy_tailwind'
+  | 'fii_increase'
+  | 'dii_increase'
+  | 'promoter_buying'
+  | 'block_deal_buy'
+  | 'sector_momentum';
+
+export type FreshnessTag = 'FRESH' | 'RECENT' | 'STALE';
+
+export type Catalyst = {
+  type: CatalystType;
+  date: string; // ISO YYYY-MM-DD
+  days_old: number;
+  freshness: FreshnessTag;
+  source_url: string;
+  detail: string;
+  magnitude_score: number; // 0..10
+};
+
+// One-symbol-tagged catalyst as it appears inside a sector rollup highlight.
+export type SectorCatalystHighlight = Catalyst & {
+  symbol: string;
+};
+
+export type CatalystRollup = {
+  fresh_count: number;
+  recent_count: number;
+  high_conviction_count: number;
+  highlights: SectorCatalystHighlight[];
+};
+
 export type CandidateRow = {
   symbol: string;
   signal: SignalState;
@@ -27,6 +68,12 @@ export type CandidateRow = {
   risk_pct?: number;
   reward_pct?: number;
   rr_ratio?: number;
+  // §13 catalysts (Phase D). Optional on legacy JSON (pre-Phase D);
+  // empty array on current scans when no catalysts present.
+  catalysts?: Catalyst[];
+  catalyst_count_fresh?: number;
+  catalyst_count_recent?: number;
+  has_high_conviction_catalyst?: boolean;
 };
 
 export type ScanResult = {
@@ -75,6 +122,11 @@ export type ResearchRow = {
   rvol_today: number; // today's volume / 50-bar prior mean
   pro_setup_score: number;
   lifecycle: LifecycleTag;
+  // §13 catalysts (Phase D). Empty array when no catalysts present.
+  catalysts: Catalyst[];
+  catalyst_count_fresh: number;
+  catalyst_count_recent: number;
+  has_high_conviction_catalyst: boolean;
 };
 
 // M1 v0 sector aggregate emitted under ``sector_strength`` in research.json.
@@ -102,6 +154,8 @@ export type SectorStrength = {
   inst_buy_bar_count_5d: number;
   sector_count: number;
   rank_by_inst_flow: number;
+  // §13 catalyst rollup across constituents (Phase D).
+  catalyst_rollup: CatalystRollup;
 };
 
 export type ResearchSnapshot = {

@@ -23,6 +23,7 @@ from typing import Literal
 import numpy as np
 import pandas as pd
 
+from saadhana_filter.catalysts.types import Catalyst, CatalystSummary, catalyst_to_dict
 from saadhana_filter.indicators.conditions import (
     INST_FLOW_LOOKBACK,
     pro_setup_score,
@@ -84,6 +85,14 @@ class ResearchRow:
     # Score + lifecycle
     pro_setup_score: int
     lifecycle: LifecycleTag
+
+    # §13 catalyst attachments — populated when the per-symbol
+    # CatalystSummary is threaded through build_research_snapshot.
+    # Empty list when no catalysts present (most rows on a typical day).
+    catalysts: list[Catalyst] = field(default_factory=list)
+    catalyst_count_fresh: int = 0
+    catalyst_count_recent: int = 0
+    has_high_conviction_catalyst: bool = False
 
 
 @dataclass
@@ -166,6 +175,7 @@ def _row_for(
     df: pd.DataFrame,
     sector: str,
     sub_industry: str,
+    catalysts: CatalystSummary | None = None,
 ) -> ResearchRow | None:
     """Compute the per-symbol research snapshot. Returns None if the
     underlying data lacks the lookback our indicators need."""
@@ -229,6 +239,16 @@ def _row_for(
         pro_setup_score=score_today,
     )
 
+    if catalysts is None:
+        catalyst_list: list[Catalyst] = []
+        cat_fresh = cat_recent = 0
+        cat_high = False
+    else:
+        catalyst_list = list(catalysts.catalysts)
+        cat_fresh = catalysts.catalyst_count_fresh
+        cat_recent = catalysts.catalyst_count_recent
+        cat_high = catalysts.has_high_conviction_catalyst
+
     return ResearchRow(
         symbol=symbol,
         sector=sector,
@@ -249,6 +269,10 @@ def _row_for(
         rvol_today=rvol_today_val,
         pro_setup_score=score_today,
         lifecycle=lifecycle,
+        catalysts=catalyst_list,
+        catalyst_count_fresh=cat_fresh,
+        catalyst_count_recent=cat_recent,
+        has_high_conviction_catalyst=cat_high,
     )
 
 
@@ -263,6 +287,7 @@ def build_research_snapshot(
     fundamentals_passed: set[str],
     sectors: Mapping[str, str],
     industries: Mapping[str, str] | None = None,
+    catalysts: Mapping[str, CatalystSummary] | None = None,
     nifty_df: pd.DataFrame,
     ohlcv_provider: Callable[[str], pd.DataFrame],
 ) -> ResearchSnapshot:
@@ -278,6 +303,7 @@ def build_research_snapshot(
     nifty_pct_change = (nifty_close_today - nifty_close_yesterday) / nifty_close_yesterday
 
     industries = industries or {}
+    catalysts = catalysts or {}
     rows: list[ResearchRow] = []
     for symbol in universe:
         if symbol not in fundamentals_passed:
@@ -290,7 +316,13 @@ def build_research_snapshot(
             continue
         sector = sectors.get(symbol, "UNKNOWN")
         sub_industry = industries.get(symbol, "Unknown")
-        row = _row_for(symbol, df, sector, sub_industry)
+        row = _row_for(
+            symbol,
+            df,
+            sector,
+            sub_industry,
+            catalysts=catalysts.get(symbol),
+        )
         if row is not None:
             rows.append(row)
 
@@ -338,6 +370,10 @@ def snapshot_to_dict(snap: ResearchSnapshot) -> dict:
                 "rvol_today": r.rvol_today,
                 "pro_setup_score": r.pro_setup_score,
                 "lifecycle": r.lifecycle,
+                "catalysts": [catalyst_to_dict(c) for c in r.catalysts],
+                "catalyst_count_fresh": r.catalyst_count_fresh,
+                "catalyst_count_recent": r.catalyst_count_recent,
+                "has_high_conviction_catalyst": r.has_high_conviction_catalyst,
             }
             for r in snap.rows
         ],

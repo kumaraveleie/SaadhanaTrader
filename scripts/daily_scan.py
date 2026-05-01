@@ -27,6 +27,7 @@ from pathlib import Path
 
 import pandas as pd
 
+from saadhana_filter.catalysts.daily import build_all_catalysts
 from saadhana_filter.data.loader import load_eod
 from saadhana_filter.scan.daily import run_scan, scan_to_json
 from saadhana_filter.scan.universe import NIFTY_50
@@ -102,12 +103,16 @@ def main(argv: list[str] | None = None) -> int:
     nifty_df = _load_index(refresh=args.refresh)
     provider = _build_provider(refresh=args.refresh)
 
+    # §13 Phase D — load catalysts via every active source.
+    catalysts = build_all_catalysts(today=args.scan_date)
+
     result = run_scan(
         scan_date=args.scan_date,
         universe=tuple(args.universe),
         fundamentals=fundamentals,
         nifty_df=nifty_df,
         ohlcv_provider=provider,
+        catalysts=catalysts,
     )
 
     args.output.parent.mkdir(parents=True, exist_ok=True)

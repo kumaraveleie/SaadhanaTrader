@@ -1,8 +1,831 @@
 {
-  "scan_date": "2026-04-30",
+  "scan_date": "2026-05-01",
   "spec_version": "2.0",
-  "regime": "Risk_Off",
+  "regime": "Caution",
   "universe_size": 399,
   "tier1_passed": 398,
-  "candidates": []
+  "candidates": [
+    {
+      "symbol": "ABB",
+      "signal": "WATCH",
+      "pro_setup_score": 10,
+      "drs": 62.8,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "5ema_above_20ema_rising",
+        "macd_hist_rising",
+        "distance_to_stop_le_3pct"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "AIAENG",
+      "signal": "WATCH",
+      "pro_setup_score": 10,
+      "drs": 48.3,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "5ema_above_20ema_rising",
+        "macd_hist_rising",
+        "institutional_flow"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "AWL",
+      "signal": "WATCH",
+      "pro_setup_score": 10,
+      "drs": 36.1,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "stage_2",
+        "above_50_and_200_ema",
+        "distance_to_stop_le_3pct"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "ATGL",
+      "signal": "WATCH",
+      "pro_setup_score": 11,
+      "drs": 46.8,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "weekly_hh_hl",
+        "distance_to_stop_le_3pct"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "ABDL",
+      "signal": "WATCH",
+      "pro_setup_score": 10,
+      "drs": 50.9,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "macd_hist_rising",
+        "institutional_flow",
+        "distance_to_stop_le_3pct"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "ATUL",
+      "signal": "WATCH",
+      "pro_setup_score": 12,
+      "drs": 48.9,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "distance_to_stop_le_3pct"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [
+        {
+          "type": "earnings_beat",
+          "date": "2026-04-15",
+          "days_old": 16,
+          "freshness": "RECENT",
+          "source_url": "https://www.bseindia.com/corporates/ann.html?scrip=500027&type=AS",
+          "detail": "Atul Ltd. reports Q4 EPS up double-digit YoY, exceeded consensus estimates. Specialty chemicals segment delivered major margin expansion. EBITDA margin up significantly vs prior year.",
+          "magnitude_score": 9
+        }
+      ],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 1,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "BELRISE",
+      "signal": "WATCH",
+      "pro_setup_score": 10,
+      "drs": 67.9,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "5ema_above_20ema_rising",
+        "macd_hist_rising",
+        "institutional_flow"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "BIKAJI",
+      "signal": "WATCH",
+      "pro_setup_score": 11,
+      "drs": 42.2,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "stage_2",
+        "distance_to_stop_le_3pct"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "CCL",
+      "signal": "WATCH",
+      "pro_setup_score": 10,
+      "drs": 61.8,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "5ema_above_20ema_rising",
+        "macd_hist_rising",
+        "institutional_flow"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "DELHIVERY",
+      "signal": "WATCH",
+      "pro_setup_score": 10,
+      "drs": 55.9,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "stage_2",
+        "macd_hist_rising",
+        "rr_ge_2"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "ELGIEQUIP",
+      "signal": "WATCH",
+      "pro_setup_score": 10,
+      "drs": 52.2,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "macd_hist_rising",
+        "inst_flow_score",
+        "distance_to_stop_le_3pct"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "EMCURE",
+      "signal": "WATCH",
+      "pro_setup_score": 10,
+      "drs": 61.5,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "inst_flow_score",
+        "distance_to_stop_le_3pct",
+        "bb_width_alive"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "GRASIM",
+      "signal": "WATCH",
+      "pro_setup_score": 10,
+      "drs": 36.7,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "stage_2",
+        "macd_hist_rising",
+        "inst_flow_score"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "GMDCLTD",
+      "signal": "WATCH",
+      "pro_setup_score": 11,
+      "drs": 66.3,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "distance_to_stop_le_3pct",
+        "rr_ge_2"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "IPCALAB",
+      "signal": "WATCH",
+      "pro_setup_score": 10,
+      "drs": 47.8,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "weekly_hh_hl",
+        "institutional_flow",
+        "inst_flow_score"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "JBMA",
+      "signal": "WATCH",
+      "pro_setup_score": 10,
+      "drs": 49.8,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "stage_2",
+        "institutional_flow",
+        "distance_to_stop_le_3pct"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "JSWENERGY",
+      "signal": "WATCH",
+      "pro_setup_score": 10,
+      "drs": 55.4,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "rsi_50_70",
+        "distance_to_stop_le_3pct",
+        "not_extended"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "JPPOWER",
+      "signal": "WATCH",
+      "pro_setup_score": 11,
+      "drs": 51.6,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "macd_hist_rising",
+        "distance_to_stop_le_3pct"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "JINDALSAW",
+      "signal": "WATCH",
+      "pro_setup_score": 10,
+      "drs": 58.9,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "5ema_above_20ema_rising",
+        "macd_hist_rising",
+        "distance_to_stop_le_3pct"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "JUBLINGREA",
+      "signal": "WATCH",
+      "pro_setup_score": 11,
+      "drs": 46.7,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "macd_hist_rising",
+        "distance_to_stop_le_3pct"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "THELEELA",
+      "signal": "WATCH",
+      "pro_setup_score": 10,
+      "drs": 40.5,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "weekly_hh_hl",
+        "macd_hist_rising",
+        "bb_width_alive"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "NSLNISP",
+      "signal": "WATCH",
+      "pro_setup_score": 10,
+      "drs": 44.0,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "stage_2",
+        "weekly_hh_hl",
+        "distance_to_stop_le_3pct"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "NTPCGREEN",
+      "signal": "WATCH",
+      "pro_setup_score": 11,
+      "drs": 53.0,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "5ema_above_20ema_rising",
+        "macd_hist_rising"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "NAVINFLUOR",
+      "signal": "WATCH",
+      "pro_setup_score": 10,
+      "drs": 57.4,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "weekly_hh_hl",
+        "distance_to_stop_le_3pct",
+        "rr_ge_2"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "ONGC",
+      "signal": "WATCH",
+      "pro_setup_score": 10,
+      "drs": 55.8,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "weekly_hh_hl",
+        "rsi_50_70",
+        "distance_to_stop_le_3pct"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "OIL",
+      "signal": "WATCH",
+      "pro_setup_score": 10,
+      "drs": 49.6,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "weekly_hh_hl",
+        "distance_to_stop_le_3pct",
+        "rr_ge_2"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "OLECTRA",
+      "signal": "WATCH",
+      "pro_setup_score": 11,
+      "drs": 51.8,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "stage_2",
+        "distance_to_stop_le_3pct"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "ONESOURCE",
+      "signal": "WATCH",
+      "pro_setup_score": 10,
+      "drs": 48.7,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "stage_2",
+        "macd_hist_rising",
+        "distance_to_stop_le_3pct"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "RKFORGE",
+      "signal": "WATCH",
+      "pro_setup_score": 12,
+      "drs": 48.2,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "distance_to_stop_le_3pct"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "SJVN",
+      "signal": "WATCH",
+      "pro_setup_score": 10,
+      "drs": 45.9,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "stage_2",
+        "weekly_hh_hl",
+        "distance_to_stop_le_3pct"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "MOTHERSON",
+      "signal": "WATCH",
+      "pro_setup_score": 10,
+      "drs": 52.0,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "5ema_above_20ema_rising",
+        "weekly_hh_hl",
+        "macd_hist_rising"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "SCI",
+      "signal": "WATCH",
+      "pro_setup_score": 10,
+      "drs": 64.4,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "macd_hist_rising",
+        "distance_to_stop_le_3pct",
+        "rr_ge_2"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "SHYAMMETL",
+      "signal": "WATCH",
+      "pro_setup_score": 11,
+      "drs": 43.7,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "stage_2",
+        "distance_to_stop_le_3pct"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "SONACOMS",
+      "signal": "WATCH",
+      "pro_setup_score": 11,
+      "drs": 57.7,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "distance_to_stop_le_3pct",
+        "not_extended"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "SAIL",
+      "signal": "WATCH",
+      "pro_setup_score": 10,
+      "drs": 64.4,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "rsi_50_70",
+        "distance_to_stop_le_3pct",
+        "not_extended"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "SUNPHARMA",
+      "signal": "WATCH",
+      "pro_setup_score": 11,
+      "drs": 41.4,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "weekly_hh_hl",
+        "inst_flow_score"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [
+        {
+          "type": "buyback",
+          "date": "2026-04-22",
+          "days_old": 9,
+          "freshness": "RECENT",
+          "source_url": "https://www.bseindia.com/corporates/ann.html?scrip=524715&type=AS",
+          "detail": "Sun Pharma board approved a buyback of up to 1.2 crore equity shares at INR 1750 per share, total deployment ~INR 2100 crore. Buyback ratio 0.8% of paid-up capital. Open-market route.",
+          "magnitude_score": 6
+        }
+      ],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 1,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "TATACONSUM",
+      "signal": "WATCH",
+      "pro_setup_score": 10,
+      "drs": 41.3,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "5ema_above_20ema_rising",
+        "weekly_hh_hl",
+        "macd_hist_rising"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "TATAPOWER",
+      "signal": "WATCH",
+      "pro_setup_score": 10,
+      "drs": 58.5,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "rsi_50_70",
+        "distance_to_stop_le_3pct",
+        "not_extended"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "THERMAX",
+      "signal": "WATCH",
+      "pro_setup_score": 10,
+      "drs": 56.8,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "5ema_above_20ema_rising",
+        "macd_hist_rising",
+        "institutional_flow"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "USHAMART",
+      "signal": "WATCH",
+      "pro_setup_score": 10,
+      "drs": 56.1,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "macd_hist_rising",
+        "distance_to_stop_le_3pct",
+        "rr_ge_2"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "VTL",
+      "signal": "WATCH",
+      "pro_setup_score": 11,
+      "drs": 63.6,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "rsi_50_70",
+        "distance_to_stop_le_3pct"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "VEDL",
+      "signal": "WATCH",
+      "pro_setup_score": 10,
+      "drs": 60.7,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "5ema_above_20ema_rising",
+        "macd_hist_rising",
+        "inst_flow_score"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    },
+    {
+      "symbol": "ZEEL",
+      "signal": "WATCH",
+      "pro_setup_score": 10,
+      "drs": 46.4,
+      "regime": "Caution",
+      "tier1_passed": true,
+      "failed_conditions": [
+        "stage_2",
+        "above_50_and_200_ema",
+        "distance_to_stop_le_3pct"
+      ],
+      "notes": [],
+      "sell_reason": null,
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
+    }
+  ]
 }

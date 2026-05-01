@@ -8,7 +8,7 @@
  * raw internal labels.
  */
 
-import type { LifecycleTag, Regime, SignalState } from './scan-types';
+import type { CatalystType, FreshnessTag, LifecycleTag, Regime, SignalState } from './scan-types';
 
 export type PublicLabel = {
   text: string;
@@ -174,3 +174,49 @@ export const LIFECYCLE_ORDER: LifecycleTag[] = [
   'LATE',
   'UNKNOWN',
 ];
+
+// ──────────────────────────────────────────────────────────────────────────
+// §13 Phase D catalyst-type → user-facing label.
+// ──────────────────────────────────────────────────────────────────────────
+export const CATALYST_LABEL: Record<CatalystType, string> = {
+  earnings_beat: 'Earnings beat',
+  guidance_raise: 'Guidance raise',
+  buyback: 'Buyback',
+  management_change: 'Mgmt change',
+  m_and_a: 'M&A',
+  policy_tailwind: 'Policy tailwind',
+  fii_increase: 'FII increase',
+  dii_increase: 'DII increase',
+  promoter_buying: 'Promoter buying',
+  block_deal_buy: 'Block deal',
+  sector_momentum: 'Sector momentum',
+};
+
+export type CatalystTone = 'positive' | 'caution' | 'neutral';
+
+// Mostly positive types; mgmt change is neutral-to-cautionary depending
+// on context — UI defaults to neutral and text content carries the
+// signal interpretation.
+export const CATALYST_TONE: Record<CatalystType, CatalystTone> = {
+  earnings_beat: 'positive',
+  guidance_raise: 'positive',
+  buyback: 'positive',
+  management_change: 'neutral',
+  m_and_a: 'neutral',
+  policy_tailwind: 'positive',
+  fii_increase: 'positive',
+  dii_increase: 'positive',
+  promoter_buying: 'positive',
+  block_deal_buy: 'positive',
+  sector_momentum: 'positive',
+};
+
+export function catalystLabel(type: CatalystType): string {
+  return CATALYST_LABEL[type] ?? type;
+}
+
+export const FRESHNESS_LABEL: Record<FreshnessTag, string> = {
+  FRESH: 'Fresh',
+  RECENT: 'Recent',
+  STALE: 'Stale',
+};

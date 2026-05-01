@@ -23,6 +23,7 @@ from pathlib import Path
 import pandas as pd
 
 from saadhana_filter import __spec_version__
+from saadhana_filter.catalysts.daily import build_all_catalysts
 from saadhana_filter.data.loader import load_eod
 from saadhana_filter.scan.research import build_research_snapshot, snapshot_to_dict
 from saadhana_filter.sectors.strength import build_sector_strength, sector_to_dict
@@ -56,6 +57,10 @@ def _load_index() -> pd.DataFrame:
     if "adj close" in df.columns and "close" not in df.columns:
         df["close"] = df["adj close"]
     df.index = pd.to_datetime(df.index).tz_localize(None)
+    # yfinance occasionally returns a partial/blank row for the current
+    # session before close — drop those so the pct-change computation
+    # doesn't propagate NaN into the JSON output.
+    df = df.dropna(subset=["close"])
     return df[["open", "high", "low", "close", "volume"]]
 
 
@@ -104,6 +109,9 @@ def main(argv: list[str] | None = None) -> int:
     nifty_df = _load_index()
     provider = _build_provider(refresh=args.refresh)
 
+    # §13 Phase D — load catalysts via every active source.
+    catalysts = build_all_catalysts(today=args.scan_date)
+
     snap = build_research_snapshot(
         scan_date=args.scan_date,
         spec_version=__spec_version__,
@@ -111,6 +119,7 @@ def main(argv: list[str] | None = None) -> int:
         fundamentals_passed=fundamentals_passed,
         sectors=sectors,
         industries=industries,
+        catalysts=catalysts,
         nifty_df=nifty_df,
         ohlcv_provider=provider,
     )
@@ -142,6 +151,10 @@ def main(argv: list[str] | None = None) -> int:
             f"{s['sector_label']} {s['today_pct'] * 100:+.2f}%"
             for s in snap.sector_strength[:3]
         ],
+        "catalysts_attached": sum(1 for r in snap.rows if r.catalysts),
+        "high_conviction_catalysts": sum(
+            1 for r in snap.rows if r.has_high_conviction_catalyst
+        ),
     }
     print(json.dumps(summary, indent=2), file=sys.stderr)
     return 0

@@ -23,6 +23,7 @@ from typing import TypedDict
 import pandas as pd
 
 from saadhana_filter import __spec_version__
+from saadhana_filter.catalysts.types import CatalystSummary, catalyst_to_dict
 from saadhana_filter.scan.universe import NIFTY_50
 from saadhana_filter.signals import (
     Position,
@@ -64,6 +65,11 @@ class CandidateRow(TypedDict, total=False):
     risk_pct: float
     reward_pct: float
     rr_ratio: float
+    # §13 catalyst attachments — empty list when none present.
+    catalysts: list[dict]
+    catalyst_count_fresh: int
+    catalyst_count_recent: int
+    has_high_conviction_catalyst: bool
 
 
 def run_scan(
@@ -74,6 +80,7 @@ def run_scan(
     nifty_df: pd.DataFrame,
     ohlcv_provider: OHLCVProvider,
     positions: PositionMap | None = None,
+    catalysts: Mapping[str, CatalystSummary] | None = None,
 ) -> dict:
     """Run a full §15 scan. Returns a JSON-serializable dict.
 
@@ -99,6 +106,7 @@ def run_scan(
         §8 SELL branch — Tier 1 failures don't force-close positions.
     """
     positions = positions or {}
+    catalysts = catalysts or {}
     regime = latest_regime(nifty_df)
     tier1_pass = tier1_filter(fundamentals)
     tier1_passed_symbols = set(tier1_pass.index.astype(str))
@@ -131,7 +139,9 @@ def run_scan(
         )
         decisions.append(decision)
         if decision.signal != SignalState.WAIT:
-            candidates.append(_decision_to_row(decision))
+            candidates.append(
+                _decision_to_row(decision, catalysts.get(symbol)),
+            )
 
     return {
         "scan_date": scan_date.isoformat(),
@@ -143,7 +153,10 @@ def run_scan(
     }
 
 
-def _decision_to_row(decision: SignalDecision) -> CandidateRow:
+def _decision_to_row(
+    decision: SignalDecision,
+    catalysts: CatalystSummary | None = None,
+) -> CandidateRow:
     row: CandidateRow = {
         "symbol": decision.symbol,
         "signal": decision.signal.value,
@@ -154,6 +167,16 @@ def _decision_to_row(decision: SignalDecision) -> CandidateRow:
         "failed_conditions": list(decision.failed_conditions),
         "notes": list(decision.notes),
         "sell_reason": decision.sell_reason.value if decision.sell_reason else None,
+        "catalysts": (
+            [catalyst_to_dict(c) for c in catalysts.catalysts]
+            if catalysts is not None
+            else []
+        ),
+        "catalyst_count_fresh": catalysts.catalyst_count_fresh if catalysts else 0,
+        "catalyst_count_recent": catalysts.catalyst_count_recent if catalysts else 0,
+        "has_high_conviction_catalyst": (
+            catalysts.has_high_conviction_catalyst if catalysts else False
+        ),
     }
     if decision.risk is not None:
         risk_dict = asdict(decision.risk)

@@ -564,6 +564,51 @@ Daily JSON written to `signals/YYYY-MM-DD.json` and Vercel Postgres
 }
 ```
 
+### 15.1 Catalysts (Phase D additions)
+
+Each candidate row carries an attached catalyst summary populated by
+the Phase D engine (see §13). Schema:
+
+```jsonc
+{
+  // ...existing candidate fields...
+  "catalysts": [
+    {
+      "type": "earnings_beat",        // §13.1 taxonomy
+      "date": "2026-04-25",            // ISO YYYY-MM-DD (event date)
+      "days_old": 5,
+      "freshness": "FRESH",            // FRESH (<7d) | RECENT (<30d) | STALE
+      "source_url": "https://www.bseindia.com/...",
+      "detail": "Q4 EPS up 18% YoY beat estimates by 12%.",
+      "magnitude_score": 9             // 0..10, deterministic per §13.1
+    }
+  ],
+  "catalyst_count_fresh": 1,
+  "catalyst_count_recent": 0,
+  "has_high_conviction_catalyst": true  // FRESH + magnitude ≥ 7
+}
+```
+
+The same catalyst payload appears on `signals/research.json` per-row
+records (where catalysts are attached to every Tier-1-passing symbol,
+not only candidates) and in the per-sector ``catalyst_rollup`` field
+on each `sector_strength` entry, which surfaces top-N highlights for
+the /research drill-down "Triggers" panel.
+
+**Sources currently active** (Phase D, deterministic only):
+1. BSE/NSE corporate filings (earnings_beat, guidance_raise, buyback,
+   management_change, m_and_a) — fixture-backed in Phase D1; Phase
+   D2 swaps in the live scraper without changing the schema.
+2. NSE shareholding pattern (fii_increase, dii_increase,
+   promoter_buying) — *land in upcoming commit*.
+3. NSE block & bulk deals (block_deal_buy) — *land in upcoming commit*.
+4. SEBI insider trading disclosures (promoter_buying, insider_buying)
+   — *land in upcoming commit*.
+5. Sector momentum (sector_momentum) — *land in upcoming commit*.
+
+Phase E adds an LLM news-classification source that emits the same
+catalyst schema; it does not extend the §13.1 taxonomy.
+
 ---
 
 ## 16. Versioning + drift protocol

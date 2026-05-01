@@ -1,19 +1,19 @@
 {
-  "scan_date": "2026-04-30",
+  "scan_date": "2026-05-01",
   "spec_version": "2.0",
   "universe_size": 399,
   "tier1_passed": 398,
-  "nifty_close_today": 23997.55078125,
-  "nifty_close_yesterday": 24177.650390625,
-  "nifty_pct_change_today": -0.007449012061355412,
+  "nifty_close_today": 24177.650390625,
+  "nifty_close_yesterday": 23995.69921875,
+  "nifty_pct_change_today": 0.007582657634449142,
   "sector_strength": [
     {
       "sector": "TELECOMMUNICATION",
       "sector_label": "Telecommunication",
       "today_pct": 0.013529186635477242,
-      "rs_5d": 1.033258789525324,
-      "rs_20d": 1.056656698193567,
-      "rs_60d": 1.1911062336216858,
+      "rs_5d": 1.0342614015174874,
+      "rs_20d": 1.0717137386668807,
+      "rs_60d": 1.1786919124204127,
       "breadth_above_50dma": 0.7,
       "breadth_above_200dma": 0.4,
       "sector_phase": "Confirming",
@@ -58,15 +58,32 @@
       "inst_flow_total": 5,
       "inst_buy_bar_count_5d": 11,
       "sector_count": 10,
-      "rank_by_inst_flow": 12
+      "rank_by_inst_flow": 12,
+      "catalyst_rollup": {
+        "fresh_count": 0,
+        "recent_count": 1,
+        "high_conviction_count": 0,
+        "highlights": [
+          {
+            "symbol": "INDUSTOWER",
+            "type": "management_change",
+            "date": "2026-04-18",
+            "days_old": 13,
+            "freshness": "RECENT",
+            "source_url": "https://www.bseindia.com/corporates/ann.html?scrip=534816&type=AS",
+            "detail": "The Board of Indus Towers Ltd. announces the resignation of the Managing Director with effect from 30 April 2026. A senior member of the leadership team has been appointed as the new managing director",
+            "magnitude_score": 5
+          }
+        ]
+      }
     },
     {
       "sector": "OIL_GAS_AND_CONSUMABLE_FUELS",
       "sector_label": "Oil Gas & Consumable Fuels",
       "today_pct": 0.013220514692395057,
-      "rs_5d": 1.0229144382694981,
-      "rs_20d": 1.0227375355261692,
-      "rs_60d": 1.1095031027815516,
+      "rs_5d": 1.0239070127272845,
+      "rs_20d": 1.0373112381225953,
+      "rs_60d": 1.0979392913406034,
       "breadth_above_50dma": 0.7058823529411765,
       "breadth_above_200dma": 0.35294117647058826,
       "sector_phase": "Confirming",
@@ -111,15 +128,21 @@
       "inst_flow_total": -1,
       "inst_buy_bar_count_5d": 7,
       "sector_count": 17,
-      "rank_by_inst_flow": 13
+      "rank_by_inst_flow": 13,
+      "catalyst_rollup": {
+        "fresh_count": 0,
+        "recent_count": 0,
+        "high_conviction_count": 0,
+        "highlights": []
+      }
     },
     {
       "sector": "METALS_AND_MINING",
       "sector_label": "Metals & Mining",
       "today_pct": 0.005200120185314102,
-      "rs_5d": 1.0308688227223939,
-      "rs_20d": 1.100275697904627,
-      "rs_60d": 1.2016588841727995,
+      "rs_5d": 1.0318691156349598,
+      "rs_20d": 1.115954296018353,
+      "rs_60d": 1.1891345778251403,
       "breadth_above_50dma": 1.0,
       "breadth_above_200dma": 0.9411764705882353,
       "sector_phase": "Confirming",
@@ -164,15 +187,21 @@
       "inst_flow_total": 19,
       "inst_buy_bar_count_5d": 9,
       "sector_count": 17,
-      "rank_by_inst_flow": 4
+      "rank_by_inst_flow": 4,
+      "catalyst_rollup": {
+        "fresh_count": 0,
+        "recent_count": 0,
+        "high_conviction_count": 0,
+        "highlights": []
+      }
     },
     {
       "sector": "POWER",
       "sector_label": "Power",
       "today_pct": 0.004713712124321433,
-      "rs_5d": 1.049583741748067,
-      "rs_20d": 1.1494991954738696,
-      "rs_60d": 1.4000967478921498,
+      "rs_5d": 1.0506021944889719,
+      "rs_20d": 1.1658792136385971,
+      "rs_60d": 1.3855042201640886,
       "breadth_above_50dma": 1.0,
       "breadth_above_200dma": 0.8823529411764706,
       "sector_phase": "Confirming",
@@ -217,15 +246,21 @@
       "inst_flow_total": 60,
       "inst_buy_bar_count_5d": 21,
       "sector_count": 17,
-      "rank_by_inst_flow": 2
+      "rank_by_inst_flow": 2,
+      "catalyst_rollup": {
+        "fresh_count": 0,
+        "recent_count": 0,
+        "high_conviction_count": 0,
+        "highlights": []
+      }
     },
     {
       "sector": "CHEMICALS",
       "sector_label": "Chemicals",
       "today_pct": 0.0021984978270328964,
-      "rs_5d": 1.0296806539115082,
-      "rs_20d": 1.0310890754686506,
-      "rs_60d": 1.1596478442344986,
+      "rs_5d": 1.0306797938967431,
+      "rs_20d": 1.0457817850000095,
+      "rs_60d": 1.1475613985319035,
       "breadth_above_50dma": 0.7692307692307693,
       "breadth_above_200dma": 0.38461538461538464,
       "sector_phase": "Confirming",
@@ -270,15 +305,32 @@
       "inst_flow_total": 34,
       "inst_buy_bar_count_5d": 23,
       "sector_count": 26,
-      "rank_by_inst_flow": 3
+      "rank_by_inst_flow": 3,
+      "catalyst_rollup": {
+        "fresh_count": 0,
+        "recent_count": 1,
+        "high_conviction_count": 0,
+        "highlights": [
+          {
+            "symbol": "ATUL",
+            "type": "earnings_beat",
+            "date": "2026-04-15",
+            "days_old": 16,
+            "freshness": "RECENT",
+            "source_url": "https://www.bseindia.com/corporates/ann.html?scrip=500027&type=AS",
+            "detail": "Atul Ltd. reports Q4 EPS up double-digit YoY, exceeded consensus estimates. Specialty chemicals segment delivered major margin expansion. EBITDA margin up significantly vs prior year.",
+            "magnitude_score": 9
+          }
+        ]
+      }
     },
     {
       "sector": "REALTY",
       "sector_label": "Realty",
       "today_pct": 0.0008865536936434659,
-      "rs_5d": 1.0103903515893033,
-      "rs_20d": 1.0809044239280818,
-      "rs_60d": 1.1280961470271633,
+      "rs_5d": 1.0113707734289614,
+      "rs_20d": 1.0963069872078042,
+      "rs_60d": 1.116338549325293,
       "breadth_above_50dma": 0.7272727272727273,
       "breadth_above_200dma": 0.18181818181818182,
       "sector_phase": "Confirming",
@@ -323,15 +375,21 @@
       "inst_flow_total": -3,
       "inst_buy_bar_count_5d": 3,
       "sector_count": 11,
-      "rank_by_inst_flow": 15
+      "rank_by_inst_flow": 15,
+      "catalyst_rollup": {
+        "fresh_count": 0,
+        "recent_count": 0,
+        "high_conviction_count": 0,
+        "highlights": []
+      }
     },
     {
       "sector": "AUTOMOBILE_AND_AUTO_COMPONENTS",
       "sector_label": "Automobile and Auto Components",
       "today_pct": 0.0008192980955906395,
-      "rs_5d": 0.9919831550844017,
-      "rs_20d": 1.0032102281932462,
-      "rs_60d": 1.1012672919635538,
+      "rs_5d": 0.99294571569109,
+      "rs_20d": 1.0175056725272213,
+      "rs_60d": 1.089789318374815,
       "breadth_above_50dma": 0.5151515151515151,
       "breadth_above_200dma": 0.45454545454545453,
       "sector_phase": "Confirming",
@@ -376,15 +434,32 @@
       "inst_flow_total": 14,
       "inst_buy_bar_count_5d": 12,
       "sector_count": 33,
-      "rank_by_inst_flow": 5
+      "rank_by_inst_flow": 5,
+      "catalyst_rollup": {
+        "fresh_count": 0,
+        "recent_count": 0,
+        "high_conviction_count": 0,
+        "highlights": [
+          {
+            "symbol": "BHARATFORG",
+            "type": "m_and_a",
+            "date": "2026-03-28",
+            "days_old": 34,
+            "freshness": "STALE",
+            "source_url": "https://www.bseindia.com/corporates/ann.html?scrip=500493&type=AS",
+            "detail": "Bharat Forge announced the acquisition of XYZ Defense Components LLC for USD 120 million via scheme of arrangement. Acquired entity manufactures titanium alloy parts for US defense primes; expands the",
+            "magnitude_score": 9
+          }
+        ]
+      }
     },
     {
       "sector": "TEXTILES",
       "sector_label": "Textiles",
       "today_pct": 8.339769075430686e-05,
-      "rs_5d": 1.0248177744392584,
-      "rs_20d": 1.0457497620936538,
-      "rs_60d": 1.2135427735169004,
+      "rs_5d": 1.025812195779634,
+      "rs_20d": 1.0606513820045682,
+      "rs_60d": 1.2008946071681148,
       "breadth_above_50dma": 1.0,
       "breadth_above_200dma": 0.4,
       "sector_phase": "Confirming",
@@ -429,15 +504,21 @@
       "inst_flow_total": 10,
       "inst_buy_bar_count_5d": 1,
       "sector_count": 5,
-      "rank_by_inst_flow": 7
+      "rank_by_inst_flow": 7,
+      "catalyst_rollup": {
+        "fresh_count": 0,
+        "recent_count": 0,
+        "high_conviction_count": 0,
+        "highlights": []
+      }
     },
     {
       "sector": "CONSUMER_DURABLES",
       "sector_label": "Consumer Durables",
       "today_pct": -0.0005299145575664322,
-      "rs_5d": 1.0114651255194198,
-      "rs_20d": 1.0385740220802058,
-      "rs_60d": 1.189223183866748,
+      "rs_5d": 1.012446590254858,
+      "rs_20d": 1.053373389851903,
+      "rs_60d": 1.1768284887776015,
       "breadth_above_50dma": 0.8571428571428571,
       "breadth_above_200dma": 0.35714285714285715,
       "sector_phase": "Confirming",
@@ -482,15 +563,21 @@
       "inst_flow_total": 6,
       "inst_buy_bar_count_5d": 7,
       "sector_count": 14,
-      "rank_by_inst_flow": 11
+      "rank_by_inst_flow": 11,
+      "catalyst_rollup": {
+        "fresh_count": 0,
+        "recent_count": 0,
+        "high_conviction_count": 0,
+        "highlights": []
+      }
     },
     {
       "sector": "CAPITAL_GOODS",
       "sector_label": "Capital Goods",
       "today_pct": -0.0008664111466519938,
-      "rs_5d": 1.0286698196790094,
-      "rs_20d": 1.102820293974694,
-      "rs_60d": 1.322839582657508,
+      "rs_5d": 1.0296679788116891,
+      "rs_20d": 1.118535151817886,
+      "rs_60d": 1.309052268803113,
       "breadth_above_50dma": 0.864406779661017,
       "breadth_above_200dma": 0.711864406779661,
       "sector_phase": "Confirming",
@@ -535,15 +622,21 @@
       "inst_flow_total": 122,
       "inst_buy_bar_count_5d": 40,
       "sector_count": 59,
-      "rank_by_inst_flow": 1
+      "rank_by_inst_flow": 1,
+      "catalyst_rollup": {
+        "fresh_count": 0,
+        "recent_count": 0,
+        "high_conviction_count": 0,
+        "highlights": []
+      }
     },
     {
       "sector": "HEALTHCARE",
       "sector_label": "Healthcare",
       "today_pct": -0.0011795640999538802,
-      "rs_5d": 1.0260457265004028,
-      "rs_20d": 0.9955892545462365,
-      "rs_60d": 1.1469138040445739,
+      "rs_5d": 1.0270413393713755,
+      "rs_20d": 1.0097761022954879,
+      "rs_60d": 1.1349600790520595,
       "breadth_above_50dma": 0.782608695652174,
       "breadth_above_200dma": 0.43478260869565216,
       "sector_phase": "Confirming",
@@ -588,15 +681,32 @@
       "inst_flow_total": -4,
       "inst_buy_bar_count_5d": 29,
       "sector_count": 46,
-      "rank_by_inst_flow": 16
+      "rank_by_inst_flow": 16,
+      "catalyst_rollup": {
+        "fresh_count": 0,
+        "recent_count": 1,
+        "high_conviction_count": 0,
+        "highlights": [
+          {
+            "symbol": "SUNPHARMA",
+            "type": "buyback",
+            "date": "2026-04-22",
+            "days_old": 9,
+            "freshness": "RECENT",
+            "source_url": "https://www.bseindia.com/corporates/ann.html?scrip=524715&type=AS",
+            "detail": "Sun Pharma board approved a buyback of up to 1.2 crore equity shares at INR 1750 per share, total deployment ~INR 2100 crore. Buyback ratio 0.8% of paid-up capital. Open-market route.",
+            "magnitude_score": 6
+          }
+        ]
+      }
     },
     {
       "sector": "SERVICES",
       "sector_label": "Services",
       "today_pct": -0.0024722363439135574,
-      "rs_5d": 0.9914611222717694,
-      "rs_20d": 1.0133673616471142,
-      "rs_60d": 1.0987980440944205,
+      "rs_5d": 0.9924231763293109,
+      "rs_20d": 1.027807542081063,
+      "rs_60d": 1.0873458062757648,
       "breadth_above_50dma": 0.7142857142857143,
       "breadth_above_200dma": 0.5,
       "sector_phase": "Confirming",
@@ -641,15 +751,21 @@
       "inst_flow_total": 13,
       "inst_buy_bar_count_5d": 3,
       "sector_count": 14,
-      "rank_by_inst_flow": 6
+      "rank_by_inst_flow": 6,
+      "catalyst_rollup": {
+        "fresh_count": 0,
+        "recent_count": 0,
+        "high_conviction_count": 0,
+        "highlights": []
+      }
     },
     {
       "sector": "FAST_MOVING_CONSUMER_GOODS",
       "sector_label": "Fast Moving Consumer Goods",
       "today_pct": -0.002593353118000812,
-      "rs_5d": 1.0108495171163414,
-      "rs_20d": 1.0148292355493143,
-      "rs_60d": 1.1050921269707374,
+      "rs_5d": 1.0118303845025254,
+      "rs_20d": 1.0292902472471446,
+      "rs_60d": 1.0935742889862123,
       "breadth_above_50dma": 0.7777777777777778,
       "breadth_above_200dma": 0.4444444444444444,
       "sector_phase": "Confirming",
@@ -694,15 +810,21 @@
       "inst_flow_total": 7,
       "inst_buy_bar_count_5d": 17,
       "sector_count": 27,
-      "rank_by_inst_flow": 9
+      "rank_by_inst_flow": 9,
+      "catalyst_rollup": {
+        "fresh_count": 0,
+        "recent_count": 0,
+        "high_conviction_count": 0,
+        "highlights": []
+      }
     },
     {
       "sector": "INFORMATION_TECHNOLOGY",
       "sector_label": "Information Technology",
       "today_pct": -0.0027944207336679317,
-      "rs_5d": 0.9764516194961184,
-      "rs_20d": 0.992002224812878,
-      "rs_60d": 0.8806459107673347,
+      "rs_5d": 0.9773991092376997,
+      "rs_20d": 1.0061379584661638,
+      "rs_60d": 0.8714673665768543,
       "breadth_above_50dma": 0.46153846153846156,
       "breadth_above_200dma": 0.07692307692307693,
       "sector_phase": "Confirming",
@@ -747,15 +869,21 @@
       "inst_flow_total": 9,
       "inst_buy_bar_count_5d": 11,
       "sector_count": 26,
-      "rank_by_inst_flow": 8
+      "rank_by_inst_flow": 8,
+      "catalyst_rollup": {
+        "fresh_count": 0,
+        "recent_count": 0,
+        "high_conviction_count": 0,
+        "highlights": []
+      }
     },
     {
       "sector": "CONSTRUCTION",
       "sector_label": "Construction",
       "today_pct": -0.003521816332700614,
-      "rs_5d": 1.0171898639387436,
-      "rs_20d": 1.075470302081022,
-      "rs_60d": 1.1693797619710802,
+      "rs_5d": 1.0181768836149665,
+      "rs_20d": 1.0907954307571233,
+      "rs_60d": 1.157191885221215,
       "breadth_above_50dma": 1.0,
       "breadth_above_200dma": 0.4166666666666667,
       "sector_phase": "Confirming",
@@ -800,15 +928,21 @@
       "inst_flow_total": 6,
       "inst_buy_bar_count_5d": 4,
       "sector_count": 12,
-      "rank_by_inst_flow": 10
+      "rank_by_inst_flow": 10,
+      "catalyst_rollup": {
+        "fresh_count": 0,
+        "recent_count": 0,
+        "high_conviction_count": 0,
+        "highlights": []
+      }
     },
     {
       "sector": "CONSUMER_SERVICES",
       "sector_label": "Consumer Services",
       "today_pct": -0.004956050042481475,
-      "rs_5d": 0.983320474227535,
-      "rs_20d": 1.0070084965278225,
-      "rs_60d": 1.0271203500158415,
+      "rs_5d": 0.9842746290913451,
+      "rs_20d": 1.021358065044363,
+      "rs_60d": 1.016415173955525,
       "breadth_above_50dma": 0.6818181818181818,
       "breadth_above_200dma": 0.09090909090909091,
       "sector_phase": "Confirming",
@@ -853,15 +987,21 @@
       "inst_flow_total": -1,
       "inst_buy_bar_count_5d": 1,
       "sector_count": 22,
-      "rank_by_inst_flow": 14
+      "rank_by_inst_flow": 14,
+      "catalyst_rollup": {
+        "fresh_count": 0,
+        "recent_count": 0,
+        "high_conviction_count": 0,
+        "highlights": []
+      }
     },
     {
       "sector": "CONSTRUCTION_MATERIALS",
       "sector_label": "Construction Materials",
       "today_pct": -0.013507817348510223,
-      "rs_5d": 0.9839964413435689,
-      "rs_20d": 0.9763618109970378,
-      "rs_60d": 0.9656915036574153,
+      "rs_5d": 0.9849512521250868,
+      "rs_20d": 0.9902746734526611,
+      "rs_60d": 0.9556265705982612,
       "breadth_above_50dma": 0.4,
       "breadth_above_200dma": 0.2,
       "sector_phase": "Confirming",
@@ -906,7 +1046,13 @@
       "inst_flow_total": -27,
       "inst_buy_bar_count_5d": 2,
       "sector_count": 10,
-      "rank_by_inst_flow": 17
+      "rank_by_inst_flow": 17,
+      "catalyst_rollup": {
+        "fresh_count": 0,
+        "recent_count": 0,
+        "high_conviction_count": 0,
+        "highlights": []
+      }
     }
   ],
   "rows": [
@@ -929,7 +1075,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.8689449333741992,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ABB",
@@ -950,7 +1100,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.6201258102933973,
       "pro_setup_score": 10,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ACC",
@@ -971,7 +1125,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.5672677879673429,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ACMESOLAR",
@@ -992,7 +1150,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.5027250843045401,
       "pro_setup_score": 6,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "AIAENG",
@@ -1013,7 +1175,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.36086073106013444,
       "pro_setup_score": 10,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "APLAPOLLO",
@@ -1034,7 +1200,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 1.3703253460251017,
       "pro_setup_score": 3,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "AWL",
@@ -1055,7 +1225,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 0.6146713023931045,
       "pro_setup_score": 10,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "AARTIIND",
@@ -1076,7 +1250,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 2.5581547950120287,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ABBOTINDIA",
@@ -1097,7 +1275,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 0.7380545290754325,
       "pro_setup_score": 3,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ACE",
@@ -1118,7 +1300,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.6322805280358573,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ADANIENSOL",
@@ -1139,7 +1325,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 0.9947912790539835,
       "pro_setup_score": 7,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ADANIENT",
@@ -1160,7 +1350,11 @@
       "inst_buy_bar_count_5d": 3,
       "rvol_today": 2.1896009084443073,
       "pro_setup_score": 9,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ADANIGREEN",
@@ -1181,7 +1375,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 1.0271706463251193,
       "pro_setup_score": 7,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ADANIPORTS",
@@ -1202,7 +1400,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.8578216331368527,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ADANIPOWER",
@@ -1223,7 +1425,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 1.195414181854077,
       "pro_setup_score": 9,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ATGL",
@@ -1244,7 +1450,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 2.7156282632253883,
       "pro_setup_score": 11,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ABFRL",
@@ -1265,7 +1475,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.4031535421265423,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ABREL",
@@ -1286,7 +1500,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.7394633539001297,
       "pro_setup_score": 8,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "AEGISLOG",
@@ -1307,7 +1525,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.19551872465718098,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "AFCONS",
@@ -1328,7 +1550,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.3638015870498534,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "AFFLE",
@@ -1349,7 +1575,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.2929865861450046,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "AJANTPHARM",
@@ -1370,7 +1600,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.4257937655384299,
       "pro_setup_score": 4,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ALKEM",
@@ -1391,7 +1625,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.7359035067419086,
       "pro_setup_score": 5,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ABDL",
@@ -1412,7 +1650,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.7249924757429913,
       "pro_setup_score": 10,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ARE&M",
@@ -1433,7 +1675,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.4593860565838011,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "AMBER",
@@ -1454,7 +1700,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 1.1813834516987827,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "AMBUJACEM",
@@ -1475,7 +1725,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.6286808645219264,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ANANTRAJ",
@@ -1496,7 +1750,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.8296926018289725,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ANURAS",
@@ -1517,7 +1775,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.798873083320824,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "APARINDS",
@@ -1538,7 +1800,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.8299489243709297,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "APOLLOHOSP",
@@ -1559,7 +1825,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.7911307920806159,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "APOLLOTYRE",
@@ -1580,7 +1850,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.48140264394143256,
       "pro_setup_score": 3,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ASAHIINDIA",
@@ -1601,7 +1875,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.2491340038086083,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ASHOKLEY",
@@ -1622,7 +1900,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.7223127178806291,
       "pro_setup_score": 2,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ASIANPAINT",
@@ -1643,7 +1925,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.42800509917054963,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ASTERDM",
@@ -1664,7 +1950,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 1.0145966369922714,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ASTRAL",
@@ -1685,7 +1975,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.5487878531235877,
       "pro_setup_score": 3,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ATUL",
@@ -1706,7 +2000,21 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 2.085657940626778,
       "pro_setup_score": 12,
-      "lifecycle": "CONFIRMED"
+      "lifecycle": "CONFIRMED",
+      "catalysts": [
+        {
+          "type": "earnings_beat",
+          "date": "2026-04-15",
+          "days_old": 16,
+          "freshness": "RECENT",
+          "source_url": "https://www.bseindia.com/corporates/ann.html?scrip=500027&type=AS",
+          "detail": "Atul Ltd. reports Q4 EPS up double-digit YoY, exceeded consensus estimates. Specialty chemicals segment delivered major margin expansion. EBITDA margin up significantly vs prior year.",
+          "magnitude_score": 9
+        }
+      ],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 1,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "AUROPHARMA",
@@ -1727,7 +2035,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.44737878532137093,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "DMART",
@@ -1748,7 +2060,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.7323085224571272,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "BEML",
@@ -1769,7 +2085,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.9578165903051413,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "BLS",
@@ -1790,7 +2110,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.10999166799849391,
       "pro_setup_score": 5,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "BAJAJ-AUTO",
@@ -1811,7 +2135,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.7523253562333551,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "BALKRISIND",
@@ -1832,7 +2160,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.5006904592903674,
       "pro_setup_score": 2,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "BALRAMCHIN",
@@ -1853,7 +2185,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.8420085298393223,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "BATAINDIA",
@@ -1874,7 +2210,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.32652183031783,
       "pro_setup_score": 3,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "BAYERCROP",
@@ -1895,7 +2235,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 1.0813304979336356,
       "pro_setup_score": 4,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "BERGEPAINT",
@@ -1916,7 +2260,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.16558433321483565,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "BDL",
@@ -1937,7 +2285,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.44950917399477525,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "BEL",
@@ -1958,7 +2310,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.6540152582604524,
       "pro_setup_score": 3,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "BHARATFORG",
@@ -1979,7 +2335,21 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.3414040985944757,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [
+        {
+          "type": "m_and_a",
+          "date": "2026-03-28",
+          "days_old": 34,
+          "freshness": "STALE",
+          "source_url": "https://www.bseindia.com/corporates/ann.html?scrip=500493&type=AS",
+          "detail": "Bharat Forge announced the acquisition of XYZ Defense Components LLC for USD 120 million via scheme of arrangement. Acquired entity manufactures titanium alloy parts for US defense primes; expands the",
+          "magnitude_score": 9
+        }
+      ],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "BHEL",
@@ -2000,7 +2370,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.8718217024244924,
       "pro_setup_score": 7,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "BPCL",
@@ -2021,7 +2395,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 1.171878732736421,
       "pro_setup_score": 4,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "BHARTIARTL",
@@ -2042,7 +2420,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 1.1349243917854768,
       "pro_setup_score": 5,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "BHARTIHEXA",
@@ -2063,7 +2445,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 4.1199699968882575,
       "pro_setup_score": 4,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "BIKAJI",
@@ -2084,7 +2470,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 1.0568243215779816,
       "pro_setup_score": 11,
-      "lifecycle": "CONFIRMED"
+      "lifecycle": "CONFIRMED",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "BIOCON",
@@ -2105,7 +2495,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 1.161119463332974,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "BSOFT",
@@ -2126,7 +2520,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.2273861113909197,
       "pro_setup_score": 3,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "BLUEDART",
@@ -2147,7 +2545,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.5814121384222939,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "BLUEJET",
@@ -2168,7 +2570,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.41597640072072023,
       "pro_setup_score": 7,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "BLUESTARCO",
@@ -2189,7 +2595,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.8642763308592522,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "BBTC",
@@ -2210,7 +2620,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.5245594897700043,
       "pro_setup_score": 2,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "BOSCHLTD",
@@ -2231,7 +2645,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.5952788025379158,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "FIRSTCRY",
@@ -2252,7 +2670,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.1266566250425352,
       "pro_setup_score": 3,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "BRIGADE",
@@ -2273,7 +2695,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.428987649346712,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "BRITANNIA",
@@ -2294,7 +2720,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.6601148087477892,
       "pro_setup_score": 2,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "MAPMYINDIA",
@@ -2315,7 +2745,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.33159406497577865,
       "pro_setup_score": 2,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "CCL",
@@ -2336,7 +2770,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.292278736244453,
       "pro_setup_score": 10,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "CESC",
@@ -2357,7 +2795,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 1.5501010153881787,
       "pro_setup_score": 8,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "CGPOWER",
@@ -2378,7 +2820,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.6653690835099125,
       "pro_setup_score": 7,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "CAPLIPOINT",
@@ -2399,7 +2845,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.9339160046343128,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "CARBORUNIV",
@@ -2420,7 +2870,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.6342653156523398,
       "pro_setup_score": 9,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "CARTRADE",
@@ -2441,7 +2895,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.8199149900191515,
       "pro_setup_score": 3,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "CASTROLIND",
@@ -2462,7 +2920,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 1.6427056827497815,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "CEATLTD",
@@ -2483,7 +2945,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 1.454484765395668,
       "pro_setup_score": 3,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "CHALET",
@@ -2504,7 +2970,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.46483892076257755,
       "pro_setup_score": 5,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "CHAMBLFERT",
@@ -2525,7 +2995,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.6171270627884652,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "CHENNPETRO",
@@ -2546,7 +3020,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 2.437992329328195,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "CIPLA",
@@ -2567,7 +3045,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.8492595973157885,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "CLEAN",
@@ -2588,7 +3070,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 0.48881791951172343,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "COALINDIA",
@@ -2609,7 +3095,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 2.231117886385988,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "COCHINSHIP",
@@ -2630,7 +3120,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 1.2366534334454091,
       "pro_setup_score": 8,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "COFORGE",
@@ -2651,7 +3145,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.35063972020243256,
       "pro_setup_score": 3,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "COLPAL",
@@ -2672,7 +3170,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.7806734245653225,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "CONCORDBIO",
@@ -2693,7 +3195,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 1.7670288486233876,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "CONCOR",
@@ -2714,7 +3220,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.6909977618597396,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "COROMANDEL",
@@ -2735,7 +3245,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.8341423301301457,
       "pro_setup_score": 2,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "CRAFTSMAN",
@@ -2756,7 +3270,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.3760251986115051,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "CROMPTON",
@@ -2777,7 +3295,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 4.067299136745406,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "CUMMINSIND",
@@ -2798,7 +3320,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.42610791474818793,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "CYIENT",
@@ -2819,7 +3345,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 1.9169843971191074,
       "pro_setup_score": 5,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "DCMSHRIRAM",
@@ -2840,7 +3370,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.45313856803931424,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "DLF",
@@ -2861,7 +3395,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.4862406091859116,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "DOMS",
@@ -2882,7 +3420,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.1700981115966416,
       "pro_setup_score": 3,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "DABUR",
@@ -2903,7 +3445,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.2797516960656834,
       "pro_setup_score": 5,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "DALBHARAT",
@@ -2924,7 +3470,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 4.106585641283833,
       "pro_setup_score": 3,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "DATAPATTNS",
@@ -2945,7 +3495,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 1.0755944781865496,
       "pro_setup_score": 7,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "DEEPAKFERT",
@@ -2966,7 +3520,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.39680605764673205,
       "pro_setup_score": 9,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "DEEPAKNTR",
@@ -2987,7 +3545,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.3343087978292054,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "DELHIVERY",
@@ -3008,7 +3570,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 1.0324042917075535,
       "pro_setup_score": 10,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "DEVYANI",
@@ -3029,7 +3595,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.5742536677368579,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "DIVISLAB",
@@ -3050,7 +3620,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.8399141079115169,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "DIXON",
@@ -3071,7 +3645,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 1.2821982720176768,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "LALPATHLAB",
@@ -3092,7 +3670,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.41356853154769246,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "DRREDDY",
@@ -3113,7 +3695,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 1.0761935837313776,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "EIDPARRY",
@@ -3134,7 +3720,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.41567282469597056,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "EIHOTEL",
@@ -3155,7 +3745,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.2570521166532701,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "EICHERMOT",
@@ -3176,7 +3770,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.8467274751075025,
       "pro_setup_score": 2,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ELECON",
@@ -3197,7 +3795,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 0.8511420064561737,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ELGIEQUIP",
@@ -3218,7 +3820,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.28982859738902356,
       "pro_setup_score": 10,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "EMAMILTD",
@@ -3239,7 +3845,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.47754084578142963,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "EMCURE",
@@ -3260,7 +3870,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 4.964412771705952,
       "pro_setup_score": 10,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ENDURANCE",
@@ -3281,7 +3895,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.7217153064371598,
       "pro_setup_score": 2,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ENGINERSIN",
@@ -3302,7 +3920,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.31640699187907195,
       "pro_setup_score": 6,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ERIS",
@@ -3323,7 +3945,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 1.4167760428962999,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ESCORTS",
@@ -3344,7 +3970,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.9721606153994247,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ETERNAL",
@@ -3365,7 +3995,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 2.0893350538154825,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "EXIDEIND",
@@ -3386,7 +4020,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 1.7278775956687236,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "NYKAA",
@@ -3407,7 +4045,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.627423643274604,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "FACT",
@@ -3428,7 +4070,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.12069964541136888,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "FINCABLES",
@@ -3449,7 +4095,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.6137512273312571,
       "pro_setup_score": 6,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "FSL",
@@ -3470,7 +4120,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.36966225462004854,
       "pro_setup_score": 4,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "FORCEMOT",
@@ -3491,7 +4145,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 1.0968568617668415,
       "pro_setup_score": 4,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "FORTIS",
@@ -3512,7 +4170,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.7563287993282554,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "GAIL",
@@ -3533,7 +4195,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.4192115408074933,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "GVT&D",
@@ -3554,7 +4220,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 0.8536019485918597,
       "pro_setup_score": 8,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "GMRAIRPORT",
@@ -3575,7 +4245,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 1.1047756876920993,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "GABRIEL",
@@ -3596,7 +4270,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 2.02953129543576,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "GALLANTT",
@@ -3617,7 +4295,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.3630791105355507,
       "pro_setup_score": 9,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "GRSE",
@@ -3638,7 +4320,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 1.0383113061089506,
       "pro_setup_score": 9,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "GILLETTE",
@@ -3659,7 +4345,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 1.2083324338909875,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "GLAND",
@@ -3680,7 +4370,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.8864046503823255,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "GLAXO",
@@ -3701,7 +4395,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.8574411625366256,
       "pro_setup_score": 3,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "GLENMARK",
@@ -3722,7 +4420,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 2.5950251181058115,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "MEDANTA",
@@ -3743,7 +4445,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.6727392629599587,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "GPIL",
@@ -3764,7 +4470,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 3.200893986001247,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "GODFRYPHLP",
@@ -3785,7 +4495,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.2308300885885708,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "GODREJCP",
@@ -3806,7 +4520,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.5539260837929146,
       "pro_setup_score": 5,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "GODREJIND",
@@ -3827,7 +4545,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.4732739477176461,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "GODREJPROP",
@@ -3848,7 +4570,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.43451004921608705,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "GRANULES",
@@ -3869,7 +4595,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 1.0107021050354168,
       "pro_setup_score": 8,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "GRAPHITE",
@@ -3890,7 +4620,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.693220864606475,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "GRASIM",
@@ -3911,7 +4645,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 1.6384306257268781,
       "pro_setup_score": 10,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "GRAVITA",
@@ -3932,7 +4670,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.5208561804078111,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "GESHIP",
@@ -3953,7 +4695,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 1.1866932636685867,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "FLUOROCHEM",
@@ -3974,7 +4720,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 0.8292716175445545,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "GMDCLTD",
@@ -3995,7 +4745,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 2.5592218851748956,
       "pro_setup_score": 11,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "GSPL",
@@ -4016,7 +4770,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.30939081867090684,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "HEG",
@@ -4037,7 +4795,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.2668328309387051,
       "pro_setup_score": 7,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "HBLENGINE",
@@ -4058,7 +4820,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 1.61224090723363,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "HCLTECH",
@@ -4079,7 +4845,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 1.4659202554844983,
       "pro_setup_score": 3,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "HFCL",
@@ -4100,7 +4870,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 1.208136840502653,
       "pro_setup_score": 7,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "HAVELLS",
@@ -4121,7 +4895,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 1.2834728657513028,
       "pro_setup_score": 3,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "HEROMOTOCO",
@@ -4142,7 +4920,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 1.2658454766430345,
       "pro_setup_score": 2,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "HEXT",
@@ -4163,7 +4945,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.20249485519809224,
       "pro_setup_score": 4,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "HSCL",
@@ -4184,7 +4970,11 @@
       "inst_buy_bar_count_5d": 3,
       "rvol_today": 2.1719339061074083,
       "pro_setup_score": 9,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "HINDALCO",
@@ -4205,7 +4995,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 1.1865011413679751,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "HAL",
@@ -4226,7 +5020,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.3569609993363001,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "HINDCOPPER",
@@ -4247,7 +5045,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.4042644116800121,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "HINDPETRO",
@@ -4268,7 +5070,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.516020239234005,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "HINDUNILVR",
@@ -4289,7 +5095,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.7762089147006856,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "HINDZINC",
@@ -4310,7 +5120,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 1.0553061307209377,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "POWERINDIA",
@@ -4331,7 +5145,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.9257253055127258,
       "pro_setup_score": 8,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "HONASA",
@@ -4352,7 +5170,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.2904350694983658,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "HONAUT",
@@ -4373,7 +5195,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.31869112674981503,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "HYUNDAI",
@@ -4394,7 +5220,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.8831666434348755,
       "pro_setup_score": 2,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "IRB",
@@ -4415,7 +5245,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.6026956327373243,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "IRCON",
@@ -4436,7 +5270,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.35248939797941886,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ITCHOTELS",
@@ -4457,7 +5295,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.6562542232231457,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ITI",
@@ -4478,7 +5320,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.29449906161403117,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "INDGN",
@@ -4499,7 +5345,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.706707582353841,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "INDIACEM",
@@ -4520,7 +5370,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 2.148137629254799,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "INDIAMART",
@@ -4541,7 +5395,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.6026677755041746,
       "pro_setup_score": 5,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "INDHOTEL",
@@ -4562,7 +5420,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.6988313685288138,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "IOC",
@@ -4583,7 +5445,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.5535799764121151,
       "pro_setup_score": 4,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "IRCTC",
@@ -4604,7 +5470,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.612601574823584,
       "pro_setup_score": 2,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "IGL",
@@ -4625,7 +5495,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 1.516061780592562,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "INDUSTOWER",
@@ -4646,7 +5520,21 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 1.8286532866610044,
       "pro_setup_score": 5,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [
+        {
+          "type": "management_change",
+          "date": "2026-04-18",
+          "days_old": 13,
+          "freshness": "RECENT",
+          "source_url": "https://www.bseindia.com/corporates/ann.html?scrip=534816&type=AS",
+          "detail": "The Board of Indus Towers Ltd. announces the resignation of the Managing Director with effect from 30 April 2026. A senior member of the leadership team has been appointed as the new managing director",
+          "magnitude_score": 5
+        }
+      ],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 1,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "NAUKRI",
@@ -4667,7 +5555,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.7253144980065263,
       "pro_setup_score": 4,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "INFY",
@@ -4688,7 +5580,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.8431844695302674,
       "pro_setup_score": 3,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "INOXWIND",
@@ -4709,7 +5605,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.5971998285675988,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "INTELLECT",
@@ -4730,7 +5630,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 5.419413265446626,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "INDIGO",
@@ -4751,7 +5655,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.7723323344727286,
       "pro_setup_score": 4,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "IGIL",
@@ -4772,7 +5680,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.3277158323769699,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "IKS",
@@ -4793,7 +5705,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 1.1381095158364773,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "IPCALAB",
@@ -4814,7 +5730,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.43886303553649564,
       "pro_setup_score": 10,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "JBCHEPHARM",
@@ -4835,7 +5755,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.9207962613062431,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "JKCEMENT",
@@ -4856,7 +5780,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 1.744391827141668,
       "pro_setup_score": 3,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "JBMA",
@@ -4877,7 +5805,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.8415424164960772,
       "pro_setup_score": 10,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "JKTYRE",
@@ -4898,7 +5830,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.4648788600736968,
       "pro_setup_score": 2,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "JSWENERGY",
@@ -4919,7 +5855,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 1.34254035890046,
       "pro_setup_score": 10,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "JSWINFRA",
@@ -4940,7 +5880,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 1.2638674680905542,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "JSWSTEEL",
@@ -4961,7 +5905,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 1.0204277111519122,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "JPPOWER",
@@ -4982,7 +5930,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 1.0218658501431384,
       "pro_setup_score": 11,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "JINDALSAW",
@@ -5003,7 +5955,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 1.593375715473441,
       "pro_setup_score": 10,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "JSL",
@@ -5024,7 +5980,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.8099011501649276,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "JINDALSTEL",
@@ -5045,7 +6005,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.6055453573040925,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "JUBLFOOD",
@@ -5066,7 +6030,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.9201361304792375,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "JUBLINGREA",
@@ -5087,7 +6055,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 0.7430694735548576,
       "pro_setup_score": 11,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "JUBLPHARMA",
@@ -5108,7 +6080,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.9437928577690132,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "JWL",
@@ -5129,7 +6105,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.4522151678970126,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "JYOTICNC",
@@ -5150,7 +6130,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.926374090199492,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "KPRMILL",
@@ -5171,7 +6155,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.22982720193283782,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "KEI",
@@ -5192,7 +6180,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.5564750181943562,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "KPITTECH",
@@ -5213,7 +6205,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.7114405716493681,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "KAJARIACER",
@@ -5234,7 +6230,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 1.09709756748503,
       "pro_setup_score": 9,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "KPIL",
@@ -5255,7 +6255,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.5137390386090617,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "KALYANKJIL",
@@ -5276,7 +6280,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.44249625844955737,
       "pro_setup_score": 4,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "KAYNES",
@@ -5297,7 +6305,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.6077240013876852,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "KEC",
@@ -5318,7 +6330,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.45021567545405844,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "KIRLOSENG",
@@ -5339,7 +6355,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.9624696473834665,
       "pro_setup_score": 8,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "KIMS",
@@ -5360,7 +6380,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.8763092981135545,
       "pro_setup_score": 2,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "LTTS",
@@ -5381,7 +6405,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.2773343557891429,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "LTFOODS",
@@ -5402,7 +6430,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.17766576603244227,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "LT",
@@ -5423,7 +6455,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.46295134666187104,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "LATENTVIEW",
@@ -5444,7 +6480,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.12461536541243456,
       "pro_setup_score": 3,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "LAURUSLABS",
@@ -5465,7 +6505,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 1.22308186591124,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "LEMONTREE",
@@ -5486,7 +6530,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.38390464922403245,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "LINDEINDIA",
@@ -5507,7 +6555,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.19764199251451625,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "LLOYDSME",
@@ -5528,7 +6580,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 1.1658416152453266,
       "pro_setup_score": 8,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "LODHA",
@@ -5549,7 +6605,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 1.310418772920531,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "LUPIN",
@@ -5570,7 +6630,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 1.2570248380335094,
       "pro_setup_score": 3,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "MMTC",
@@ -5591,7 +6655,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.3646976846248547,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "MRF",
@@ -5612,7 +6680,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 1.0414866911264014,
       "pro_setup_score": 2,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "MGL",
@@ -5633,7 +6705,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.4626401715942424,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "M&M",
@@ -5654,7 +6730,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.8307518264082722,
       "pro_setup_score": 2,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "MRPL",
@@ -5675,7 +6755,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.9108432980108198,
       "pro_setup_score": 4,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "MANKIND",
@@ -5696,7 +6780,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.490155797317011,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "MARICO",
@@ -5717,7 +6805,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.3771298685692797,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "MARUTI",
@@ -5738,7 +6830,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 1.6180217218341413,
       "pro_setup_score": 2,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "MAXHEALTH",
@@ -5759,7 +6855,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.3603561707915535,
       "pro_setup_score": 5,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "MAZDOCK",
@@ -5780,7 +6880,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.46310005063053555,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "MINDACORP",
@@ -5801,7 +6905,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 1.4546576653504875,
       "pro_setup_score": 3,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "MSUMI",
@@ -5822,7 +6930,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 3.776974043722411,
       "pro_setup_score": 5,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "MPHASIS",
@@ -5843,7 +6955,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.457832187715854,
       "pro_setup_score": 3,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "NATCOPHARM",
@@ -5864,7 +6980,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.2949824364153928,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "NBCC",
@@ -5885,7 +7005,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.6704836678966727,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "NCC",
@@ -5906,7 +7030,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 1.6178251161104504,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "NHPC",
@@ -5927,7 +7055,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 1.7224107544835179,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "NLCINDIA",
@@ -5948,7 +7080,11 @@
       "inst_buy_bar_count_5d": 3,
       "rvol_today": 1.9982047094350208,
       "pro_setup_score": 9,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "NMDC",
@@ -5969,7 +7105,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 1.1252286250161816,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "NSLNISP",
@@ -5990,7 +7130,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 1.5804010931654644,
       "pro_setup_score": 10,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "NTPCGREEN",
@@ -6011,7 +7155,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.6735911824898563,
       "pro_setup_score": 11,
-      "lifecycle": "CONFIRMED"
+      "lifecycle": "CONFIRMED",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "NTPC",
@@ -6032,7 +7180,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.6054051505935885,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "NH",
@@ -6053,7 +7205,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.8642648025773546,
       "pro_setup_score": 4,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "NATIONALUM",
@@ -6074,7 +7230,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.6351917378105745,
       "pro_setup_score": 5,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "NAVA",
@@ -6095,7 +7255,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.6538461478439034,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "NAVINFLUOR",
@@ -6116,7 +7280,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 1.098997574382999,
       "pro_setup_score": 10,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "NESTLEIND",
@@ -6137,7 +7305,11 @@
       "inst_buy_bar_count_5d": 4,
       "rvol_today": 2.5828503728122105,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "NETWEB",
@@ -6158,7 +7330,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.8058094615070032,
       "pro_setup_score": 9,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "NEULANDLAB",
@@ -6179,7 +7355,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.3417456684052275,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "NEWGEN",
@@ -6200,7 +7380,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.21221736260467836,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "NUVOCO",
@@ -6221,7 +7405,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.6362551745458137,
       "pro_setup_score": 2,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "OBEROIRLTY",
@@ -6242,7 +7430,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.733774451649852,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ONGC",
@@ -6263,7 +7455,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 2.2620441456959477,
       "pro_setup_score": 10,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "OIL",
@@ -6284,7 +7480,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 1.7297391347852074,
       "pro_setup_score": 10,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "OLAELEC",
@@ -6305,7 +7505,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.4157286658057851,
       "pro_setup_score": 7,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "OLECTRA",
@@ -6326,7 +7530,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 1.7303374530712476,
       "pro_setup_score": 11,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ONESOURCE",
@@ -6347,7 +7555,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 1.2799874711019057,
       "pro_setup_score": 10,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "OFSS",
@@ -6368,7 +7580,11 @@
       "inst_buy_bar_count_5d": 5,
       "rvol_today": 2.2656430058305177,
       "pro_setup_score": 9,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "PCBL",
@@ -6389,7 +7605,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.3758150352616247,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "PGEL",
@@ -6410,7 +7630,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.48491199807471574,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "PIIND",
@@ -6431,7 +7655,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 1.6413782711756673,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "PTCIL",
@@ -6452,7 +7680,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.31572840267660174,
       "pro_setup_score": 2,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "PVRINOX",
@@ -6473,7 +7705,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 1.0740490348717782,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "PAGEIND",
@@ -6494,7 +7730,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.8632857849835195,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "PARADEEP",
@@ -6515,7 +7755,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.8121733196646861,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "PATANJALI",
@@ -6536,7 +7780,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.5397343862688193,
       "pro_setup_score": 2,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "PERSISTENT",
@@ -6557,7 +7805,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.8402847419927763,
       "pro_setup_score": 3,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "PETRONET",
@@ -6578,7 +7830,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.2741154835896576,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "PFIZER",
@@ -6599,7 +7855,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.44915923190364937,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "PHOENIXLTD",
@@ -6620,7 +7880,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 2.538806071437555,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "PIDILITIND",
@@ -6641,7 +7905,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.49073246910825136,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "PPLPHARMA",
@@ -6662,7 +7930,11 @@
       "inst_buy_bar_count_5d": 3,
       "rvol_today": 1.5413028506875128,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "POLYMED",
@@ -6683,7 +7955,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.5703790858508169,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "POLYCAB",
@@ -6704,7 +7980,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.7437210890130982,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "POWERGRID",
@@ -6725,7 +8005,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.581676548362455,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "PREMIERENE",
@@ -6746,7 +8030,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.5692779521472946,
       "pro_setup_score": 7,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "PRESTIGE",
@@ -6767,7 +8055,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.45258438642484905,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "RRKABEL",
@@ -6788,7 +8080,11 @@
       "inst_buy_bar_count_5d": 3,
       "rvol_today": 3.877793947323236,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "RHIM",
@@ -6809,7 +8105,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.18912839365255316,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "RITES",
@@ -6830,7 +8130,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.5749335486037522,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "RADICO",
@@ -6851,7 +8155,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 1.3395306068234214,
       "pro_setup_score": 9,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "RVNL",
@@ -6872,7 +8180,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.655117833442344,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "RAILTEL",
@@ -6893,7 +8205,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 1.2723123881180705,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "RAINBOW",
@@ -6914,7 +8230,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.6087159271279403,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "RKFORGE",
@@ -6935,7 +8255,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 10.152190383734824,
       "pro_setup_score": 12,
-      "lifecycle": "CONFIRMED"
+      "lifecycle": "CONFIRMED",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "REDINGTON",
@@ -6956,7 +8280,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.4711393713612116,
       "pro_setup_score": 3,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "RELIANCE",
@@ -6977,7 +8305,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 2.311339909676559,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "RPOWER",
@@ -6998,7 +8330,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.8016049690628682,
       "pro_setup_score": 8,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "SJVN",
@@ -7019,7 +8355,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 1.2208425641781109,
       "pro_setup_score": 10,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "SRF",
@@ -7040,7 +8380,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.5369289999630903,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "SAGILITY",
@@ -7061,7 +8405,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.3524275947775914,
       "pro_setup_score": 4,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "SAILIFE",
@@ -7082,7 +8430,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.6343568776591425,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "MOTHERSON",
@@ -7103,7 +8455,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.6772501779722063,
       "pro_setup_score": 10,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "SAPPHIRE",
@@ -7124,7 +8480,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 1.618886662052427,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "SARDAEN",
@@ -7145,7 +8505,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 1.351407589242295,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "SAREGAMA",
@@ -7166,7 +8530,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 0.5266122504655899,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "SCHAEFFLER",
@@ -7187,7 +8555,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.9519946006490709,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "SCHNEIDER",
@@ -7208,7 +8580,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.357330565800368,
       "pro_setup_score": 8,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "SCI",
@@ -7229,7 +8605,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 1.6153391895350095,
       "pro_setup_score": 10,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "SHREECEM",
@@ -7250,7 +8630,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.8745955222902227,
       "pro_setup_score": 5,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "SHYAMMETL",
@@ -7271,7 +8655,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 1.3253778715549307,
       "pro_setup_score": 11,
-      "lifecycle": "CONFIRMED"
+      "lifecycle": "CONFIRMED",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "SIEMENS",
@@ -7292,7 +8680,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.5596656598819439,
       "pro_setup_score": 6,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "SIGNATURE",
@@ -7313,7 +8705,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.4763537772941635,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "SOBHA",
@@ -7334,7 +8730,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 0.7617395800637856,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "SOLARINDS",
@@ -7355,7 +8755,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.5922482204945139,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "SONACOMS",
@@ -7376,7 +8780,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 1.7035309433081627,
       "pro_setup_score": 11,
-      "lifecycle": "CONFIRMED"
+      "lifecycle": "CONFIRMED",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "SONATSOFTW",
@@ -7397,7 +8805,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.24630090005820418,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "SAIL",
@@ -7418,7 +8830,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 1.1069240421745379,
       "pro_setup_score": 10,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "SUMICHEM",
@@ -7439,7 +8855,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.5687299721616838,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "SUNPHARMA",
@@ -7460,7 +8880,21 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 4.825313097722051,
       "pro_setup_score": 11,
-      "lifecycle": "CONFIRMED"
+      "lifecycle": "CONFIRMED",
+      "catalysts": [
+        {
+          "type": "buyback",
+          "date": "2026-04-22",
+          "days_old": 9,
+          "freshness": "RECENT",
+          "source_url": "https://www.bseindia.com/corporates/ann.html?scrip=524715&type=AS",
+          "detail": "Sun Pharma board approved a buyback of up to 1.2 crore equity shares at INR 1750 per share, total deployment ~INR 2100 crore. Buyback ratio 0.8% of paid-up capital. Open-market route.",
+          "magnitude_score": 6
+        }
+      ],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 1,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "SUNTV",
@@ -7481,7 +8915,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.6993690563749765,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "SUPREMEIND",
@@ -7502,7 +8940,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 1.640832279451187,
       "pro_setup_score": 2,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "SPLPETRO",
@@ -7523,7 +8965,11 @@
       "inst_buy_bar_count_5d": 3,
       "rvol_today": 1.7782457647789816,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "SUZLON",
@@ -7544,7 +8990,11 @@
       "inst_buy_bar_count_5d": 3,
       "rvol_today": 1.5865603848550112,
       "pro_setup_score": 9,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "SWANCORP",
@@ -7565,7 +9015,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.38021415783589585,
       "pro_setup_score": 5,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "SWIGGY",
@@ -7586,7 +9040,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 1.571974549984941,
       "pro_setup_score": 2,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "SYNGENE",
@@ -7607,7 +9065,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.5917686634339443,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "SYRMA",
@@ -7628,7 +9090,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.8936080625412123,
       "pro_setup_score": 9,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "TBOTEK",
@@ -7649,7 +9115,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.39526028907335004,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "TVSMOTOR",
@@ -7670,7 +9140,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.48720242617795484,
       "pro_setup_score": 2,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "TATACHEM",
@@ -7691,7 +9165,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 22.803243080867382,
       "pro_setup_score": 8,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "TATACOMM",
@@ -7712,7 +9190,11 @@
       "inst_buy_bar_count_5d": 3,
       "rvol_today": 1.7393736249514689,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "TCS",
@@ -7733,7 +9215,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 1.037663971368157,
       "pro_setup_score": 2,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "TATACONSUM",
@@ -7754,7 +9240,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 1.2112932427829293,
       "pro_setup_score": 10,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "TATAELXSI",
@@ -7775,7 +9265,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.917617772425292,
       "pro_setup_score": 3,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "TATAPOWER",
@@ -7796,7 +9290,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 1.9969765460525357,
       "pro_setup_score": 10,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "TATASTEEL",
@@ -7817,7 +9315,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 1.055315967237759,
       "pro_setup_score": 5,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "TATATECH",
@@ -7838,7 +9340,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.5779321691835556,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "TTML",
@@ -7859,7 +9365,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.43603253242854595,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "TECHM",
@@ -7880,7 +9390,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.7798924383465954,
       "pro_setup_score": 3,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "TECHNOE",
@@ -7901,7 +9415,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.5177505556259795,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "TEGA",
@@ -7922,7 +9440,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.29893586537889133,
       "pro_setup_score": 3,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "TEJASNET",
@@ -7943,7 +9465,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.06184177887340583,
       "pro_setup_score": 3,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "RAMCOCEM",
@@ -7964,7 +9490,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 1.0723229478399368,
       "pro_setup_score": 3,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "THERMAX",
@@ -7985,7 +9515,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.5799099080921298,
       "pro_setup_score": 10,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "TIMKEN",
@@ -8006,7 +9540,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.43455523501951415,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "TITAGARH",
@@ -8027,7 +9565,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.5087779242146093,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "TITAN",
@@ -8048,7 +9590,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.5900547462461759,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "TORNTPHARM",
@@ -8069,7 +9615,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.7864205964093136,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "TORNTPOWER",
@@ -8090,7 +9640,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 1.2409486844833317,
       "pro_setup_score": 7,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "TARIL",
@@ -8111,7 +9665,11 @@
       "inst_buy_bar_count_5d": 3,
       "rvol_today": 0.7596904725967858,
       "pro_setup_score": 8,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "TRENT",
@@ -8132,7 +9690,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.7694228814565213,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "TRIDENT",
@@ -8153,7 +9715,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.4090191381716745,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "TRITURBINE",
@@ -8174,7 +9740,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.6374080832203335,
       "pro_setup_score": 9,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "TIINDIA",
@@ -8195,7 +9765,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.5562001560092313,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "UNOMINDA",
@@ -8216,7 +9790,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.6022628654440731,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "UPL",
@@ -8237,7 +9815,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.7556483897928009,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ULTRACEMCO",
@@ -8258,7 +9840,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 1.5423207493713793,
       "pro_setup_score": 5,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "UBL",
@@ -8279,7 +9865,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.7836002306633547,
       "pro_setup_score": 2,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "UNITDSPR",
@@ -8300,7 +9890,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.6560174461174044,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "USHAMART",
@@ -8321,7 +9915,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 0.7013549893592546,
       "pro_setup_score": 10,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "VTL",
@@ -8342,7 +9940,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 1.3658016294798916,
       "pro_setup_score": 11,
-      "lifecycle": "CONFIRMED"
+      "lifecycle": "CONFIRMED",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "VBL",
@@ -8363,7 +9965,11 @@
       "inst_buy_bar_count_5d": 3,
       "rvol_today": 2.1231902233458677,
       "pro_setup_score": 8,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "VEDL",
@@ -8384,7 +9990,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 2.569734619749963,
       "pro_setup_score": 10,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "VIJAYA",
@@ -8405,7 +10015,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 1.690511994867971,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "VMM",
@@ -8426,7 +10040,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.23710444226504146,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "IDEA",
@@ -8447,7 +10065,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 1.6097587376105877,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "VOLTAS",
@@ -8468,7 +10090,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.9184647524786187,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "WAAREEENER",
@@ -8489,7 +10115,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.9404785664261964,
       "pro_setup_score": 7,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "WELCORP",
@@ -8510,7 +10140,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 1.1735423345883418,
       "pro_setup_score": 7,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "WELSPUNLIV",
@@ -8531,7 +10165,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.3150370373148216,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "WHIRLPOOL",
@@ -8552,7 +10190,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 2.0839277271467465,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "WIPRO",
@@ -8573,7 +10215,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 1.0469717147852586,
       "pro_setup_score": 3,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "WOCKPHARMA",
@@ -8594,7 +10240,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.5922873946415745,
       "pro_setup_score": 6,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ZFCVINDIA",
@@ -8615,7 +10265,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.5338287566211319,
       "pro_setup_score": 9,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ZEEL",
@@ -8636,7 +10290,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 1.1573307853634465,
       "pro_setup_score": 10,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ZENTEC",
@@ -8657,7 +10315,11 @@
       "inst_buy_bar_count_5d": 1,
       "rvol_today": 0.6180413691270916,
       "pro_setup_score": 9,
-      "lifecycle": "LATE"
+      "lifecycle": "LATE",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ZENSARTECH",
@@ -8678,7 +10340,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 1.7704580080370258,
       "pro_setup_score": 3,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ZYDUSLIFE",
@@ -8699,7 +10365,11 @@
       "inst_buy_bar_count_5d": 2,
       "rvol_today": 2.1958979672968284,
       "pro_setup_score": 4,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ZYDUSWELL",
@@ -8720,7 +10390,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.08478445478220949,
       "pro_setup_score": 8,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     },
     {
       "symbol": "ECLERX",
@@ -8741,7 +10415,11 @@
       "inst_buy_bar_count_5d": 0,
       "rvol_today": 0.4544310997565379,
       "pro_setup_score": 2,
-      "lifecycle": "UNKNOWN"
+      "lifecycle": "UNKNOWN",
+      "catalysts": [],
+      "catalyst_count_fresh": 0,
+      "catalyst_count_recent": 0,
+      "has_high_conviction_catalyst": false
     }
   ]
 }

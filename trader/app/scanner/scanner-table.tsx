@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { useTheme } from '../components/theme';
+import { CatalystChipCount } from '../components/catalyst-chip';
 import { SignalPill } from '../components/signal-pill';
 import type { CandidateRow } from '../lib/scan-types';
 
@@ -98,17 +99,24 @@ export function ScannerTable({ candidates }: { candidates: CandidateRow[] }) {
               }}
             >
               <td style={{ padding: '14px 16px' }}>
-                <Link
-                  href={`/stock/${encodeURIComponent(c.symbol)}`}
-                  style={{
-                    color: t.text,
-                    fontWeight: 600,
-                    fontFamily: FONT_MONO,
-                    letterSpacing: '0.02em',
-                  }}
-                >
-                  {c.symbol}
-                </Link>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                  <Link
+                    href={`/stock/${encodeURIComponent(c.symbol)}`}
+                    style={{
+                      color: t.text,
+                      fontWeight: 600,
+                      fontFamily: FONT_MONO,
+                      letterSpacing: '0.02em',
+                    }}
+                  >
+                    {c.symbol}
+                  </Link>
+                  <CatalystChipCount
+                    freshCount={c.catalyst_count_fresh ?? 0}
+                    recentCount={c.catalyst_count_recent ?? 0}
+                    highConviction={c.has_high_conviction_catalyst ?? false}
+                  />
+                </div>
               </td>
               <td style={{ padding: '14px 16px' }}>
                 <SignalPill signal={c.signal} />
