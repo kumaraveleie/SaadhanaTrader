@@ -27,7 +27,10 @@ CatalystType = Literal[
     "fii_increase",
     "dii_increase",
     "promoter_buying",
+    "promoter_selling",
+    "insider_buying",
     "block_deal_buy",
+    "block_deal_sell",
     "sector_momentum",
 ]
 

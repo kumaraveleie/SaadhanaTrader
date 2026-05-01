@@ -188,7 +188,10 @@ export const CATALYST_LABEL: Record<CatalystType, string> = {
   fii_increase: 'FII increase',
   dii_increase: 'DII increase',
   promoter_buying: 'Promoter buying',
-  block_deal_buy: 'Block deal',
+  promoter_selling: 'Promoter selling',
+  insider_buying: 'Insider buying',
+  block_deal_buy: 'Block deal (buy)',
+  block_deal_sell: 'Block deal (sell)',
   sector_momentum: 'Sector momentum',
 };
 
@@ -207,7 +210,10 @@ export const CATALYST_TONE: Record<CatalystType, CatalystTone> = {
   fii_increase: 'positive',
   dii_increase: 'positive',
   promoter_buying: 'positive',
+  promoter_selling: 'caution',
+  insider_buying: 'positive',
   block_deal_buy: 'positive',
+  block_deal_sell: 'caution',
   sector_momentum: 'positive',
 };
 

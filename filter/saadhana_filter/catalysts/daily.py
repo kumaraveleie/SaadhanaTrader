@@ -23,6 +23,10 @@ from collections.abc import Iterable, Mapping
 from datetime import date
 
 from saadhana_filter.catalysts.aggregator import merge_sources
+from saadhana_filter.catalysts.sources.block_deals import (
+    build_block_deal_catalysts,
+    fixture_fetcher as block_deals_fixture_fetcher,
+)
 from saadhana_filter.catalysts.sources.bse_filings import (
     build_filing_catalysts,
     fixture_fetcher as bse_fixture_fetcher,
@@ -62,6 +66,12 @@ def build_all_catalysts(
         fetcher=shareholding_fixture_fetcher(),
     )
 
+    # Source 3 — NSE block & bulk deals (institutional ≥ ₹50 Cr)
+    block_deals = build_block_deal_catalysts(
+        today=today,
+        fetcher=block_deals_fixture_fetcher(),
+    )
+
     # Source 5 — sector momentum (only when caller provides sector data)
     sector_momentum: dict[str, list[Catalyst]] = {}
     if sector_aggregates is not None and sector_constituents is not None:
@@ -74,6 +84,7 @@ def build_all_catalysts(
     sources: list[dict[str, list[Catalyst]]] = [
         bse_filings,
         shareholding,
+        block_deals,
         sector_momentum,
     ]
 

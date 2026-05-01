@@ -122,7 +122,10 @@ _BASE_MAGNITUDE: dict[CatalystType, int] = {
     "fii_increase": 5,
     "dii_increase": 5,
     "promoter_buying": 7,
+    "promoter_selling": 5,
+    "insider_buying": 4,
     "block_deal_buy": 5,
+    "block_deal_sell": 5,
     "sector_momentum": 4,
 }
 

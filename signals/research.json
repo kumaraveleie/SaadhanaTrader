@@ -137,9 +137,19 @@
       "rank_by_inst_flow": 13,
       "catalyst_rollup": {
         "fresh_count": 1,
-        "recent_count": 0,
+        "recent_count": 1,
         "high_conviction_count": 0,
         "highlights": [
+          {
+            "symbol": "RELIANCE",
+            "type": "block_deal_buy",
+            "date": "2026-04-22",
+            "days_old": 9,
+            "freshness": "RECENT",
+            "source_url": "https://www.nseindia.com/all-reports?reportType=block-deals&date=2026-04-22",
+            "detail": "Vanguard FII buys \u20b980 Cr in RELIANCE (2026-04-22)",
+            "magnitude_score": 1
+          },
           {
             "symbol": "RELIANCE",
             "type": "fii_increase",
@@ -727,10 +737,30 @@
       "sector_count": 46,
       "rank_by_inst_flow": 16,
       "catalyst_rollup": {
-        "fresh_count": 1,
+        "fresh_count": 3,
         "recent_count": 1,
-        "high_conviction_count": 0,
+        "high_conviction_count": 1,
         "highlights": [
+          {
+            "symbol": "DIVISLAB",
+            "type": "block_deal_buy",
+            "date": "2026-04-29",
+            "days_old": 2,
+            "freshness": "FRESH",
+            "source_url": "https://www.nseindia.com/all-reports?reportType=block-deals&date=2026-04-29",
+            "detail": "Nippon Life MF buys \u20b9450 Cr in DIVISLAB (2026-04-29)",
+            "magnitude_score": 7
+          },
+          {
+            "symbol": "DIVISLAB",
+            "type": "block_deal_buy",
+            "date": "2026-04-26",
+            "days_old": 5,
+            "freshness": "FRESH",
+            "source_url": "https://www.nseindia.com/all-reports?reportType=block-deals&date=2026-04-26",
+            "detail": "HDFC MF buys \u20b9220 Cr in DIVISLAB (2026-04-26)",
+            "magnitude_score": 3
+          },
           {
             "symbol": "SUNPHARMA",
             "type": "buyback",
@@ -945,10 +975,20 @@
       "sector_count": 26,
       "rank_by_inst_flow": 8,
       "catalyst_rollup": {
-        "fresh_count": 1,
+        "fresh_count": 2,
         "recent_count": 0,
         "high_conviction_count": 0,
         "highlights": [
+          {
+            "symbol": "TCS",
+            "type": "block_deal_buy",
+            "date": "2026-04-28",
+            "days_old": 3,
+            "freshness": "FRESH",
+            "source_url": "https://www.nseindia.com/all-reports?reportType=block-deals&date=2026-04-28",
+            "detail": "ICICI Prudential MF buys \u20b9320 Cr in TCS (2026-04-28)",
+            "magnitude_score": 3
+          },
           {
             "symbol": "TCS",
             "type": "dii_increase",
@@ -3717,6 +3757,24 @@
       "lifecycle": "UNKNOWN",
       "catalysts": [
         {
+          "type": "block_deal_buy",
+          "date": "2026-04-29",
+          "days_old": 2,
+          "freshness": "FRESH",
+          "source_url": "https://www.nseindia.com/all-reports?reportType=block-deals&date=2026-04-29",
+          "detail": "Nippon Life MF buys \u20b9450 Cr in DIVISLAB (2026-04-29)",
+          "magnitude_score": 7
+        },
+        {
+          "type": "block_deal_buy",
+          "date": "2026-04-26",
+          "days_old": 5,
+          "freshness": "FRESH",
+          "source_url": "https://www.nseindia.com/all-reports?reportType=block-deals&date=2026-04-26",
+          "detail": "HDFC MF buys \u20b9220 Cr in DIVISLAB (2026-04-26)",
+          "magnitude_score": 3
+        },
+        {
           "type": "fii_increase",
           "date": "2026-04-21",
           "days_old": 10,
@@ -3726,9 +3784,9 @@
           "magnitude_score": 3
         }
       ],
-      "catalyst_count_fresh": 1,
+      "catalyst_count_fresh": 3,
       "catalyst_count_recent": 0,
-      "has_high_conviction_catalyst": false
+      "has_high_conviction_catalyst": true
     },
     {
       "symbol": "DIXON",
@@ -8422,6 +8480,15 @@
       "lifecycle": "UNKNOWN",
       "catalysts": [
         {
+          "type": "block_deal_buy",
+          "date": "2026-04-22",
+          "days_old": 9,
+          "freshness": "RECENT",
+          "source_url": "https://www.nseindia.com/all-reports?reportType=block-deals&date=2026-04-22",
+          "detail": "Vanguard FII buys \u20b980 Cr in RELIANCE (2026-04-22)",
+          "magnitude_score": 1
+        },
+        {
           "type": "fii_increase",
           "date": "2026-04-21",
           "days_old": 10,
@@ -8432,7 +8499,7 @@
         }
       ],
       "catalyst_count_fresh": 1,
-      "catalyst_count_recent": 0,
+      "catalyst_count_recent": 1,
       "has_high_conviction_catalyst": false
     },
     {
@@ -9342,6 +9409,15 @@
       "lifecycle": "UNKNOWN",
       "catalysts": [
         {
+          "type": "block_deal_buy",
+          "date": "2026-04-28",
+          "days_old": 3,
+          "freshness": "FRESH",
+          "source_url": "https://www.nseindia.com/all-reports?reportType=block-deals&date=2026-04-28",
+          "detail": "ICICI Prudential MF buys \u20b9320 Cr in TCS (2026-04-28)",
+          "magnitude_score": 3
+        },
+        {
           "type": "dii_increase",
           "date": "2026-04-21",
           "days_old": 10,
@@ -9351,7 +9427,7 @@
           "magnitude_score": 2
         }
       ],
-      "catalyst_count_fresh": 1,
+      "catalyst_count_fresh": 2,
       "catalyst_count_recent": 0,
       "has_high_conviction_catalyst": false
     },
