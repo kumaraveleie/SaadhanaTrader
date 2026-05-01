@@ -109,9 +109,15 @@ def main(argv: list[str] | None = None) -> int:
     nifty_df = _load_index()
     provider = _build_provider(refresh=args.refresh)
 
-    # §13 Phase D — load catalysts via every active source.
-    catalysts = build_all_catalysts(today=args.scan_date)
-
+    # ── Two-pass catalyst orchestration ─────────────────────────────
+    # Source 5 (sector momentum) needs the M1 v0 sector aggregates,
+    # which are derived from research rows. So we:
+    #   1. build rows + sector aggregates with no catalysts attached;
+    #   2. run all sources (including Source 5) using those aggregates;
+    #   3. attach the merged catalyst summaries back onto the rows;
+    #   4. rebuild sector aggregates so the catalyst_rollup now reflects
+    #      every source — including the sector_momentum catalysts that
+    #      were just emitted in step 2.
     snap = build_research_snapshot(
         scan_date=args.scan_date,
         spec_version=__spec_version__,
@@ -119,12 +125,39 @@ def main(argv: list[str] | None = None) -> int:
         fundamentals_passed=fundamentals_passed,
         sectors=sectors,
         industries=industries,
-        catalysts=catalysts,
+        catalysts=None,
         nifty_df=nifty_df,
         ohlcv_provider=provider,
     )
 
-    # M1 v0 — sector strength aggregator (see thinking_engine.md §3.1)
+    sector_aggs_pass1 = build_sector_strength(
+        rows=snap.rows,
+        nifty_df=nifty_df,
+        ohlcv_provider=provider,
+    )
+    sector_constituents = {
+        s.sector: [r.symbol for r in snap.rows if r.sub_industry == s.sector_label]
+        for s in sector_aggs_pass1
+    }
+    sector_aggs_dicts_pass1 = [sector_to_dict(s) for s in sector_aggs_pass1]
+
+    catalysts = build_all_catalysts(
+        today=args.scan_date,
+        sector_aggregates=sector_aggs_dicts_pass1,
+        sector_constituents=sector_constituents,
+    )
+
+    # Step 3 — attach catalysts to the existing rows in-place
+    for row in snap.rows:
+        summary = catalysts.get(row.symbol)
+        if summary is None:
+            continue
+        row.catalysts = list(summary.catalysts)
+        row.catalyst_count_fresh = summary.catalyst_count_fresh
+        row.catalyst_count_recent = summary.catalyst_count_recent
+        row.has_high_conviction_catalyst = summary.has_high_conviction_catalyst
+
+    # Step 4 — rebuild sector aggregates with full catalyst_rollup
     sector_aggs = build_sector_strength(
         rows=snap.rows,
         nifty_df=nifty_df,

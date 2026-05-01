@@ -142,6 +142,9 @@ export type SectorStrength = {
   sector: string; // slug e.g. "PHARMACEUTICALS"
   sector_label: string; // human-readable e.g. "Pharmaceuticals"
   today_pct: number;
+  sector_index_change_5d: number | null;
+  sector_index_change_20d: number | null;
+  sector_index_change_60d: number | null;
   rs_5d: number | null;
   rs_20d: number | null;
   rs_60d: number | null;

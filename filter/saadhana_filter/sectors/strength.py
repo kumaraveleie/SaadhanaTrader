@@ -42,6 +42,9 @@ class SectorStrength:
     sector: str  # slug e.g. "PHARMACEUTICALS"
     sector_label: str  # human label e.g. "Pharmaceuticals"
     today_pct: float  # decimal — mean of constituent today % changes
+    sector_index_change_5d: float | None  # decimal — mean 5d return
+    sector_index_change_20d: float | None
+    sector_index_change_60d: float | None
     rs_5d: float | None  # ratio sector_return / nifty_return; None if Nifty flat
     rs_20d: float | None
     rs_60d: float | None
@@ -228,6 +231,9 @@ def build_sector_strength(
                     else industry_label
                 ),
                 today_pct=today_pct,
+                sector_index_change_5d=sector_5d,
+                sector_index_change_20d=sector_20d,
+                sector_index_change_60d=sector_60d,
                 rs_5d=rs_5d,
                 rs_20d=rs_20d,
                 rs_60d=rs_60d,
@@ -255,6 +261,9 @@ def sector_to_dict(s: SectorStrength) -> dict:
         "sector": s.sector,
         "sector_label": s.sector_label,
         "today_pct": s.today_pct,
+        "sector_index_change_5d": s.sector_index_change_5d,
+        "sector_index_change_20d": s.sector_index_change_20d,
+        "sector_index_change_60d": s.sector_index_change_60d,
         "rs_5d": s.rs_5d,
         "rs_20d": s.rs_20d,
         "rs_60d": s.rs_60d,
