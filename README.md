@@ -69,11 +69,18 @@ npm run dev                         # localhost:3000
 
 ## Build phases
 
-See spec §23. Phases A–C complete (scaffold, indicators, signal
-engine), G1 complete (technical-only backtest validator with
-Provisional v2.1 acceptance). Currently in flight: **Phase D**
-(catalyst engine v1) and **Phase K1** (Vercel preview deploy)
-running in parallel — neither depends on the other.
+See spec §23. Phases A–D and K1 complete:
+
+- **A / B / C** — scaffold, 13 indicator conditions, signal engine
+- **D** — catalyst engine v1, all 5 deterministic sources
+  (BSE filings, NSE shareholding, NSE block deals, SEBI insider
+  trades, sector momentum). Phase D2 (live scrapers) deferred.
+- **G1** — technical-only backtest validator (v2.1 Provisional)
+- **K1** — Vercel preview deploy with `/scanner`, `/research`,
+  `/stock/[symbol]`, `/about`, `/about/phases`
+
+Next phases queued: **E** (LLM news classification), **F**
+(conviction tier + sizing), **G2** (full-system backtest gate).
 
 ## Compliance & legal
 

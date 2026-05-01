@@ -64,7 +64,16 @@ saadhana-trader/
 │   │   ├── __init__.py
 │   │   ├── data/                # OHLCV loaders (yfinance, bhavcopy)
 │   │   ├── indicators/          # 13 conditions, institutional flow, stage
-│   │   ├── catalysts/           # corporate filings, shareholding, deals
+│   │   ├── catalysts/           # Phase D — 5 deterministic sources
+│   │   │   ├── types.py             # taxonomy + freshness + dataclasses
+│   │   │   ├── classifier.py        # filing-text classifier
+│   │   │   ├── aggregator.py        # per-symbol merge_sources
+│   │   │   ├── daily.py             # build_all_catalysts orchestrator
+│   │   │   └── sources/             # bse_filings / shareholding /
+│   │   │                            # block_deals / insider_trades /
+│   │   │                            # sector_momentum (Phase D2 swap
+│   │   │                            # fixture fetchers for live scrapers)
+│   │   ├── sectors/             # M1 v0 sector strength (catalyst rollup)
 │   │   ├── signals/             # BUY/HOLD/SELL/WAIT engine
 │   │   ├── ledger/              # signal ledger schema + writers
 │   │   ├── forensics/           # outcome tracker, cluster analyzer

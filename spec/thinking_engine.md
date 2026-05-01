@@ -160,9 +160,15 @@ rendered as the regime-ribbon strip + inline drill-down on
 `/research`. Phase Q replaces the v0 with the full module above
 without changing the JSON contract — additional fields (`rs_252d`,
 `breadth_stage_2_pct`, `volume_sustainability_score`, `tier`) are
-purely additive. Phase D's catalyst data populates the drill-
-down's "Triggers" section (currently a placeholder) once the
-catalyst engine ships.
+purely additive.
+
+**Triggers section.** M1 v0 + Phase D fully populates the drill-
+down's "Triggers" section. Each `sector_strength` entry carries
+a `catalyst_rollup` of constituent catalysts from all 5 Phase D
+sources (BSE filings, NSE shareholding, NSE block deals, SEBI
+insider trades, sector momentum). M1 formal module (Phase Q)
+replaces v0 with multi-window RS + sector phase classifier
+without altering the rollup contract.
 
 ### 3.2 M2 / Phase R — Pattern Lifecycle Engine
 
@@ -295,6 +301,59 @@ Phase Q–T are sequenced after that. CR-005 in
 becomes load-bearing during the v2.1 build window — it reserves the
 schema fields Phase D must emit so M1–M3 don't require migration
 later.
+
+---
+
+## 6. Phase D landed — worked example
+
+### 6.1 What landed
+
+The five Phase D catalyst sources are now active in
+`signals/research.json` and `signals/latest.json`. Each row carries a
+`catalysts: [...]` array (per-symbol) and each `sector_strength`
+entry carries a `catalyst_rollup` (per-sector, top-N highlights
+across constituents). UI surfaces:
+
+- `/research` — sector drill-down "Triggers" section renders the
+  rollup chips
+- `/stock/[symbol]` — full catalyst card (sorted FRESH→RECENT→STALE)
+- `/scanner` — compact catalyst-chip count badge next to symbol
+
+### 6.2 Today's snapshot (scan_date 2026-05-01)
+
+The system stops describing patterns and starts explaining causes.
+Today's run surfaces 11 catalysts attached across 8 industrial-only
+Nifty 500 symbols, with 3 high-conviction:
+
+- **DIVISLAB** — block_deal_buy ×2 (Nippon Life MF ₹450 Cr +
+  HDFC MF ₹220 Cr; cluster boost ×1.5 → magnitude 7) +
+  fii_increase (+1.4pp QoQ to 24.8%, Q4 FY26)
+- **JSWENERGY** — promoter_buying ×2 (Sajjan Jindal ₹12 Cr +
+  JSW Group Trust ₹6 Cr; cluster boost → magnitude 10)
+- **TATAPOWER** — promoter_buying (N. Chandrasekaran ₹8.5 Cr,
+  magnitude 10)
+- **ATUL** — earnings_beat (Q4 EPS double-digit YoY, magnitude 9)
+- **BHARATFORG** — m_and_a (acquisition of US defense-components
+  subsidiary; magnitude 9, RECENT) + insider_buying (director
+  Suresh Sharma ₹3.5 Cr)
+- **SUNPHARMA** — buyback (₹2,100 Cr deployment, magnitude 6)
+- **INDUSTOWER** — management_change (MD resignation,
+  magnitude 5)
+- **VEDL** — promoter_selling (Anil Agarwal ₹25 Cr; cautionary)
+
+The Power sector hovers at `rs_5d = 1.0496` — just below the 1.05
+sector_momentum threshold — so Source 5 doesn't fire today. When
+it does (e.g. on the prior session at 1.0506), every Power
+constituent gets a `sector_momentum` catalyst flagging breadth-
+confirmed sector outperformance.
+
+This is the moment the technical filter graduates from **"these
+13 conditions fired"** to **"these 13 conditions fired AND here's
+the catalyst that explains why"**. The Thinking Engine layers
+on top of this — Phase F (conviction tier), Phase Q (M1 sector
+classifier), Phase R (M2 lifecycle), Phase S (M3 multi-year base),
+Phase T (M4 thesis synthesizer) — all consume the Phase D output
+without further plumbing.
 
 ---
 

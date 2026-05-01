@@ -445,12 +445,39 @@ field — older catalysts decay in weight (see §14).
 
 ### 13.2 Catalyst sources by phase
 
-**Phase D (deterministic, MVP):** filings, shareholding pattern, block deals,
-insider trades, sector momentum. Covers ~70% of catalysts. NO LLM.
+**Phase D (deterministic, MVP) — ✓ done (v1).** All five sources active
+in `filter/saadhana_filter/catalysts/sources/`. Covers ~70% of catalysts.
+NO LLM.
+
+| Source | Module | Catalyst types emitted | Freshness | Magnitude |
+|---|---|---|---|---|
+| 1. BSE/NSE corporate filings | `bse_filings.py` | `earnings_beat`, `guidance_raise`, `buyback`, `management_change`, `m_and_a` | 7 / 30 / drop>30d | base 5–7 + ×1.5 strength-keyword boost |
+| 2. NSE shareholding pattern | `shareholding.py` | `fii_increase`, `dii_increase`, `promoter_buying` | 30 / 90 / drop>90d | `min(10, abs(delta_pp) * 2)` |
+| 3. NSE block & bulk deals | `block_deals.py` | `block_deal_buy`, `block_deal_sell` | 7 / 30 / drop>30d | `min(10, value_cr / 100)`; cluster-boost ×1.5 |
+| 4. SEBI insider trading | `insider_trades.py` | `promoter_buying`, `promoter_selling`, `insider_buying` | 14 / 60 / drop>60d | `value × role_weight × cluster_boost` |
+| 5. Sector momentum | `sector_momentum.py` | `sector_momentum` | always FRESH | `min(10, change_5d * 200) × (0.5 + breadth)` |
+
+Phase D1 ships fixture-backed fetchers under `data/catalysts/`; Phase D2
+swaps each `*_fixture_fetcher` for a live BSE/NSE/SEBI scraper without
+changing the classifier, aggregator, or downstream consumers. The
+fetcher protocols are defined per source file.
 
 **Phase E (LLM-classified):** news headlines via free RSS / API. Small
-local model (Qwen 7B / Phi-4) classifies each headline into the taxonomy
-with confidence score. Headlines with confidence < 0.75 are dropped.
+local model (Qwen 7B / Phi-4) classifies each headline into the §13.1
+taxonomy with confidence score. Headlines with confidence < 0.75 are
+dropped. Phase E does NOT extend the taxonomy — it adds a sixth
+classification source emitting the same shape.
+
+**High-conviction flag.** A row is flagged
+`has_high_conviction_catalyst = true` when any attached catalyst is
+both `FRESH` and has `magnitude_score ≥ 7`. Drives §14 conviction
+tier in Phase F.
+
+**Cluster boost.** Sources 3 (block deals) and 4 (insider trades)
+apply a ×1.5 boost when ≥ 2 same-side disclosures land for the same
+symbol within the lookback window — a hand-curated proxy for
+"stacked institutional interest" until the full §14 conviction tier
+formalises this.
 
 ### 13.3 Catalyst card (per signal)
 
@@ -1093,7 +1120,7 @@ parked — apply during Phase D implementation.
 | **A** | Spec v2 (THIS DOC) + project scaffold + CLAUDE.md | Repo created, README, scaffold committed |
 | **B** | Python data loader + 13 technical conditions + tests | All conditions pass golden-fixture tests |
 | **C** | Python signal engine (BUY/HOLD/SELL/WAIT) + Tier 1 gate | End-to-end scan on Nifty 50 produces JSON |
-| **D** | Catalyst engine v1 (deterministic sources) | Catalyst tags appear in scan output |
+| **D** ✓ | Catalyst engine v1 (deterministic sources) | All 5 sources active in `signals/research.json` and `signals/latest.json`; surfaces in `/research` drill-down "Triggers", `/stock/[symbol]` catalyst card, `/scanner` chip count. **Phase D2 (live scrapers) deferred until verified BSE/NSE/SEBI network access** — fixture fetchers swap 1:1 for live ones without contract change. |
 | **E** | LLM news classification on HF Space | News headlines tagged with confidence |
 | **F** | Convergence scoring + sizing tiers | Conviction tier in output, sizing computed |
 | **G1** | Backtest validator — **technical-only** | Replay 3 years on Nifty 500 using §5 v2 13 conditions only (no catalyst, no conviction tier, standard 0.5% sizing); §11 metrics reported. **Diagnostic gate** — confirms the technical layer alone has predictive value before catalyst / conviction sit on top of it. |
