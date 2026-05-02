@@ -1208,7 +1208,7 @@ their G1 baseline lands.
 ### Storage representation
 
 The registry is stored as Python source at
-`filter/saadhana_filter/scan/cohorts.py`:
+`filter/saadhana_filter/cohorts/registry.py`:
 
 ```python
 COHORTS: list[CohortSpec] = [
@@ -1249,9 +1249,14 @@ COHORTS: list[CohortSpec] = [
 ]
 ```
 
-The same data is mirrored to a Vercel Postgres `scanner_cohorts` table
-(schema locked in S1.7) so the Next.js /scanners page can render the
-registry without re-importing Python.
+**The registry stays in Python only.** The runtime database (§17 lock)
+carries operational state — emitted signals, open positions, position
+events — *not* configuration. Cohort definitions, sector exclusions,
+and validation gates are checked-in source: changing them goes through
+spec → code → §19 candidate-rule review, never through a runtime DB
+toggle. The Next.js /scanners page reads the registry by importing the
+Python module via the scan API or by pre-computing a JSON snapshot at
+build time, **not** by querying a `scanner_cohorts` table.
 
 ### Status lifecycle
 
@@ -1483,6 +1488,159 @@ financial ledger.
 **Outcome enums:** `WIN_T1`, `WIN_T2`, `WIN_T3`, `STOP_HIT`,
 `CATASTROPHIC_BREAK`, `STAGE_SHIFT_EXIT`, `SCORE_COLLAPSE_EXIT`,
 `INST_SELL_EXIT`, `RSI_DIVERGENCE_EXIT`, `TIME_EXIT`, `STILL_OPEN`.
+
+### 17.1 Postgres schema (locked S1.7)
+
+The runtime operational-state layer is three Postgres tables:
+**`signals_ledger`** (entries — append-only), **`positions`** (one row
+per open position, mutable for state + exit fields), and
+**`position_events`** (per-bar audit trail from §25 — append-only).
+
+The cohort registry (§14a) is **not** a table — it stays as Python
+source per the same section. The DB carries operational state only,
+not configuration.
+
+```sql
+-- Schema lives at filter/saadhana_filter/ledger/schema.sql.
+-- Apply via saadhana_filter.ledger.migrations.apply_schema(conn).
+-- gen_random_uuid() is core in PostgreSQL 13+ (no extension needed).
+
+-- ────────────────────────────────────────────────────────────────
+-- signals_ledger — every BUY ever issued, append-only
+-- ────────────────────────────────────────────────────────────────
+create table if not exists signals_ledger (
+    signal_id           text         primary key,                -- 'sig_2026_04_29_DIVISLAB_001'
+    spec_version        text         not null,                   -- '2.1'
+    cohort_id           text         not null,                   -- §14a cohort_id
+    sector_exclusions   jsonb        not null default '[]'::jsonb,
+    symbol              text         not null,
+    signal_date         date         not null,
+    signal_price        numeric(18,4) not null,
+    regime              text,                                    -- 'Risk_On' | 'Risk_Off' | 'Neutral'
+    sector              text,
+    conviction          numeric(10,4),                           -- §14
+    conviction_tier     text,                                    -- 'STANDARD' | 'HIGH' | 'WATCH' | 'SKIP'
+    payload             jsonb        not null,                   -- full §17 JSON snapshot
+    created_at          timestamptz  not null default now()
+);
+create index if not exists ix_signals_ledger_symbol_date
+    on signals_ledger (symbol, signal_date desc);
+create index if not exists ix_signals_ledger_cohort_date
+    on signals_ledger (cohort_id, signal_date desc);
+
+-- ────────────────────────────────────────────────────────────────
+-- positions — one row per held position; mutable on exit/state
+-- ────────────────────────────────────────────────────────────────
+create table if not exists positions (
+    position_id     uuid         primary key default gen_random_uuid(),
+    signal_id       text         not null references signals_ledger(signal_id),
+    cohort_id       text         not null,
+    symbol          text         not null,
+    entry_date      date         not null,
+    entry_price     numeric(18,4) not null,
+    entry_stop      numeric(18,4) not null,
+    target_t1       numeric(18,4),
+    target_t2       numeric(18,4),
+    target_t3       numeric(18,4),
+    size_qty        integer      not null,
+    state           text         not null default 'HEALTHY',     -- §25 state machine
+    exit_date       date,
+    exit_price      numeric(18,4),
+    exit_trigger    text,                                        -- §25 trigger name
+    exit_outcome    text,                                        -- §17 outcome enum
+    created_at      timestamptz  not null default now(),
+    updated_at      timestamptz  not null default now(),
+    constraint positions_state_chk check (state in
+        ('HEALTHY','AT_RISK','TARGET_NEAR','TRIGGERED','CLOSED','PAUSED'))
+);
+create index if not exists ix_positions_symbol on positions (symbol);
+create index if not exists ix_positions_open
+    on positions (state) where state <> 'CLOSED';
+create index if not exists ix_positions_cohort on positions (cohort_id);
+
+-- ────────────────────────────────────────────────────────────────
+-- position_events — per-bar audit log from §25 monitor; append-only
+-- ────────────────────────────────────────────────────────────────
+create table if not exists position_events (
+    event_id        bigserial    primary key,
+    position_id     uuid         not null references positions(position_id),
+    bar_date        date         not null,
+    from_state      text         not null,
+    to_state        text         not null,
+    reason          text         not null,                       -- trigger name or transition reason
+    cohort_id       text         not null,                       -- denormalised for fast per-cohort queries
+    metadata        jsonb        not null default '{}'::jsonb,
+    created_at      timestamptz  not null default now()
+);
+create index if not exists ix_position_events_position_bar
+    on position_events (position_id, bar_date, created_at);
+create index if not exists ix_position_events_cohort_bar
+    on position_events (cohort_id, bar_date desc);
+
+-- ────────────────────────────────────────────────────────────────
+-- Append-only enforcement — DB-level, not app-level
+-- ────────────────────────────────────────────────────────────────
+create or replace function saadhana_block_mutation() returns trigger
+language plpgsql as $$
+begin
+    raise exception
+        'append-only table %: % is forbidden (signal_id/event_id immutable)',
+        tg_table_name, tg_op
+        using errcode = 'check_violation';
+end;
+$$;
+
+drop trigger if exists trg_signals_ledger_no_update on signals_ledger;
+drop trigger if exists trg_signals_ledger_no_delete on signals_ledger;
+create trigger trg_signals_ledger_no_update
+    before update on signals_ledger
+    for each row execute function saadhana_block_mutation();
+create trigger trg_signals_ledger_no_delete
+    before delete on signals_ledger
+    for each row execute function saadhana_block_mutation();
+
+drop trigger if exists trg_position_events_no_update on position_events;
+drop trigger if exists trg_position_events_no_delete on position_events;
+create trigger trg_position_events_no_update
+    before update on position_events
+    for each row execute function saadhana_block_mutation();
+create trigger trg_position_events_no_delete
+    before delete on position_events
+    for each row execute function saadhana_block_mutation();
+
+-- positions table is intentionally MUTABLE — state machine advances
+-- HEALTHY → AT_RISK → CLOSED on the same row. The audit history of
+-- those transitions lives in position_events (which IS append-only).
+```
+
+### 17.2 Append-only invariants
+
+`signals_ledger` and `position_events` are guaranteed by **DB-level
+trigger** (`saadhana_block_mutation`), not by application logic. An
+attempted UPDATE or DELETE raises `check_violation` and the
+transaction rolls back.
+
+`positions` is **mutable by design** — the state column transitions
+through the §25 state machine on the same row. The full transition
+history is recorded as INSERTs into `position_events`, which is the
+append-only audit log. Reconstructing a position's lifecycle therefore
+means: read the `positions` row for current state + read all
+`position_events` for that `position_id` ordered by `(bar_date, created_at)`.
+
+### 17.3 Tables explicitly NOT in the S1.7 lock
+
+| Table | Locked in | Reason for deferral |
+|---|---|---|
+| `forensics_results` | S2.4 | Schema depends on what the forensics scaffold actually computes; locking now would force migrations |
+| `daily_reports` | S3.7 | Dependent on the LLM daily-report payload shape, which is sketched in S3 not finalised |
+| `learning_feedback` | S3.9 | Dependent on the feedback → CR pipeline format finalised in S3.9 |
+| `scanner_cohorts` | (never) | Cohort registry stays in Python source per §14a — config is not runtime DB state |
+| `paper_trade_orders` | S3.4 | Schema depends on Zerodha Kite Connect sandbox response shape (D6) |
+| `auth_users`, `auth_sessions` | (NextAuth default) | Owned by the NextAuth credentials provider, not the filter package |
+
+The S1.7 lock is intentionally narrow — only the operational-state
+foundation (signal emission → position lifecycle → audit). Each
+deferred table arrives in its own sprint with its own migration.
 
 ---
 
