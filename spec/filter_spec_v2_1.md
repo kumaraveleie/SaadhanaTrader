@@ -316,6 +316,128 @@ Renaming a key is a spec change.
 **Pro-Setup Score** = sum of conditions met, range 0..13. Score 13 = BUY
 candidate. Score 10–12 = WATCH (displayed but not actionable). <10 = WAIT.
 
+> **Note on §5.x numbering vs §0.6 reservations.** The reservations
+> table at §0.6 lists Sec.5.5 / Sec.5.6 for RPI calculator and RPI
+> spurt + crossover (deferred to Wave 1, cohort #2). Existing §5.5
+> "Not-extended qualification" already occupies that number — RPI
+> sub-sections will be re-targeted to Sec.5.5a / Sec.5.5b (or §5.6
+> if §5.5 stays Pro-setup-specific) when Wave 1 ships. No change
+> needed in this slice.
+
+---
+
+## Sec.5.7 MA crossover (component of Triple confluence)
+
+Adapted from the public TradingView script *Ultimate Moving Average*
+by ChrisMoody. Detects bullish trend onset via fast-MA-over-slow-MA
+crossover with a slope confirmation on the slow MA so we don't fire
+on flat-range whipsaws. Stand-alone candidate function for the
+**MA crossover cohort** AND a component of the **Triple confluence
+cohort** (Sec.5.10).
+
+### Inputs / parameters
+
+| Parameter | Default | Description |
+|---|---|---|
+| `ma_type` | `TEMA` | one of {SMA, EMA, WMA, HullMA, VWMA, RMA, TEMA} |
+| `fast_period` | 20 | fast MA window |
+| `slow_period` | 50 | slow MA window |
+| `slope_window` | 3 | bars over which slow MA slope is measured |
+| `min_slope_pct` | 0.0 | minimum slow-MA slope (% of price) for trend confirmation |
+| `source` | `close` | input series; usually close, occasionally hl2 / ohlc4 |
+
+The default `(TEMA 20, EMA 50)` matches the ChrisMoody publication.
+The 7 MA-type catalogue exists because different parameter
+combinations work better on different cohorts — the **Pro-setup
+cohort** uses (EMA 5, EMA 20) elsewhere; the **MA crossover cohort**
+defaults to TEMA × EMA per the source script.
+
+### Formula
+
+For a series `s` of close prices, an MA function `MA(s, n, type)`,
+and bar index `i ≥ slow_period + slope_window`:
+
+```
+fast_i  = MA(s, fast_period, ma_type) at bar i
+slow_i  = MA(s, slow_period, ma_type='EMA') at bar i
+slope_i = (slow_i - slow_{i - slope_window}) / slow_{i - slow_window} * 100
+```
+
+(slow MA always uses EMA regardless of `ma_type`; `ma_type` controls
+the fast MA only — matches the source script's behaviour.)
+
+**Bullish crossover** at bar `i`:
+
+```
+fast_{i-1} ≤ slow_{i-1}  AND  fast_i > slow_i  AND  slope_i ≥ min_slope_pct
+```
+
+A second-bar confirmation (require the cross to hold for one bar)
+is OPTIONAL via a `confirm_bars` parameter (default 0 = no
+confirmation; set to 1 in cohort spec if backtest shows
+whipsaw-prone behaviour).
+
+### Signal logic
+
+The candidate function returns:
+
+```
+{
+    qualified: bool,           # bullish crossover fired on bar i
+    fast_ma: float,            # fast MA value at bar i
+    slow_ma: float,            # slow MA value at bar i
+    slope_pct: float,          # slow MA slope %
+    crossover_bar: int | None, # bar index where cross fired
+    ma_type: str,              # echoes the ma_type used
+}
+```
+
+`qualified = True` means a fresh bullish crossover within the
+trailing `signal_freshness_bars` (default 5) — the cohort spec
+declares freshness so old crossovers don't keep firing.
+
+### Edge cases
+
+| Case | Behaviour |
+|---|---|
+| Bars < `slow_period + slope_window` | Skip — return `qualified: False, reason: 'insufficient_history'` |
+| Fast MA == Slow MA exactly (rare) | Treat as not crossed; require strict `>` for the crossover bar |
+| `slope_pct == 0.0` | If `min_slope_pct == 0` (default), passes; otherwise fails |
+| NaN in source after warm-up | Drop NaN bars from the series; if the MA window can't be filled, skip |
+| TEMA with very short series | TEMA needs ≥ 3×period bars to warm up fully — first 3×fast_period bars return `qualified: False` |
+
+### Golden-fixture test cases
+
+Synthetic OHLCV fixtures committed to
+`filter/tests/fixtures/ma_crossover/`:
+
+1. **Clean uptrend crossover** — flat 100 days, then 30-day rising
+   linear ramp from 100 to 130. Expect bullish crossover within
+   `slow_period + 5` bars of ramp start; `slope_pct > 0`.
+2. **Downtrend** — mirror of #1 (linear decline). Expect no
+   bullish crossover.
+3. **Flat range with noise** — 200 days of mean-100 ±2% gaussian
+   noise. Expect zero crossovers OR all crossovers fail the
+   `min_slope_pct` filter; depends on noise seed but the count
+   must be ≤ 3 to avoid whipsaw.
+4. **Insufficient history** — 49 bars of data, `slow_period=50`.
+   Expect `qualified: False, reason: 'insufficient_history'`.
+5. **Fast/slow equal** — synthetic series engineered so
+   `fast == slow` at bar 51, `fast > slow` at bar 52. Bar 52 is
+   the crossover bar.
+6. **MA-type switch** — same fixture, run with each of the 7
+   MA types; verify that TEMA fires earlier than SMA (TEMA's
+   reduced lag is the reason it's the default).
+
+### Cross-references
+
+- Pine source for parity: `pine/iq_ma_crossover.pine` (to ship
+  in S2.x; deep link from /stock detail page in K2.2).
+- Used as a Triple confluence component at Sec.5.10.
+- Cohort registration: §14a row `ma_crossover` (deferred to a
+  later cohort sprint; this section specs the indicator itself,
+  not the cohort).
+
 ---
 
 ## 6. Downside Resistance Score (transparency metric)
