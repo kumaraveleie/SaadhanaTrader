@@ -566,6 +566,129 @@ Synthetic OHLCV fixtures committed to
 
 ---
 
+## Sec.5.9 Deviation Trend (component of Triple confluence)
+
+Adapted from the public TradingView script *Deviation Trend Profile* by
+BigBeluga. The indicator builds a regression-anchored mean line and a
+**rolling standard-deviation band** around it; trend direction flips when
+price closes outside the upper / lower band. Compared to a Bollinger-style
+band, the line itself is a **linear-regression slope estimate** anchored
+to a pivot point, so the band tracks an inferred trendline rather than a
+moving average. Stand-alone candidate for the **Deviation trend cohort**
+(reserved, not in the v1 §14a registry) AND a component of **Triple
+confluence** (Sec.5.10).
+
+### Inputs / parameters
+
+| Parameter | Default | Description |
+|---|---|---|
+| `length` | 100 | regression / std-dev window in bars |
+| `dev_mult` | 2.0 | std-dev multiplier for upper/lower band |
+| `pivot_lookback` | 5 | bars on each side for swing-pivot anchor |
+| `signal_freshness_bars` | 3 | window during which a band-cross still qualifies |
+| `min_init_bars` | 100 | full `length` warm-up before signals fire |
+
+### Formula
+
+For OHLCV series with at least `length` bars available:
+
+1. **Pivot anchor** — find the most recent confirmed swing-low pivot
+   using `pivot_lookback` bars on each side (`low[i]` is a pivot iff it
+   is the lowest of the surrounding `2*pivot_lookback + 1` bars).
+2. **Linear regression line** over the trailing `length` bars,
+   anchored at the pivot:
+   ```
+   x = arange(length)
+   y = close[-length:]
+   slope, intercept = polyfit(x, y, deg=1)
+   trend_line_i = slope * (length - 1) + intercept    # value at bar i
+   ```
+3. **Rolling std-dev** of `(close - trend_line_proj)` over the same
+   `length` window, where `trend_line_proj[k] = slope * k + intercept`.
+   ```
+   resid = close[-length:] - (slope * x + intercept)
+   sigma = std(resid, ddof=0)
+   ```
+4. **Bands**:
+   ```
+   upper_i = trend_line_i + dev_mult * sigma
+   lower_i = trend_line_i - dev_mult * sigma
+   ```
+5. **Trend direction**:
+   ```
+   direction_i = +1   if close_i > upper_{i-1}    # bullish breakout
+                = -1   if close_i < lower_{i-1}    # bearish breakdown
+                = direction_{i-1}   otherwise     # inside the band — no flip
+   ```
+
+A **bullish band cross** at bar `i` is `direction_{i-1} ≠ +1 AND direction_i = +1`.
+
+### Signal logic
+
+The candidate function returns:
+
+```
+{
+    qualified: bool,            # bullish band cross within signal_freshness_bars
+    direction: +1 | -1,
+    trend_line: float,
+    upper: float,
+    lower: float,
+    slope: float,               # regression slope (price units / bar)
+    sigma: float,               # current band-half-width / dev_mult
+    cross_bar: int | None,      # bar index of last bullish cross
+}
+```
+
+`qualified = True` requires `direction_i = +1` AND `slope > 0` AND a
+bullish cross within `signal_freshness_bars` — slope sign filters out
+band-touch noise during sideways regimes.
+
+### Edge cases
+
+| Case | Behaviour |
+|---|---|
+| Bars < `min_init_bars` | Skip — `qualified: False, reason: 'insufficient_history'`. |
+| No swing-low pivot in trailing `length` bars | Use first bar of the window as anchor; emit `reason: 'no_pivot_anchor'` for forensics. |
+| `sigma == 0` (perfectly flat residuals) | Bands collapse to `trend_line`; treat any close ≠ trend_line as a cross. Forensics flags as `reason: 'degenerate_sigma'`. |
+| Slope ≤ 0 with `direction = +1` (price above upper band but trendline declining) | `qualified = False` — sideways false positive. |
+| NaN inputs (close, high, low) | Skip — `qualified: False, reason: 'nan_input'`. |
+
+### Golden-fixture test cases
+
+Synthetic OHLCV fixtures committed to
+`filter/tests/fixtures/deviation_trend/`:
+
+1. **Clean uptrend** — 150 bars, +0.3% drift, σ=0.5%. Expect
+   `slope > 0`, `direction = +1` after the first band cross,
+   `qualified: True` once per band touch from below.
+2. **Clean downtrend mirror** — same shape, negative drift. Expect
+   `slope < 0`, no `qualified: True`.
+3. **Sideways** — 200 bars random walk with zero drift. Expect
+   `direction` flips on noise but `qualified: False` for each
+   bullish cross because `slope ≤ 0` filter rejects.
+4. **Insufficient history** — 99 bars (one short of `min_init_bars`).
+   Expect `qualified: False, reason: 'insufficient_history'`.
+5. **No pivot anchor** — 150-bar monotonically rising series with
+   no swing low. Expect graceful fallback (uses first-bar anchor)
+   plus `reason: 'no_pivot_anchor'` flag.
+6. **Determinism** — same fixture run twice, same outputs to 1e-9
+   tolerance (regression is deterministic; pivot detection is
+   deterministic; no random seed needed).
+
+### Cross-references
+
+- Pine source for parity: `pine/iq_deviation_trend.pine`
+  (to ship in S2.x; deep link from /stock detail page in K2.2
+  loads BigBeluga's published Deviation Trend Profile script).
+- Used as a Triple confluence component at Sec.5.10.
+- BigBeluga's full Deviation Trend Profile script also draws
+  in-band volume profile bins; we deliberately implement only
+  the trend-band signal — the volume profile is a chart-side
+  visual, not a candidate-function input.
+
+---
+
 ## 6. Downside Resistance Score (transparency metric)
 
 Computed for every stock, displayed alongside signal. Range 0–100.
