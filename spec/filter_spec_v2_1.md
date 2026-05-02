@@ -95,6 +95,34 @@ layers is caught by parity tests in CI, not by reviewers months later.
 
 ---
 
+## 0.6 Section reservations (Triple confluence vertical slice)
+
+The InvestQuest 10-cohort architecture (see
+`investquest-architecture-review.html` v1.2) introduces new sections.
+The vertical-slice strategy ships Triple confluence end-to-end first,
+proves the closed loop, then replicates the pattern per cohort. This
+table reserves the section numbers now to prevent renumbering churn
+later — every cohort that lands later refers to these stable numbers.
+
+| Reserved section | Title | Status this slice |
+|------------------|-------|-------------------|
+| Sec.5.7  | MA crossover (component of Triple confluence)              | In scope |
+| Sec.5.8  | Adaptive SuperTrend (component of Triple confluence)       | In scope |
+| Sec.5.9  | Deviation Trend (component of Triple confluence)           | In scope |
+| Sec.5.10 | Triple confluence scoring                                  | In scope |
+| Sec.5.5  | RPI calculator                                             | Deferred to Wave 1 (cohort #2) |
+| Sec.5.6  | RPI spurt + crossover                                      | Deferred to Wave 1 (cohort #2) |
+| Sec.6.3  | Persistence + trend quality classifier                     | Deferred to Wave 2 |
+| Sec.14a  | Scanner cohort registry                                    | In scope |
+| Sec.25   | Position Monitor                                           | In scope |
+
+Architecture review document references Sec.6.2 Tier 2 quality score —
+this maps to existing Sec.14.1 Tier 2 Quality Score. No separate
+Sec.6.2 will be created. Architecture doc updated to v1.2 to reflect
+this mapping.
+
+---
+
 ## 1. What this system promises (and does not)
 
 ### Promises

@@ -45,7 +45,11 @@ per §19.2, no single-metric degradation > 5%.
   tier-weighted return curve against the equal-weight A1 baseline.
   If HIGH-tier alone beats blended on Sharpe and PF, promote per
   §19 user-approval flow.
-- **Status:** Parked for Phase F implementation.
+- **Status:** Promoted to Phase F (high-conviction tier modifier
+  per architecture review v1.2).
+
+  *Operator's original parking note (preserved):* "Parked for Phase F
+  implementation."
 
 ### CR-003: Sector Leadership exception during Risk-Off
 - **Source:** Strategic conversation Apr 2026 — sector rotation
