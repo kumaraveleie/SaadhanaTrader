@@ -1981,6 +1981,142 @@ make on-chart eyeballing match the Python-computed risk levels.
 
 ---
 
+## Sec.25 Position Monitor
+
+The Position Monitor is the runtime component that watches every open
+position and decides when to exit. v1 in this spec corresponds to
+"Sec.20 Position Monitor" in the InvestQuest architecture v1.2 review;
+the section is renumbered here to avoid collision with §20 Compute
+architecture (per §0.6 reservations).
+
+The §17 ledger records *signal emissions* (entries); §25 governs *exits*.
+A position has exactly one entry row in the ledger and exactly one exit
+row when closed. While open, the monitor advances state on every scan
+bar and produces audit events for every state change.
+
+### Position state machine
+
+```
+HEALTHY ──┬─→ AT_RISK ──┬─→ TRIGGERED ──→ CLOSED
+          │             │
+          └─→ TARGET_NEAR ┘ (re-enters HEALTHY if pulls back without trigger)
+```
+
+| State | Definition |
+|---|---|
+| `HEALTHY` | Entry-bar default. Risk model says position is operating within thesis. |
+| `AT_RISK` | Distance-to-stop ≤ 1 ATR OR a Tier-1 exit precondition is forming (e.g., 2 of 3 Triple confluence components have flipped). UI surfaces this as a yellow badge. |
+| `TARGET_NEAR` | Within 0.5 ATR of next target ladder rung (§7). Ladder partial-exit logic primes here. |
+| `TRIGGERED` | An exit trigger fired this bar; exit order being placed. Transient — at most one bar. |
+| `CLOSED` | Exit order filled OR cancelled-and-replaced as MARKET on next bar. Terminal. |
+
+State is recomputed on every scan bar. Transitions emit a `position_event`
+row keyed by (`position_id`, `bar_date`, `from_state`, `to_state`, `reason`).
+
+### Exit triggers (six)
+
+The six triggers below are evaluated **in priority order** every scan
+bar. The first trigger that fires produces a `TRIGGERED` event and
+the position closes; remaining triggers are not evaluated.
+
+| Priority | Trigger | Definition | Applies to |
+|---|---|---|---|
+| 1 | `HARD_STOP` | Close ≤ entry_stop (per §10) | All cohorts |
+| 2 | `TARGET_T3` | Close ≥ target_t3 (per §7); also produces ladder partial at T1/T2 | All cohorts |
+| 3 | `PATTERN_INVALIDATION` | Cohort-specific structural break (see Triple confluence table below) | All cohorts |
+| 4 | `TRAILING_BREAK` | Trailing stop logic per §10 broken (e.g., close below 5-EMA after T2 hit) | All cohorts |
+| 5 | `TIME_LIMIT` | Bars-held ≥ horizon-specific cap (swing 60, position 250) AND no T1 hit | All cohorts |
+| 6 | `REGIME_OVERRIDE` | §18 forensics 2σ pause OR operator manual override | All cohorts |
+
+**`PATTERN_INVALIDATION` is cohort-specific.** Each cohort registers
+its invalidation logic in the §14a `exit_logic` field; the monitor
+dispatches on `cohort_id`. Cohort tables below give the full logic.
+
+### Monitoring tiers
+
+The monitor evaluates positions at three cadences:
+
+| Tier | Cadence | What runs | Cost / day |
+|---|---|---|---|
+| **Tier A — EOD batch** | 1× per day after market close | Full evaluation of all six triggers across all open positions; updates state, writes events, places next-day exit orders | One scheduled GH Actions run |
+| **Tier B — Intraday EOD-equivalent** | 1× per day (15:25 IST, 5 min before close) | Same as Tier A but on the *current* day's bar — produces same-day exit orders for triggers that have already fired | One scheduled run |
+| **Tier C — Instant** | (deferred per D5) | Sub-bar trigger detection via live feed | v2 (Sec.6.3 deferred bucket) |
+
+v1 ships **Tier A + Tier B**. Tier C is reserved.
+
+### Triple confluence exit logic (Sec.5.10 cohort)
+
+| Trigger | Definition (specific to triple_confluence) |
+|---|---|
+| `HARD_STOP` | close ≤ entry_stop (where entry_stop = entry × 0.97 OR entry − 1.5×ATR_at_entry, whichever tighter) |
+| `TARGET_T3` | close ≥ entry × 1.15 (position horizon target) |
+| `PATTERN_INVALIDATION` | All 3 components currently `qualified=False` OR ≥ 2 components currently `direction = -1` (thesis fully broken) |
+| `TRAILING_BREAK` | After T2 hit (entry × 1.10), close below entry × 1.04 (lock partial profit) |
+| `TIME_LIMIT` | bars_held ≥ 250 AND close < entry × 1.05 (didn't reach T1) |
+| `REGIME_OVERRIDE` | Forensics 2σ drift on cohort_id `triple_confluence` over trailing 4-week window |
+
+A 3-of-3 entry that decays to 2-of-3 is a `state_change → AT_RISK` event,
+**not** an exit. The position only exits on full thesis breakdown
+(0-of-3 OR ≥ 2 bearish).
+
+### Pro-setup 13/13 exit logic (Sec.5 cohort)
+
+| Trigger | Definition (specific to pro_setup_13) |
+|---|---|
+| `HARD_STOP` | close ≤ entry_stop (per §5 distance-to-stop logic) |
+| `TARGET_T3` | close ≥ target_t3 (per §7 ladder, swing horizon target) |
+| `PATTERN_INVALIDATION` | `stage_2 = False` OR `inst_flow_score = False` (core thesis broken — these were the gating conditions at entry) |
+| `TRAILING_BREAK` | After T2 hit, close below 5-EMA |
+| `TIME_LIMIT` | bars_held ≥ 60 AND close < entry × 1.05 |
+| `REGIME_OVERRIDE` | Forensics 2σ drift on cohort_id `pro_setup_13` |
+
+### Audit event schema
+
+Every state change writes a row to the `position_events` table:
+
+| Column | Type | Description |
+|---|---|---|
+| `position_id` | uuid | FK to `positions` table |
+| `bar_date` | date | Scan bar this event was produced for |
+| `from_state` | str | Previous state |
+| `to_state` | str | New state |
+| `reason` | str | Trigger name (`HARD_STOP`, `AT_RISK_DTS_LT_1ATR`, etc.) |
+| `cohort_id` | str | Cohort that owns this position |
+| `metadata` | jsonb | Cohort-specific snapshot (e.g., for triple_confluence: which 0/1/2/3 components qualified) |
+| `created_at` | timestamp | UTC |
+
+Audit completeness rule: a position's full lifecycle MUST be reconstructable
+by replaying events in `bar_date, created_at` order. If a state change is
+inferred at run time (e.g., a missed bar from a data outage), the
+event still gets written — flagged with `metadata.inferred = true`.
+
+### Edge cases
+
+| Case | Behaviour |
+|---|---|
+| Two triggers fire on the same bar | Higher-priority trigger wins (table order). Audit event records the winning trigger plus `metadata.also_fired = [...]`. |
+| Position has zero bars of history at scan time (entry day before EOD) | Skip evaluation — entry events don't get exit-checked on entry bar. First evaluation is on bar+1. |
+| Cohort retired while position open | Position continues to be monitored under its *original* cohort_id's exit logic until closed. Retired status applies only to *new* signal emission. |
+| Operator manually closes position via /positions UI | Treated as `REGIME_OVERRIDE` with `metadata.manual_close = operator_id`. |
+| Same symbol held under two cohorts (e.g., pro_setup_13 AND triple_confluence) | Two separate `position_id`s, two independent exit timelines. Sizing for each follows its cohort's tier. |
+| Data outage prevents evaluation on a scheduled bar | On next successful run, monitor fires for *both* missed bar and current bar — events recorded with `metadata.inferred = true` for the missed bar. |
+
+### Cross-references
+
+- §10 risk math: entry_stop and trailing-stop primitives.
+- §7 target ladder: T1/T2/T3 partial exits.
+- §14a registry: `exit_logic` field references this section's
+  cohort-specific tables; new cohorts must extend those tables before
+  going live.
+- §17 ledger: the entry row points forward to a `position_id`; this
+  section's events table owns the per-bar exit timeline.
+- §18 forensics: produces the regime override signal that triggers
+  `REGIME_OVERRIDE` on a per-cohort basis.
+- §25 storage in Postgres (positions + position_events tables) is
+  locked in S1.7 alongside §17 ledger.
+
+---
+
 **End of spec v2.0** — this document is the contract. Every line of code
 written for the filter must trace back to a section here. Drift from spec
 is caught by parity tests and forensics — not by reviewers months later.
