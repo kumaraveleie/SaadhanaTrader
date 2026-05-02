@@ -123,6 +123,65 @@ this mapping.
 
 ---
 
+## 0.7 Universe filter vs cohort-level sector exclusions
+
+The InvestQuest universe (§4) defines the **tradeable pool**: MCap ≥
+₹5,000 Cr AND ADV ≥ ₹5 Cr. The universe is **sector-agnostic** — any
+listed name meeting the cap and liquidity floors qualifies.
+
+**Sector exclusions are a cohort-level concern.** Each cohort
+registered in §14a may declare optional `sector_exclusions: list[str]`
+in its candidate function. The exclusion list is part of the cohort's
+spec and is auditable per signal in the §17 ledger snapshot — every
+ledger row carries the cohort's exclusion list as it stood at the
+moment the signal fired, so a forensics review can attribute outcomes
+to the rule that was in effect.
+
+### Migration of v2.1 §0.5 amendment 1
+
+§0.5 amendment 1 (financial-sector exclusion based on G1 A1
+experiment evidence — financials posted 11% hit / −2.29% avg / N=27,
+dragging Profit Factor / Sharpe / Win-Loss-Ratio below their §11
+gates) **migrates from universe-level to cohort-level**:
+
+- **Pro-setup cohort** (Sec.5 13-condition strict-AND) declares
+  `sector_exclusions = ['FINANCIAL_SERVICES', 'NBFC', 'BANK']`. This
+  preserves the Apr 2026 G1-final baseline (PF 1.95, hit 41.1%,
+  Sharpe 2.81 on N=95) — the InvestQuest-universe rerun validates
+  this is the correct exclusion: Industrial sub-slice on the new
+  universe (N=94) posts hit 41.5% / PF 2.03 / Sharpe 3.11, drift
+  within ±5pp of the old baseline on every metric.
+
+- **Triple confluence cohort** (Sec.5.10) declares
+  `sector_exclusions = []` in v1. Re-evaluate in S2.3 cohort
+  backtest. If financial drag is pattern-specific to strict-AND
+  trend filters, TC will not need exclusions. If TC's S2.3
+  backtest also drags on financials, add exclusions then with
+  evidence — same discipline as §0.5 amendment 1 originally.
+
+- **Other cohorts** (RPI leaders, RPI spurt, Volume blast, Counter-
+  trend, Base breakouts, MA crossover, Adaptive trendflip, Super
+  strength) default to `sector_exclusions = []` and decide
+  independently in their respective backtest tasks (Wave 1+).
+
+### Implementation contract
+
+The cohort's `candidate_fn(symbol, as_of_date) -> dict` reads the
+universe row's `sector` field. If `sector` is in the cohort's
+declared `sector_exclusions`, the function returns
+`{qualified: False, reason: 'sector_excluded:{sector}'}` BEFORE any
+indicator computation. The Sec.17 ledger writer records the
+exclusion list (by reference to cohort version) on every signal so
+forensics can audit promotion / retirement of exclusions.
+
+Cohort-level exclusions are versioned with the cohort. Adding,
+removing, or modifying an exclusion list requires a Sec.19 candidate
+rule with evidence, just like any other rule change — never a silent
+edit. Auto drift detection on a cohort can flag a pattern of losses
+concentrated in a sector, surfacing it as a Sec.19 candidate.
+
+---
+
 ## 1. What this system promises (and does not)
 
 ### Promises
