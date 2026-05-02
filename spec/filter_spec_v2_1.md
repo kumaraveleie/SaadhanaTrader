@@ -1133,6 +1133,165 @@ forces align; *deserves* to skip when the story is missing.
 
 ---
 
+## Sec.14a Scanner cohort registry
+
+The InvestQuest architecture (review v1.2) defines **10 cohorts** —
+each a separate candidate function with its own entry rules, exit rules,
+universe filters, and validation gates. The scanner cohort registry is
+the single source of truth for which cohorts are wired into the daily
+scan, what they do, and where they sit in the validation pipeline.
+
+Per §0.7, the universe filter (§2) is sector-agnostic. Each cohort
+declares its own optional `sector_exclusions` list, which the scanner
+applies to the universe at candidate-function invocation time. The
+ledger (§17) stores `cohort_id` and any applied exclusions on every
+emitted signal — making sector decisions auditable per-signal, not
+buried in a global universe filter.
+
+### Cohort schema
+
+Each registered cohort is a record with the following fields:
+
+| Field | Type | Description |
+|---|---|---|
+| `cohort_id` | str | Stable slug (e.g., `pro_setup_13`, `triple_confluence`); used as the §17 ledger key |
+| `display_name` | str | Human-facing label for /scanners and /stock pages |
+| `description` | str | One-paragraph plain-English thesis |
+| `instrument` | str | `equity` (v1) — reserved for `etf`, `index_future`, etc. |
+| `horizon` | str | `swing` (5–60 bars), `position` (60–250 bars), `intraday` (deferred) |
+| `source` | str | Spec section(s) that define the candidate function (e.g., `Sec.5`, `Sec.5.10`) |
+| `candidate_fn` | str | Fully-qualified Python callable name (e.g., `saadhana_filter.signals.candidate_pro_setup_13`) |
+| `entry_logic` | str | One-line summary; full logic in `source` |
+| `exit_logic` | str | One-line summary; full logic in §25 Position Monitor |
+| `sector_exclusions` | list[str] | Sector names excluded *for this cohort only*. Empty list = sector-agnostic (matches universe). |
+| `position_size_tier` | str | §10 tier — `STANDARD` / `HIGH`; or `dynamic` when cohort emits its own conviction (e.g., Triple confluence 2-of-3 vs 3-of-3) |
+| `validation_gate` | str | Phase identifier — `G1` (technical baseline), `G2` (catalyst layer), `F` (Phase F shadow), `paper` (paper trading), `live` |
+| `status` | str | `live` / `shadow` / `paper` / `validation` / `deferred` / `retired` |
+| `g1_baseline_ref` | str \| null | Path to the G1 baseline backtest report (`spec/samples/...md`); null until S1.3-equivalent rebaseline runs |
+
+### v1 cohort registry
+
+The v1 registry contains exactly the two cohorts that the Triple
+confluence vertical slice ships. The remaining 8 cohorts are reserved
+slots — listed below as `deferred` with their target sprint — and will
+be filled in their respective backtest tasks per §0.7.
+
+| `cohort_id` | `display_name` | `source` | `horizon` | `sector_exclusions` | `position_size_tier` | `status` | `g1_baseline_ref` |
+|---|---|---|---|---|---|---|---|
+| `pro_setup_13` | Pro-setup 13/13 | Sec.5 | swing | `['FINANCIAL_SERVICES','NBFC','BANK']` | `STANDARD` | `live` | `spec/samples/backtest_report_g1_investquest_universe.md` (industrial slice) |
+| `triple_confluence` | Triple confluence | Sec.5.10 | position | `[]` | `dynamic` (medium=STANDARD, high=HIGH) | `validation` | (pending S2.3 backtest) |
+
+### Reserved cohorts (deferred to later sprints)
+
+Listed in §14a so the scanner shape is fixed at the v1 schema lock
+even though the candidate functions don't exist yet. Each reservation
+is a *promise* to ship the cohort with a G1 baseline before flipping
+its `status` to `live`.
+
+| `cohort_id` | `display_name` | Target sprint | Notes |
+|---|---|---|---|
+| `counter_trend` | Counter-trend rebound | future | RSI-divergence + reversal |
+| `base_breakout` | Base breakout | future | Multi-week base + volume |
+| `rpi_leaders` | RPI leaders (sustained) | future | RPI > 80 percentile, multi-week |
+| `rpi_spurt` | RPI spurt + crossover | W1.5 (Wave 1) | Cohort #2 per D9; needs §2 universe seed-list expansion |
+| `volume_blast` | Volume blast | future | RVOL ≥ 3 + breakout |
+| `super_strength` | Super strength | future | All-time-high proximity + RPI |
+| `ma_crossover` | MA crossover (stand-alone) | future | Sec.5.7 as cohort #8 |
+| `adaptive_trendflip` | Adaptive trendflip | future | Sec.5.8 as cohort #9 |
+| `deviation_trend` | Deviation trend | future | Sec.5.9 as cohort #10 |
+
+The 10-cohort target is the InvestQuest architecture v1.2 commitment;
+the v1 registry ships **2 of 10** (`pro_setup_13` + `triple_confluence`).
+The other 8 ship as their backtest tasks complete — never before
+their G1 baseline lands.
+
+### Storage representation
+
+The registry is stored as Python source at
+`filter/saadhana_filter/scan/cohorts.py`:
+
+```python
+COHORTS: list[CohortSpec] = [
+    CohortSpec(
+        cohort_id="pro_setup_13",
+        display_name="Pro-setup 13/13",
+        description="Strict-AND of 13 BUY conditions per §5; "
+                    "sector_exclusions migrate from §0.5 amendment.",
+        instrument="equity",
+        horizon="swing",
+        source="Sec.5",
+        candidate_fn="saadhana_filter.signals.candidate_pro_setup_13",
+        entry_logic="all 13 BUY conditions True",
+        exit_logic="§25 Tier 1 (hard stop / target ladder / score collapse)",
+        sector_exclusions=["FINANCIAL_SERVICES", "NBFC", "BANK"],
+        position_size_tier="STANDARD",
+        validation_gate="G1",
+        status="live",
+        g1_baseline_ref="spec/samples/backtest_report_g1_investquest_universe.md",
+    ),
+    CohortSpec(
+        cohort_id="triple_confluence",
+        display_name="Triple confluence",
+        description="2-of-3 / 3-of-3 agreement across MA crossover, "
+                    "Adaptive SuperTrend, Deviation Trend (Sec.5.10).",
+        instrument="equity",
+        horizon="position",
+        source="Sec.5.10",
+        candidate_fn="saadhana_filter.signals.candidate_triple_confluence",
+        entry_logic="≥ 2 components qualified bullish on same scan bar",
+        exit_logic="§25 Tier 2 (component decay watchlist; 0-of-3 = exit)",
+        sector_exclusions=[],
+        position_size_tier="dynamic",
+        validation_gate="paper",
+        status="validation",
+        g1_baseline_ref=None,
+    ),
+]
+```
+
+The same data is mirrored to a Vercel Postgres `scanner_cohorts` table
+(schema locked in S1.7) so the Next.js /scanners page can render the
+registry without re-importing Python.
+
+### Status lifecycle
+
+A cohort moves through statuses in a fixed order:
+
+```
+deferred → validation → shadow → paper → live
+                                     ↓
+                                  retired
+```
+
+| Transition | Gate |
+|---|---|
+| `deferred` → `validation` | candidate_fn implemented + unit tests green |
+| `validation` → `shadow` | G1 backtest baseline meets §11 acceptance OR documented exception |
+| `shadow` → `paper` | 4 weeks of shadow-mode signals match expected drift envelope (§18) |
+| `paper` → `live` | 4 weeks of paper trading meets paper-acceptance gate (Sprint 3) |
+| `live` → `retired` | §18 forensics 3σ drift breach OR operator decommission |
+
+### Edge cases
+
+| Case | Behaviour |
+|---|---|
+| Two cohorts emit signals for the same symbol on the same bar | Both ledger entries written; UI dedupes by symbol with badges showing all qualifying cohorts. Position sizing takes the **higher** tier across the agreeing cohorts. |
+| Cohort has empty `sector_exclusions` but a sector consistently underperforms in shadow mode | Forensics opens a CR (§19) proposing exclusion; doesn't auto-mutate the registry. |
+| Operator hard-disables a cohort mid-day | `status: 'paused'` (transient) — no new signals; existing positions continue to be monitored by §25. Resume restores prior status. |
+| Two registry rows share `cohort_id` | Schema validation fails at `cohorts.py` import time; daily scan refuses to start. |
+
+### Cross-references
+
+- §0.7: cohort-level sector exclusion principle (this section is the registry).
+- §17: every emitted signal records `cohort_id` + applied `sector_exclusions`.
+- §18 forensics: drift envelope is computed *per `cohort_id`*, not blended.
+- §19 rule promotion: new cohorts arrive here as `validation` after their CR ships.
+- §25 Position Monitor: exit logic deduplication is keyed by (symbol, cohort_id).
+- Sprint 3 K1.x: /scanners page reads this registry; one tab per `live` or
+  `shadow` cohort.
+
+---
+
 ## 15. Scanner output format
 
 Daily JSON written to `signals/YYYY-MM-DD.json` and Vercel Postgres
