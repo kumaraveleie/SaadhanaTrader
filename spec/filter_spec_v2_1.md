@@ -689,6 +689,129 @@ Synthetic OHLCV fixtures committed to
 
 ---
 
+## Sec.5.10 Triple confluence scoring (cohort definition)
+
+**Triple confluence** is the cohort built by combining the three
+trend-flavoured indicators — MA crossover (Sec.5.7), Adaptive SuperTrend
+(Sec.5.8), Deviation Trend (Sec.5.9). The thesis: signals where all three
+independent trend filters agree on direction at the same time are
+materially higher-confidence than any one alone, because each indicator
+sees trend through a different lens (moving-average slope vs. ATR-band
+flip vs. regression-band breakout).
+
+### Conviction tiers
+
+The cohort uses **2-of-3 / 3-of-3** as the tiering signal — *not*
+score-weighted summation. Each component returns a boolean
+`qualified` plus a `direction`. The cohort score is the count of
+components with `qualified=True AND direction=+1` for bullish
+candidates:
+
+| Components agreeing | Conviction | Action |
+|---|---|---|
+| 0 of 3 | none | not a candidate |
+| 1 of 3 | none | not a candidate |
+| **2 of 3** | **medium** | candidate, §10 STANDARD position size (0.5%) |
+| **3 of 3** | **high** | candidate, §10 HIGH position size (per §14 conviction tiers) |
+
+A 2-of-3 candidate that becomes 3-of-3 within the same scan day is
+recorded as **3-of-3 entry**; the §17 ledger keeps the higher tier.
+A 3-of-3 candidate that decays to 2-of-3 on a later bar does NOT
+escalate exit — it remains a held position at its original tier
+(exit logic governed by §25 Position Monitor).
+
+### Candidate function
+
+```python
+def candidate_triple_confluence(df: pd.DataFrame, *, on_bar: int) -> dict:
+    """Sec.5.10 — Triple confluence scoring.
+
+    Returns:
+        {
+            qualified: bool,                 # at least 2-of-3 bullish agreement
+            conviction: 'medium' | 'high',   # 2-of-3 vs 3-of-3
+            score: int,                      # 0..3
+            agreeing_components: list[str],  # subset of {'ma_crossover','adaptive_st','deviation_trend'}
+            ma_crossover: dict,              # raw output from Sec.5.7
+            adaptive_st: dict,               # raw output from Sec.5.8
+            deviation_trend: dict,           # raw output from Sec.5.9
+        }
+    """
+```
+
+Each component is invoked independently on the same `df` and `on_bar`.
+Components fail closed (their `qualified` is False) on insufficient
+history, NaN inputs, or degenerate cases — Sec.5.10 only counts
+**affirmative** bullish votes; abstentions are not bearish.
+
+### Universe + sector exclusions
+
+Triple confluence runs on the InvestQuest universe (MCap ≥ ₹5,000 Cr,
+ADV ≥ ₹5 Cr; Sec.2). Per §0.7, the cohort declares its own optional
+sector exclusions in the §14a registry. **v1 cohort registration
+declares `sector_exclusions = []`** — Triple confluence is an
+agreement-of-three filter, not a single-signal filter, so the
+v2.1 §0.5 financial-cohort drag may not apply at the same magnitude.
+Empirical validation in Sprint 2's S2.3 Triple confluence backtest
+will determine whether financials need to be excluded post-hoc.
+
+### Signal freshness across components
+
+Each component has its own `signal_freshness_bars` window (Sec.5.7
+default 5, Sec.5.8 default 3, Sec.5.9 default 3). For Triple
+confluence, the cohort uses the **strictest** window — components
+must all be currently-qualified on the same scan bar; staggered
+flips that fall outside their own freshness windows do NOT count.
+
+### Edge cases
+
+| Case | Behaviour |
+|---|---|
+| One component fails initialisation (insufficient history) | Treated as `qualified: False`. Score capped at 2 — promotion to 3-of-3 is impossible until full history available. |
+| Two components qualify bullish, third qualifies bearish | Score = 2 (bullish votes only). Conviction = medium. The bearish vote is recorded in `agreeing_components` metadata for forensics, not in the score. |
+| All three qualify bullish on different bars within a 3-bar window | Counts as 3-of-3 if all are within their own `signal_freshness_bars` on the scan bar; otherwise 2-of-3 or less. |
+| 3-of-3 → 2-of-3 decay on a later bar | No exit signal generated; §25 Position Monitor governs. The §17 ledger entry keeps the entry-bar conviction. |
+
+### Golden-fixture test cases
+
+Synthetic OHLCV fixtures committed to
+`filter/tests/fixtures/triple_confluence/`:
+
+1. **3-of-3 high conviction** — fixture engineered so all three
+   components fire bullish on the same bar. Expect
+   `qualified: True, conviction: 'high', score: 3`.
+2. **2-of-3 medium conviction** — MA crossover + Adaptive ST agree;
+   Deviation Trend's slope filter rejects (slope ≤ 0). Expect
+   `conviction: 'medium', score: 2,
+   agreeing_components: ['ma_crossover','adaptive_st']`.
+3. **1-of-3 not qualified** — only MA crossover fires. Expect
+   `qualified: False, score: 1`.
+4. **Mixed direction** — MA crossover + Adaptive ST fire bullish;
+   Deviation Trend fires bearish. Expect `score: 2`,
+   `agreeing_components` lists the two bullish; bearish is in
+   metadata not in the count.
+5. **Component init shortfall** — Adaptive ST has < 100 bars.
+   Even with MA + Deviation bullish, score capped at 2.
+   Expect `conviction: 'medium'` not `'high'`.
+6. **Determinism** — fixture #1 run twice, identical outputs
+   (downstream of Sec.5.7/5.8/5.9 determinism guarantees).
+
+### Cross-references
+
+- §14a registry row: `triple_confluence` (medium = STANDARD,
+  high = HIGH conviction tier per §14).
+- §10 position sizing tiers govern actual rupee allocation.
+- §17 ledger writes one row per cohort entry with
+  `cohort_id = 'triple_confluence'` and `conviction in {'medium','high'}`.
+- §25 Position Monitor exit logic uses Sec.5.10's score: a 3-of-3
+  position that decays to 0-of-3 (all components flipped or
+  abstained) triggers a "thesis broken" exit; intermediate decay
+  (3 → 2 → 1) is a watchlist event, not an exit.
+- Pine bundle for chart visualization: `pine/iq_triple_confluence.pine`
+  (overlays all three indicators; emits a single label on 3-of-3 bars).
+
+---
+
 ## 6. Downside Resistance Score (transparency metric)
 
 Computed for every stock, displayed alongside signal. Range 0–100.
