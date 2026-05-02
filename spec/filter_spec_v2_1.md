@@ -440,6 +440,132 @@ Synthetic OHLCV fixtures committed to
 
 ---
 
+## Sec.5.8 Adaptive SuperTrend (component of Triple confluence)
+
+Adapted from the public TradingView script *ML Adaptive SuperTrend*
+by AlgoAlpha. Standard SuperTrend uses a fixed ATR multiplier
+(typically 3.0×); Adaptive SuperTrend learns the multiplier from a
+**K-means clustering on rolling ATR**, so the band tightens in
+calm regimes and widens in volatile regimes. Stand-alone candidate
+function for the **Adaptive trendflip cohort** AND a component of
+the **Triple confluence cohort** (Sec.5.10).
+
+### Inputs / parameters
+
+| Parameter | Default | Description |
+|---|---|---|
+| `atr_period` | 14 | period for the underlying ATR |
+| `cluster_window` | 50 | trailing-bar window for the K-means fit |
+| `n_clusters` | 3 | always 3: low / mid / high volatility regimes |
+| `mult_low` | 1.0 | multiplier when current ATR maps to low-vol cluster |
+| `mult_mid` | 2.0 | multiplier when current ATR maps to mid-vol cluster |
+| `mult_high` | 3.0 | multiplier when current ATR maps to high-vol cluster |
+| `kmeans_random_state` | 20260502 | fixed seed for reproducibility |
+| `min_init_bars` | 100 | bars required before clustering activates; fall back to fixed `mult_mid` until then |
+
+`n_clusters` is locked at 3 by spec — the source script uses 3 and
+forensics-side comparisons assume the same labelling. Changing it
+requires a Sec.19 candidate rule.
+
+### Formula
+
+For OHLCV series with `cluster_window` ≥ `min_init_bars` available:
+
+1. **ATR(14) series** computed conventionally (Wilder's smoothing).
+2. **K-means fit** on the last `cluster_window` ATR values with
+   `n_clusters = 3`, `random_state = kmeans_random_state`. Cluster
+   centers `c_low ≤ c_mid ≤ c_high` (sort ascending after fit).
+3. **Active multiplier** at bar `i`:
+   ```
+   d = [|ATR_i - c_low|, |ATR_i - c_mid|, |ATR_i - c_high|]
+   active_cluster = argmin(d)
+   mult_i = {0: mult_low, 1: mult_mid, 2: mult_high}[active_cluster]
+   ```
+4. **SuperTrend bands** at bar `i`:
+   ```
+   hl2_i        = (high_i + low_i) / 2
+   basic_upper  = hl2_i + mult_i * ATR_i
+   basic_lower  = hl2_i - mult_i * ATR_i
+
+   final_upper  = min(basic_upper, prev_final_upper)
+                    if close_{i-1} ≤ prev_final_upper else basic_upper
+   final_lower  = max(basic_lower, prev_final_lower)
+                    if close_{i-1} ≥ prev_final_lower else basic_lower
+   ```
+5. **Trend direction** at bar `i`:
+   ```
+   direction_i = +1 (uptrend)   if close_i > final_upper_{i-1} OR (prev direction +1 AND close_i > final_lower_i)
+                = -1 (downtrend) if close_i < final_lower_{i-1} OR (prev direction -1 AND close_i < final_upper_i)
+                = direction_{i-1} otherwise
+   ```
+
+A **band flip** at bar `i` is `direction_{i-1} = -1 AND direction_i = +1`
+(bullish flip) or the inverse for bearish flip.
+
+### Signal logic
+
+The candidate function returns:
+
+```
+{
+    qualified: bool,           # bullish band flip on bar i (or within signal_freshness_bars)
+    direction: +1 | -1,
+    active_band: float,        # final_lower if uptrend, final_upper if downtrend
+    active_cluster: 'low' | 'mid' | 'high',
+    mult_used: float,
+    flip_bar: int | None,      # bar index of last bullish flip
+    atr_i: float,
+}
+```
+
+`qualified = True` requires a bullish flip within the trailing
+`signal_freshness_bars` (default 3 — Adaptive flips are typically
+shorter-horizon than MA crossovers).
+
+### Edge cases
+
+| Case | Behaviour |
+|---|---|
+| Bars < `min_init_bars` (default 100) | Use fixed `mult_mid` (2.0) until threshold met. Document in returned `active_cluster: 'init'`. |
+| K-means fails to converge OR all 3 cluster centers within 0.001 of each other | Treat as degenerate (flat-vol regime). Use `mult_mid`; `active_cluster: 'degenerate'`. |
+| ATR_i is NaN (warm-up or data gap) | Skip — `qualified: False, reason: 'atr_nan'`. |
+| Cluster center order changes between bars (low/high swap) | Re-sort ascending after each fit. Active-cluster index is by sorted position, not raw label, so the labelling is stable. |
+| Very long flat regime (all ATR ≈ 0) | Bands collapse to HL2; direction flips on noise. Spec accepts this — forensics flags as "low-confidence regime" if ATR < 0.1% of price. |
+
+### Golden-fixture test cases
+
+Synthetic OHLCV fixtures committed to
+`filter/tests/fixtures/adaptive_supertrend/`:
+
+1. **Calm-then-volatile transition** — 100 bars of low-vol noise
+   (σ=0.5%), then 50 bars of high-vol noise (σ=3%). Expect
+   `active_cluster` to migrate from `low` to `high` within the
+   `cluster_window` after the regime change.
+2. **Bullish flip on uptrend onset** — 50 bars flat, then 30-bar
+   ramp +0.5% per bar. Expect bullish band flip within 5 bars of
+   ramp start; `direction +1` thereafter.
+3. **Bearish flip mirror** — same as #2 with negative ramp.
+   Expect bearish flip; no bullish `qualified: True`.
+4. **Insufficient history** — 99 bars (one short of `min_init_bars`).
+   Expect `active_cluster: 'init'` and `mult_used == mult_mid`.
+5. **Degenerate clustering** — 200 bars of identical ATR (price
+   drifts 0.0001 per bar). Expect `active_cluster: 'degenerate'`
+   without crash; `mult_used == mult_mid`.
+6. **K-means determinism** — same fixture run twice with the same
+   `kmeans_random_state`. Cluster centers, labels, and signal
+   sequence must be byte-identical.
+
+### Cross-references
+
+- Pine source for parity: `pine/iq_adaptive_supertrend.pine`
+  (to ship in S2.x; deep link from /stock detail page in K2.2
+  loads AlgoAlpha's published ML SuperTrend script directly).
+- Used as a Triple confluence component at Sec.5.10.
+- Cohort registration: §14a row `adaptive_trendflip` (deferred
+  to a later cohort sprint).
+
+---
+
 ## 6. Downside Resistance Score (transparency metric)
 
 Computed for every stock, displayed alongside signal. Range 0–100.
