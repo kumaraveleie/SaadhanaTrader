@@ -1,0 +1,123 @@
+// External reference — DO NOT MODIFY
+// Source: TradingView public Pine library
+// Author: AlgoAlpha (modified to strategy by Antigravity / trade_crush)
+// License: Mozilla Public License 2.0 — https://mozilla.org/MPL/2.0/
+// Used by: InvestQuest Triple confluence cohort (Sec.5.8 Adaptive SuperTrend component)
+// Attribution: Pine logic ported clean-room into filter/saadhana_filter/indicators/adaptive_supertrend.py
+// Divergences (if any) documented in that module's docstring.
+
+// This Pine Script™ code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © AlgoAlpha (Modified to Strategy by Antigravity)
+//@version=5
+strategy("ML Adaptive SuperTrend Strategy [trade_crush]", "🤖 Adaptive SuperTrend Strategy", overlay = true, max_labels_count = 500, initial_capital = 10000, default_qty_type = strategy.percent_of_equity, default_qty_value = 10, currency = currency.USD)
+import TradingView/ta/7
+// --- Inputs ---
+atr_len = input.int(10, "ATR Length", group = "SuperTrend Settings")
+fact = input.float(3, "SuperTrend Factor", group = "SuperTrend Settings")
+use_ml_adaptive = input.bool(true, "Use ML Adaptive ATR (Centroid)", group = "SuperTrend Settings", tooltip = "When enabled, it uses K-Means centroids for volatility detection. If disabled, it uses standard ATR.")
+confirm_signals = input.bool(true, "Confirm Signals (Non-Repainting)", group = "SuperTrend Settings", tooltip = "Ensures signals are confirmed on bar close before triggering. This prevents repainting visuals.")
+training_data_period = input.int(100, "Training Data Length", group = "K-Means Settings")
+highvol = input.float(0.75, "Initial High volatility Percentile Guess", maxval = 1, group = "K-Means Settings")
+midvol = input.float(0.5, "Initial Medium volatility Percentile Guess", maxval = 1, group = "K-Means Settings")
+lowvol = input.float(0.25, "Initial Low volatility Percentile Guess", maxval = 1, group = "K-Means Settings")
+// --- Risk Management ---
+sl_type = input.string("None", "Stop Loss Type", options = ["None", "Percentage", "ATR"], group = "Risk Management")
+sl_val = input.float(2.0, "Stop Loss Value", group = "Risk Management")
+tp_type = input.string("None", "Take Profit Type", options = ["None", "Percentage", "ATR"], group = "Risk Management")
+tp_val = input.float(4.0, "Take Profit Value", group = "Risk Management")
+ts_enable = input.bool(false, "Enable Trailing Stop", group = "Trailing Stop")
+ts_type = input.string("ATR", "Trailing Stop Type", options = ["Percentage", "ATR"], group = "Trailing Stop")
+ts_val = input.float(2.0, "Trailing Stop Value", group = "Trailing Stop")
+ts_activation = input.float(1.0, "TS Activation Offset (%)", group = "Trailing Stop", tooltip = "Price must move this % in profit before TS activates")
+risk_per_trade = input.float(1.0, "Risk % Per Trade (if using Risk Sizing)", group = "Position Sizing", minval = 0.1, maxval = 100)
+use_risk_sizing = input.bool(false, "Use Risk-Based Sizing", group = "Position Sizing", tooltip = "Calculates quantity based on Stop Loss distance and Risk %.")
+// --- Appearance ---
+t1 = input.int(70, "Transparency 1", maxval = 100, minval = 0, group = "Appearance")
+t2 = input.int(95, "Transparency 2", maxval = 100, minval = 0, group = "Appearance")
+green = input.color(#00ffbb, "Bullish Color", group = "Appearance")
+red = input.color(#ff1100, "Bearish Color", group = "Appearance")
+// --- SuperTrend Function ---
+pine_supertrend(factor, atr) =>
+    src = hl2
+    upperBand = src + factor * atr
+    lowerBand = src - factor * atr
+    prevLowerBand = nz(lowerBand[1])
+    prevUpperBand = nz(upperBand[1])
+    lowerBand := lowerBand > prevLowerBand or close[1] < prevLowerBand ? lowerBand : prevLowerBand
+    upperBand := upperBand < prevUpperBand or close[1] > prevUpperBand ? upperBand : prevUpperBand
+    int _direction = na
+    float superTrend = na
+    prevSuperTrend = superTrend[1]
+    if na(atr[1])
+        _direction := 1
+    else if prevSuperTrend == prevUpperBand
+        _direction := close > upperBand ? -1 : 1
+    else
+        _direction := close < lowerBand ? 1 : -1
+    superTrend := _direction == -1 ? lowerBand : upperBand
+    [superTrend, _direction]
+// --- Volatility and K-Means ---
+volatility = ta.atr(atr_len)
+upper = ta.highest(volatility, training_data_period)
+lower = ta.lowest(volatility, training_data_period)
+high_volatility = lower + (upper-lower) * highvol
+medium_volatility = lower + (upper-lower) * midvol
+low_volatility = lower + (upper-lower) * lowvol
+iterations = 0
+size_a = 0
+size_b = 0
+size_c = 0
+hv = array.new_float()
+mv = array.new_float()
+lv = array.new_float()
+amean = array.new_float(1,high_volatility)
+bmean = array.new_float(1,medium_volatility)
+cmean = array.new_float(1,low_volatility)
+if nz(volatility) > 0 and bar_index >= training_data_period-1
+    while ((amean.size() == 1 ? true : (amean.first() != amean.get(1))) or (bmean.size() == 1 ? true : (bmean.first() != bmean.get(1))) or (cmean.size() == 1 ? true : (cmean.first() != cmean.get(1))))
+        hv.clear()
+        mv.clear()
+        lv.clear()
+        for i = training_data_period-1 to 0
+            _1 = math.abs(volatility[i] - amean.first())
+            _2 = math.abs(volatility[i] - bmean.first())
+            _3 = math.abs(volatility[i] - cmean.first())
+            if _1 < _2 and _1 < _3
+                hv.unshift(volatility[i])
+            if _2 < _1 and _2 < _3
+                mv.unshift(volatility[i])
+            if _3 < _1 and _3 < _2
+                lv.unshift(volatility[i])
+
+        amean.unshift(hv.avg())
+        bmean.unshift(mv.avg())
+        cmean.unshift(lv.avg())
+        size_a := hv.size()
+        size_b := mv.size()
+        size_c := lv.size()
+        iterations := iterations + 1
+hv_new = amean.first()
+mv_new = bmean.first()
+lv_new = cmean.first()
+vdist_a = math.abs(volatility - hv_new)
+vdist_b = math.abs(volatility - mv_new)
+vdist_c = math.abs(volatility - lv_new)
+distances = array.new_float()
+centroids = array.new_float()
+distances.push(vdist_a)
+distances.push(vdist_b)
+distances.push(vdist_c)
+centroids.push(hv_new)
+centroids.push(mv_new)
+centroids.push(lv_new)
+cluster = distances.indexof(distances.min()) // 0 for high, 1 for medium, 2 for low
+assigned_centroid = cluster == -1 ? na : centroids.get(cluster)
+// --- Logic Selection ---
+atr_to_use = use_ml_adaptive ? assigned_centroid : volatility
+[ST, dir] = pine_supertrend(fact, atr_to_use)
+// --- Non-Repainting Signals ---
+// If confirm_signals is true, we look at the previous bar's confirmed state
+bullish_signal = confirm_signals ? ta.crossunder(dir[1], 0) : ta.crossunder(dir, 0)
+bearish_signal = confirm_signals ? ta.crossover(dir[1], 0) : ta.crossover(dir, 0)
+// (strategy execution + risk management + dashboard sections truncated for brevity —
+//  not relevant to the indicator math being ported. Full source available on TradingView.)

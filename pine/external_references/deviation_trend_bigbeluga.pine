@@ -1,0 +1,97 @@
+// External reference — DO NOT MODIFY
+// Source: TradingView public Pine library
+// Author: BigBeluga
+// License: Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
+//          https://creativecommons.org/licenses/by-nc-sa/4.0/
+// Used by: InvestQuest Triple confluence cohort (Sec.5.9 Deviation Trend component)
+// Attribution: Pine logic ported clean-room into filter/saadhana_filter/indicators/deviation_trend.py
+//
+// CRITICAL NOTE FOR PORTING:
+//   The indicator name says "Deviation Trend" / "Standart Deviation Levels"
+//   but the actual math uses ATR-based bands, NOT standard deviation.
+//   The centerline is SMA(50), NOT linear regression.
+//   Trend detection uses 5-bar slope normalized over 500-bar percentile,
+//   triggered at +/- 0.1 normalized slope crossings.
+//   Do NOT substitute std-dev for ATR or regression for SMA — the
+//   statistical properties differ and signals will diverge.
+
+// This work is licensed under Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
+// https://creativecommons.org/licenses/by-nc-sa/4.0/
+// © BigBeluga
+//@version=6
+indicator("Deviation Trend Profile [BigBeluga]", overlay = true, max_boxes_count = 500, max_bars_back = 5000)
+// INPUTS
+grp = "Standart Deviation Levels"
+length = input.int(50, "SMA Length", group = "SMA")
+mult1 = input.int(1, "Standart Deviation 1", group = grp)
+mult2 = input.int(2, "Standart Deviation 2", group = grp)
+mult3 = input.int(3, "Standart Deviation 3", group = grp)
+show_tp = input.bool(true, "Show", group = "Trend Distribution Profile")
+bins = input.int(50, "Bins Amount", group = "Trend Distribution Profile")
+offset = input.int(30, "Offset", group = "Trend Distribution Profile")
+col_up = input.color(color.rgb(18, 209, 235), "", group = "Theme", inline = "c")
+col_dn = input.color(color.rgb(250, 40, 86), "", group = "Theme", inline = "c")
+var start_index = int(na)
+var trend = bool(na)
+
+// CALCULATIONS — these are the lines that matter for porting
+avg = ta.sma(close, length)                  // SMA-50 centerline (NOT linear regression)
+atr = ta.atr(200)                            // 200-bar ATR (very long context)
+stdv1 = avg + atr * mult1                    // ATR-based bands at +/-1, +/-2, +/-3 (NOT std-dev)
+stdv2 = avg + atr * mult2
+stdv3 = avg + atr * mult3
+stdv_1 = avg - atr * mult1
+stdv_2 = avg - atr * mult2
+stdv_3 = avg - atr * mult3
+max = stdv3
+min = stdv_3
+
+avg_diff = avg - avg[5]                      // 5-bar slope of the SMA centerline
+avg_col = avg_diff / ta.percentile_linear_interpolation(avg_diff, 500, 100)
+                                              // normalize slope vs 500-bar percentile distribution
+avg_color = color.from_gradient(avg_col, -0.3, 0.3, col_dn, col_up)
+
+if ta.crossover(avg_col, 0.1) and not trend
+    trend := true                             // bullish trend starts when normalized slope crosses +0.1
+    start_index := bar_index
+if ta.crossunder(avg_col, -0.1) and trend
+    trend := false                            // bearish trend starts when normalized slope crosses -0.1
+    start_index := bar_index
+loockback = bar_index - start_index
+
+// (Trend distribution profile rendering + plot/draw functions below —
+//  visualization only, not core indicator math. Full source on TradingView.)
+
+profile(min, max) =>
+    var boxes = array.new<box>()
+    var bin = array.new<int>(bins)
+    step = (max - min) / bins
+    start = bar_index + offset
+    if barstate.islast
+        if boxes.size() >= 0
+            for b in boxes
+                box.delete(b)
+        for g = 0 to bins-1
+            bin.set(g, 0)
+        for l = 0 to loockback
+            c = close[l]
+            a = avg[l]
+            mi = min[l]
+            s = step[l]
+            for i = 0 to bin.size()-1
+                lower = mi + s * i
+                upper = lower + s
+                if c >= lower-s and c <= upper+s
+                    bin.set(i, bin.get(i) + 1)
+        for j = 0 to bin.size()-1
+            val = bin.get(j)
+            lower = min + step * j
+            upper = lower + step
+            col = color.from_gradient(val, 0, bin.max(), color.new(chart.fg_color, 80), avg_color)
+            boxes.push(box.new(start-val, upper, start, lower, bgcolor = col, border_color = val == 0 ? chart.fg_color : chart.bg_color))
+
+if show_tp
+    profile(min, max)
+plot(avg, color = avg_color, linewidth = 3)
+plotshape(trend != trend[1] and trend ? avg : na, "Up", shape.circle, location.absolute, size = size.tiny, color = col_up)
+plotshape(trend != trend[1] and not trend ? avg : na, "Down", shape.circle, location.absolute, size = size.tiny, color = col_dn)
