@@ -499,65 +499,85 @@ Synthetic OHLCV fixtures committed to
 
 ## Sec.5.8 Adaptive SuperTrend (component of Triple confluence)
 
-Adapted from the public TradingView script *ML Adaptive SuperTrend*
-by AlgoAlpha. Standard SuperTrend uses a fixed ATR multiplier
-(typically 3.0×); Adaptive SuperTrend learns the multiplier from a
-**K-means clustering on rolling ATR**, so the band tightens in
-calm regimes and widens in volatile regimes. Stand-alone candidate
-function for the **Adaptive trendflip cohort** AND a component of
-the **Triple confluence cohort** (Sec.5.10).
+Faithful Python port of AlgoAlpha's *ML Adaptive SuperTrend*
+TradingView script. Standard SuperTrend uses a fixed ATR multiplier
+(typically 3.0×); Adaptive SuperTrend keeps the **single** multiplier
+fixed (default 3.0) but **substitutes the K-means cluster centroid
+for the raw ATR** in the band formula. In calm regimes the assigned
+centroid is small (tight bands); in volatile regimes it is large
+(wide bands). There is no separate low/mid/high *multiplier* model —
+that was a misreading of the source script and is corrected here.
+
+Stand-alone candidate function for the **Adaptive trendflip cohort**
+AND a component of the **Triple confluence cohort** (Sec.5.10).
 
 ### Inputs / parameters
 
 | Parameter | Default | Description |
 |---|---|---|
-| `atr_period` | 14 | period for the underlying ATR |
-| `cluster_window` | 50 | trailing-bar window for the K-means fit |
-| `n_clusters` | 3 | always 3: low / mid / high volatility regimes |
-| `mult_low` | 1.0 | multiplier when current ATR maps to low-vol cluster |
-| `mult_mid` | 2.0 | multiplier when current ATR maps to mid-vol cluster |
-| `mult_high` | 3.0 | multiplier when current ATR maps to high-vol cluster |
-| `kmeans_random_state` | 20260502 | fixed seed for reproducibility |
-| `min_init_bars` | 100 | bars required before clustering activates; fall back to fixed `mult_mid` until then |
+| `atr_period` | 10 | period for the underlying Wilder's ATR (matches Pine `atr_len`) |
+| `training_data_period` | 100 | trailing-bar window for the K-means fit (matches Pine) |
+| `factor` | 3.0 | single SuperTrend multiplier applied to the assigned centroid (matches Pine `fact`) |
+| `signal_freshness_bars` | 3 | window during which a fresh bullish flip qualifies (port-added; not in Pine) |
+| `confirm_signals` | True | non-repainting mode — flip detected at bar j is reported as qualified on bar j+1 (matches Pine) |
 
-`n_clusters` is locked at 3 by spec — the source script uses 3 and
-forensics-side comparisons assume the same labelling. Changing it
-requires a Sec.19 candidate rule.
+The `n_clusters = 3` is structurally locked (low / mid / high volatility regimes) and not configurable.
 
 ### Formula
 
-For OHLCV series with `cluster_window` ≥ `min_init_bars` available:
+For OHLCV series with at least `atr_period + training_data_period - 1` bars (default 109):
 
-1. **ATR(14) series** computed conventionally (Wilder's smoothing).
-2. **K-means fit** on the last `cluster_window` ATR values with
-   `n_clusters = 3`, `random_state = kmeans_random_state`. Cluster
-   centers `c_low ≤ c_mid ≤ c_high` (sort ascending after fit).
-3. **Active multiplier** at bar `i`:
+1. **ATR series**: `atr_i = ATR(close, atr_period)` with Wilder's smoothing.
+2. **K-means fit** at each bar on the trailing `training_data_period` ATR values:
+   - **Initial centroids** (linear interpolation between min/max ATR over the window):
+     ```
+     vol_low  = min(atr_window)
+     vol_high = max(atr_window)
+     seed_low  = vol_low + (vol_high - vol_low) * 0.25
+     seed_mid  = vol_low + (vol_high - vol_low) * 0.5
+     seed_high = vol_low + (vol_high - vol_low) * 0.75
+     ```
+   - **Iterate Lloyd's algorithm** with **strict-inequality assignment** (Pine quirk: a point is assigned to a cluster only when its distance to that cluster is strictly less than to BOTH others; tied points are unassigned for that iteration).
+   - **Empty clusters** keep the previous centroid value.
+   - Convergence: stop when centroids stabilise (`atol=1e-12`) or `max_iter=50`.
+3. **Centroid assignment** for the current ATR (sorted ascending: low/mid/high):
    ```
-   d = [|ATR_i - c_low|, |ATR_i - c_mid|, |ATR_i - c_high|]
-   active_cluster = argmin(d)
-   mult_i = {0: mult_low, 1: mult_mid, 2: mult_high}[active_cluster]
+   d = [|atr_i - c_low|, |atr_i - c_mid|, |atr_i - c_high|]
+   cluster_idx       = argmin(d)
+   assigned_centroid = c_{cluster_idx}
+   active_cluster    = ('low', 'mid', 'high')[cluster_idx]
    ```
-4. **SuperTrend bands** at bar `i`:
+4. **SuperTrend bands** with the centroid as ATR substitute:
    ```
-   hl2_i        = (high_i + low_i) / 2
-   basic_upper  = hl2_i + mult_i * ATR_i
-   basic_lower  = hl2_i - mult_i * ATR_i
+   hl2_i       = (high_i + low_i) / 2
+   basic_upper = hl2_i + factor * assigned_centroid
+   basic_lower = hl2_i - factor * assigned_centroid
 
-   final_upper  = min(basic_upper, prev_final_upper)
-                    if close_{i-1} ≤ prev_final_upper else basic_upper
-   final_lower  = max(basic_lower, prev_final_lower)
-                    if close_{i-1} ≥ prev_final_lower else basic_lower
+   final_upper := basic_upper
+                    if (basic_upper < prev_final_upper) OR (close_{i-1} > prev_final_upper)
+                    else prev_final_upper
+   final_lower := basic_lower
+                    if (basic_lower > prev_final_lower) OR (close_{i-1} < prev_final_lower)
+                    else prev_final_lower
    ```
-5. **Trend direction** at bar `i`:
+5. **Trend direction** (Pine convention is `dir == -1 = uptrend`; we invert for codebase consistency):
    ```
-   direction_i = +1 (uptrend)   if close_i > final_upper_{i-1} OR (prev direction +1 AND close_i > final_lower_i)
-                = -1 (downtrend) if close_i < final_lower_{i-1} OR (prev direction -1 AND close_i < final_upper_i)
-                = direction_{i-1} otherwise
+   if first valid bar (no prior super_trend):
+       direction_i := -1   (Pine na(atr[1]) → dir=1 → our -1)
+   elif super_trend_{i-1} == final_upper_{i-1}:        # were on upper band (downtrend)
+       direction_i := +1 if close_i > final_upper_i else -1
+   else:                                                # were on lower band (uptrend)
+       direction_i := -1 if close_i < final_lower_i else +1
+   super_trend_i := final_lower_i if direction_i == +1 else final_upper_i
    ```
 
-A **band flip** at bar `i` is `direction_{i-1} = -1 AND direction_i = +1`
-(bullish flip) or the inverse for bearish flip.
+### Direction sign convention
+
+**Pine returns `dir == -1` for uptrend and `+1` for downtrend** (so `bullish_signal = ta.crossunder(dir, 0)` fires on a downtrend → uptrend transition). **Our port returns `direction == +1` for uptrend** to stay consistent with every other indicator in the codebase. The K-means and SuperTrend math are identical to Pine; only the sign on the returned `direction` field is inverted relative to Pine. Documented in module docstring.
+
+### Confirm_signals (non-repainting)
+
+With `confirm_signals = True` (Pine default and ours), a bullish flip detected at bar `j` is reported as `qualified: True` only on bar `j+1` — the next confirmed close. This guarantees no in-bar repainting. Set `confirm_signals = False` to detect on the same bar (lower latency, repainting risk).
 
 ### Signal logic
 
@@ -565,61 +585,47 @@ The candidate function returns:
 
 ```
 {
-    qualified: bool,           # bullish band flip on bar i (or within signal_freshness_bars)
-    direction: +1 | -1,
-    active_band: float,        # final_lower if uptrend, final_upper if downtrend
-    active_cluster: 'low' | 'mid' | 'high',
-    mult_used: float,
-    flip_bar: int | None,      # bar index of last bullish flip
-    atr_i: float,
+    qualified: bool,                        # bullish flip within signal_freshness_bars
+    direction: +1 | -1 | 0,                 # +1 uptrend (our convention)
+    super_trend: float | None,
+    active_cluster: 'low' | 'mid' | 'high' | 'init',
+    assigned_centroid: float | None,        # the K-means centroid value used as ATR substitute
+    factor: float | None,
+    flip_bar: int | None,                   # bar index of the actual flip (not the confirmation bar)
+    atr_value: float | None,
 }
 ```
 
-`qualified = True` requires a bullish flip within the trailing
-`signal_freshness_bars` (default 3 — Adaptive flips are typically
-shorter-horizon than MA crossovers).
+`qualified = True` requires `direction == +1` AND a bullish flip within the trailing `signal_freshness_bars`.
 
 ### Edge cases
 
 | Case | Behaviour |
 |---|---|
-| Bars < `min_init_bars` (default 100) | Use fixed `mult_mid` (2.0) until threshold met. Document in returned `active_cluster: 'init'`. |
-| K-means fails to converge OR all 3 cluster centers within 0.001 of each other | Treat as degenerate (flat-vol regime). Use `mult_mid`; `active_cluster: 'degenerate'`. |
-| ATR_i is NaN (warm-up or data gap) | Skip — `qualified: False, reason: 'atr_nan'`. |
-| Cluster center order changes between bars (low/high swap) | Re-sort ascending after each fit. Active-cluster index is by sorted position, not raw label, so the labelling is stable. |
-| Very long flat regime (all ATR ≈ 0) | Bands collapse to HL2; direction flips on noise. Spec accepts this — forensics flags as "low-confidence regime" if ATR < 0.1% of price. |
+| Bars < `atr_period + training_data_period - 1` (default 109) | Skip — `qualified: False, reason: 'insufficient_history', active_cluster: 'init'`. |
+| Current ATR NaN or non-positive | Skip — `qualified: False, reason: 'atr_nan_or_nonpositive', active_cluster: 'init'`. |
+| Tied K-means assignment (point equidistant from two centroids) | Strict-inequality semantics: tied points are unassigned for that iteration (Pine-faithful). Rare on continuous-valued ATR series. |
+| Empty cluster after assignment | Centroid keeps its previous value (Pine: `na`-mean would halt the while loop; we preserve the prior centroid so iteration can continue toward stability on the other clusters). |
+| `vol_low == vol_high` (perfectly flat ATR window) | Seeds and convergence collapse to a single value; all three centroids equal; ``active_cluster`` resolves via argmin tie-break to `'low'`. SuperTrend then uses `factor * vol_low` as the band offset. |
 
 ### Golden-fixture test cases
 
-Synthetic OHLCV fixtures committed to
-`filter/tests/fixtures/adaptive_supertrend/`:
+Synthetic OHLCV fixtures generated programmatically (matches project convention):
 
-1. **Calm-then-volatile transition** — 100 bars of low-vol noise
-   (σ=0.5%), then 50 bars of high-vol noise (σ=3%). Expect
-   `active_cluster` to migrate from `low` to `high` within the
-   `cluster_window` after the regime change.
-2. **Bullish flip on uptrend onset** — 50 bars flat, then 30-bar
-   ramp +0.5% per bar. Expect bullish band flip within 5 bars of
-   ramp start; `direction +1` thereafter.
-3. **Bearish flip mirror** — same as #2 with negative ramp.
-   Expect bearish flip; no bullish `qualified: True`.
-4. **Insufficient history** — 99 bars (one short of `min_init_bars`).
-   Expect `active_cluster: 'init'` and `mult_used == mult_mid`.
-5. **Degenerate clustering** — 200 bars of identical ATR (price
-   drifts 0.0001 per bar). Expect `active_cluster: 'degenerate'`
-   without crash; `mult_used == mult_mid`.
-6. **K-means determinism** — same fixture run twice with the same
-   `kmeans_random_state`. Cluster centers, labels, and signal
-   sequence must be byte-identical.
+1. **Insufficient history** — 80 bars (< 109 minimum). Expect `qualified: False, reason: 'insufficient_history', active_cluster: 'init'`.
+2. **Calm → volatile cluster migration** — 200 bars of σ ≈ 0.3 noise, then 200 bars of σ ≈ 3.0 cumulative random walk. The assigned centroid late in the volatile phase must exceed the assigned centroid late in the calm phase.
+3. **Uptrend onset produces bullish flip** — down (110→95) → flat (95) → up (95→130) sequence over 180 bars. Expect at least one `qualified: True, direction: +1` after K-means activation.
+4. **Downtrend mirror** — up→flat→down sequence. Expect zero `qualified: True` outcomes.
+5. **`confirm_signals` lags one bar** — find the first qualified bar with `confirm_signals=False`; the same bar with `confirm_signals=True` and `signal_freshness_bars=1` must be `qualified=False`; the next bar with `signal_freshness_bars=2` must be `qualified=True` with `flip_bar` equal to the original detection bar.
+6. **Determinism** — same fixture run twice, byte-identical output (no RNG; linear-interp seeds + Lloyd's iteration are fully deterministic).
+7. **`factor` does not affect K-means centroid** — `factor=3.0` and `factor=6.0` produce the same `assigned_centroid` and `active_cluster` for the same fixture.
 
 ### Cross-references
 
-- Pine source for parity: `pine/iq_adaptive_supertrend.pine`
-  (to ship in S2.x; deep link from /stock detail page in K2.2
-  loads AlgoAlpha's published ML SuperTrend script directly).
+- Pine source: `pine/external_references/ml_adaptive_supertrend_algoalpha.pine` (read-only authoritative reference; Mozilla Public License 2.0).
 - Used as a Triple confluence component at Sec.5.10.
-- Cohort registration: §14a row `adaptive_trendflip` (deferred
-  to a later cohort sprint).
+- Cohort registration: §14a row `adaptive_trendflip` (deferred to a later cohort sprint).
+- Faithful-port note: removed the previous port's three-multiplier model (`mult_low/mult_mid/mult_high`) and `kmeans_random_state` RNG seed. K-means is now deterministic via linear-interpolation seeding; `factor` is a single scalar applied to the assigned centroid.
 
 ---
 
