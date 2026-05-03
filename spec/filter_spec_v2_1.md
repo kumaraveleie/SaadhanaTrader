@@ -961,6 +961,92 @@ Higher = lower historical drawdown probability.
 **Descriptive metric, not a guarantee.** Backtest validates correlation with
 realized drawdown. If correlation < 0.4, weights are re-tuned before ship.
 
+### 6.4 Tier 2 Quality Score — operational definition (Diamond Layer 3)
+
+The §14.1 Tier 2 booster is the canonical 6-check definition; this
+section operationalises it as a **callable filter** for the Diamond
+stack. Per Sec.0.7.5, Tier 2 belongs to information class 2 (company
+quality), orthogonal to TC's class 1 (price-pattern technicals) and
+sector breadth's class 5 (cross-symbol context). Adding Tier 2 to a
+TC + Sector Pulse cohort lifts Diamond coverage to 3 of 6 information
+classes, the minimum threshold for Diamond promotion.
+
+#### Canonical Tier 2 score (per §14.1)
+
+Each YES adds 1 point; score range 0..6. Threshold for Diamond Layer 3
+qualification: **score ≥ 4 of 6** (= 67% of checks pass).
+
+| # | Check | Threshold | Required column |
+|---|---|---|---|
+| 1 | ROE > 15% (3-year average) | strict | `roe_3y_avg` |
+| 2 | ROCE > 18% (3-year average) | strict | `roce_3y_avg` |
+| 3 | Earnings CAGR > 15% (3-year) | strict | `earnings_cagr_3y` |
+| 4 | Free cash flow positive (last 4 quarters) | strict positive | `fcf_4q` |
+| 5 | Promoter buying in last 6 months | any net buying | `promoter_buying_6m` |
+| 6 | FII or DII stake rising vs 4 quarters ago | strict positive | `fii_qoq`, `dii_qoq` |
+
+#### Sec.6.4 v0 — degraded variant for current fundamentals snapshot
+
+The InvestQuest fundamentals snapshot
+(`data/fundamentals_investquest_universe.parquet`) carries only the
+Tier 1 gate columns. None of the six §14.1 columns are present. To
+unblock the Diamond Layer 3 backtest while the missing data
+infrastructure ramps up, **v0 ships a 5-check degraded score** built
+from the available Tier 1 columns, each tightened relative to Tier
+1's pass threshold:
+
+| # | v0 check | Threshold | Available column | Tier 1 threshold (for context) |
+|---|---|---|---|---|
+| 1 | EPS YoY > 0 | strict positive | `eps_yoy` | (Tier 1 doesn't gate on EPS YoY) |
+| 2 | Revenue YoY > 0 | strict positive | `revenue_yoy` | (Tier 1 doesn't gate) |
+| 3 | Promoter holding ≥ 40% | tightened | `promoter_holding_pct` | ≥ 30% in Tier 1 |
+| 4 | Promoter pledge = 0% | tightened | `promoter_pledge_pct` | ≤ 25% in Tier 1 |
+| 5 | Debt / Equity ≤ 1.0 | tightened | `debt_to_equity` | ≤ 1.5 in Tier 1 |
+
+v0 score range 0..5. Threshold for Diamond Layer 3 v0: **score ≥ 4 of
+5** (= 80% of checks pass; matches §14.1's 67% intent rounded up
+because we have one fewer check). Banks / NBFCs / financial-services
+issuers swap the D/E gate for the §4.1 GNPA / CAR alternatives
+(GNPA ≤ 4% and CAR ≥ 12%); v0 keeps the §4.1 swap intact.
+
+#### Path from v0 to canonical
+
+The data infrastructure required to lift v0 → canonical is logged as
+an explicit gap. Sources to wire (in priority order):
+
+1. **Screener.in** — public scrape of ROE/ROCE/EPS/FCF history per symbol
+2. **Tijori finance API** — paid; covers FII/DII stake history per quarter
+3. **NSE shareholding pattern filings** — quarterly XBRL parse for
+   promoter activity tracking
+
+Once any of these lands, `tier2_score()` swaps from v0 to canonical
+without breaking the cohort registry's `tier2_min_score` field — the
+field stays an int, the underlying computation upgrades.
+
+#### Implementation contract
+
+- Module: `filter/saadhana_filter/quality/tier2.py`
+- `compute_tier2_score(row: pd.Series, *, version: str = "v0") -> int` —
+  returns 0..5 (v0) or 0..6 (canonical) based on the row's available
+  columns
+- `tier2_filter(fundamentals: pd.DataFrame, *, threshold: int = 4) -> pd.DataFrame` —
+  returns the slice whose Tier 2 score ≥ threshold
+- Tests: `filter/tests/test_tier2.py` covering v0 today; canonical-
+  version tests are skipped via `pytest.mark.skipif(missing_columns)`
+  until the data lands
+- §14a registry: cohorts that require Tier 2 add
+  `tier2_min_score: int | None` (default None = no gate)
+
+#### Promotion path — what closes the data gap
+
+Sec.6.4 v0 ships behind the existing v1 cohorts (TC + Sector Pulse,
+Pro-setup, etc.) as a Diamond Layer 3 filter. Empirical lift on
+the corrected combined-config trade list is recorded in
+`spec/samples/backtest_report_diamond_layer3_tier2_v0.md` (Phase 1
+Step 1.4 backtest). When canonical data lands, re-run the backtest
+on canonical Tier 2 and compare lift; promote the canonical version
+via §19 if it materially exceeds v0.
+
 ---
 
 ## 7. Profit target ladder

@@ -13,8 +13,14 @@ from saadhana_filter.quality.confirmation_score import (
     ConfirmationScoreResult,
     compute_confirmation_score,
 )
+from saadhana_filter.quality.tier2 import (
+    compute_tier2_score,
+    tier2_filter,
+)
 
 __all__ = [
     "ConfirmationScoreResult",
     "compute_confirmation_score",
+    "compute_tier2_score",
+    "tier2_filter",
 ]
