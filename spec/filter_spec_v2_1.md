@@ -237,6 +237,53 @@ component-1 ("3-of-3 base cohort firing") naturally maps to TC's
 ``score==3`` state, while other cohorts need a per-cohort Diamond
 mapping spec'd before they can claim Diamond candidates.
 
+### Information-orthogonality principle (added post-S2.3 follow-up)
+
+**Each Diamond layer must bring an orthogonal information class.**
+Stacking layers from the same information class does NOT compound
+precision — verified empirically by the friend's-report follow-up
+exercise (Action 1: 5-point trend-confirmation score on TC produced
+no hit-rate lift because all 5 components — RSI, ADX, VWAP, MACD,
+BB-mid — are price-pattern technicals, the same information class
+as TC's three components). 94% of TC qualified trades already
+scored ≥ 4/5 on the proposed score; the filter discriminated
+nothing.
+
+**Information classes** (orthogonal pairs compound):
+
+| # | Class | Examples | What it measures |
+|---|---|---|---|
+| 1 | **Price-pattern technicals** | TC components (Sec.5.7/5.8/5.9), Pro-setup conditions (§5), MA crossovers, RSI/MACD/ADX/VWAP, BB | Price-and-volume patterns on the symbol's own bars |
+| 2 | **Company quality** | Tier 1 fundamental gate (§4), Tier 2 quality score (§14.1) | Balance-sheet / earnings-quality of the issuing company |
+| 3 | **News-event signals** | Catalysts via Phase D + Phase E (§13) | Discrete corporate events (filings, results, deals, ratings) |
+| 4 | **Institutional behaviour** | FII / DII flow telemetry, block-deal density | Flow of large-pocket capital into/out of the name |
+| 5 | **Cross-symbol context** | Sector breadth (Sec.3.1 / sector_strength), index-relative performance | What other names in the same sector / index are doing right now |
+| 6 | **Market regime** | Broad-market trend (§12), volatility regime, macro tail-risk flags | Whether the regime is Risk_On / Risk_Off / Neutral and whether macro events are imminent |
+
+**Promotion to Diamond requires layers spanning at least 3 of these
+6 information classes.** v1's six numbered Diamond components map to
+this taxonomy as: 1 → class 1; 2 → class 2; 3 → class 2; 4 → class 3;
+5 → class 4; 6 → classes 5 + 6. So the v1 Diamond inherently spans 5
+of the 6 classes (1, 2, 3, 4, and 5+6 jointly).
+
+**Practical consequence for cohort design.** When proposing a new
+Diamond layer (e.g., another technical indicator stacked on TC), test
+whether it adds a class not already represented. If the candidate
+layer is in the same class as an existing layer, expect the precision
+lift to be marginal or zero — and don't bother shipping it as a
+Diamond gate. The candidate may still be useful inside its own
+information class as a **redundant-vote** signal (e.g., the 5-point
+score might serve as a TC-component cross-check for forensics
+debugging), but not as a Diamond gate.
+
+**Empirical reference.** S2.3 follow-up exercise:
+- Sector breadth (class 5) added on top of TC 3-of-3 (class 1) lifted
+  hit rate 55.0% → 62.2% (Track 3 Diamond Layer 6) — orthogonal,
+  compounded.
+- 5-point trend-confirmation score (class 1) added on top of TC
+  (class 1) produced no hit-rate lift (Action 1 of friend's-report
+  follow-up) — non-orthogonal, did not compound.
+
 ---
 
 ## 1. What this system promises (and does not)
@@ -972,6 +1019,41 @@ Per Saadhana risk doctrine:
 - **Drawdown halt:** if portfolio down 10% peak-to-trough → no new BUYs
   until recovery to within 5% of peak
 
+### 10.5 Daily circuit breakers (cohort-level config)
+
+Each cohort optionally declares two day-level kill switches that pause
+new entries when intraday P&L crosses a threshold. Existing open
+positions continue to be managed per the cohort's `exit_logic` (§14a /
+§25); the breakers govern only NEW entries.
+
+| Field (§14a registry) | Type | Default | Semantics |
+|---|---|---|---|
+| `max_daily_loss_pct` | float \| None | None | When the cohort's cumulative P&L for the trading day reaches `-max_daily_loss_pct × portfolio`, halt new entries until the next trading session. Existing positions continue. |
+| `daily_profit_target_pct` | float \| None | None | When the cohort's cumulative P&L for the trading day reaches `+daily_profit_target_pct × portfolio`, halt new entries until the next trading session. |
+
+Both default to `None` (no cap). The breakers are **per-cohort**, not
+portfolio-wide — a daily loss on Triple confluence does not pause
+Pro-setup. Cross-cohort caps live at the orchestration layer (§20)
+and are out of scope for §10.5.
+
+**Implementation contract.** The orchestrator (§20 / §25) maintains a
+running daily P&L per `cohort_id`. Before opening a new position it
+checks: if `max_daily_loss_pct` is set and `daily_pnl_cohort ≤
+-max_daily_loss_pct × portfolio`, the entry is rejected with
+`reason='daily_loss_cap_hit'` and the §17 ledger records the rejected
+candidate (so we can forensics whether the cap is paying). Symmetric
+for `daily_profit_target_pct`.
+
+**Calibration evidence.** Backtest of `triple_confluence` combined
+config + sector-breadth filter with `max_daily_loss_pct = 2.0%` over
+the 3-year, 396-symbol, financial-excluded universe is recorded in
+the Action 4 deliverable; results inform whether the default for that
+cohort should remain `None` or move to a positive value.
+
+**Adding a new cap to a cohort.** Treated as a Sec.19 candidate rule
+with backtest evidence — same discipline as adding a sector exclusion
+or new timeframe.
+
 ---
 
 ## 11. Backtest validation gate (must pass before live)
@@ -1286,6 +1368,7 @@ its `status` to `live`.
 | `ma_crossover` | MA crossover (stand-alone) | future | Sec.5.7 as cohort #8 |
 | `adaptive_trendflip` | Adaptive trendflip | future | Sec.5.8 as cohort #9 |
 | `deviation_trend` | Deviation trend | future | Sec.5.9 as cohort #10 |
+| `nifty_intraday_algo` | Nifty intraday algo (5-min, futures) | Wave 8+ | Externally-sourced spec; status `spec`. Requires 5-min Nifty futures infra (Wave X), then walk-forward optimisation, then real-data backtest validation before any shadow promotion. **Not** to be promoted on the friend's simulated-data report alone (S2.3 sample backtest on our daily-bar swing architecture in the best bull month produced +8.4% cash, far below the +400% claim — the gap is the timeframe + leverage, not signal edge). Reference: `docs/external_reports/nifty_intraday_friend_report.pdf`. |
 
 The 10-cohort target is the InvestQuest architecture v1.2 commitment;
 the v1 registry ships **2 of 10** (`pro_setup_13` + `triple_confluence`).

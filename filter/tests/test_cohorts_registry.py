@@ -22,9 +22,18 @@ from saadhana_filter.cohorts.registry import (
 
 
 def test_v1_registry_ships_two_cohorts() -> None:
-    """Per §14a v1 registry: pro_setup_13 (live) + triple_confluence (validation)."""
+    """Per §14a v1 registry: pro_setup_13 (live) + triple_confluence
+    (validation). Plus nifty_intraday_algo placeholder (status='spec',
+    no candidate_fn — registered to lock the slot per §14a Wave 8+ note).
+    The 'shipping' cohorts are the two with concrete candidate_fns; the
+    placeholder doesn't ship signals.
+    """
     ids = {c.cohort_id for c in COHORTS}
-    assert ids == {"pro_setup_13", "triple_confluence"}
+    assert ids == {"pro_setup_13", "triple_confluence", "nifty_intraday_algo"}
+    shipping = {
+        c.cohort_id for c in COHORTS if c.status not in ("spec", "deferred", "retired")
+    }
+    assert shipping == {"pro_setup_13", "triple_confluence"}
 
 
 def test_pro_setup_inherits_v21_section_05_exclusions() -> None:
@@ -69,9 +78,13 @@ def test_duplicate_cohort_id_raises_at_registration() -> None:
 # §14a.4 timeframe suitability + §0.7.5 Diamond eligibility
 # ──────────────────────────────────────────────────────────────────
 def test_v1_cohorts_declare_daily_timeframe() -> None:
-    """v1 ships ``['daily']`` for both registered cohorts per §14a.4.
-    Anything else (or empty) is a §14a.4 violation."""
+    """v1 SHIPPING cohorts declare ``['daily']`` per §14a.4. The
+    ``nifty_intraday_algo`` placeholder declares ``['5min']`` because
+    its eventual cohort runs on intraday futures bars; that's allowed
+    because its status is 'spec' (no signals emitted yet)."""
     for c in COHORTS:
+        if c.status == "spec":
+            continue  # placeholder; doesn't emit signals
         assert c.timeframes_supported == ("daily",), (
             f"{c.cohort_id} timeframes_supported drifted from v1 lock"
         )

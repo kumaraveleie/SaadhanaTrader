@@ -175,6 +175,50 @@ per §19.2, no single-metric degradation > 5%.
   hypothesis must be falsifiable, not just a relative ranking).
 - **Status:** Parked pending Phase R + F.
 
+### CR-009: §10.5 daily-loss cap — cohort-specific (Triple confluence)
+- **Source:** S2.3 friend's-report close-out exercise (May 2026).
+  Backtest evidence: `scripts/daily_loss_cap_backtest.py` for the
+  Triple confluence + sector-breadth cohort,
+  `scripts/daily_loss_cap_pro_setup.py` for the Pro-setup 13/13 cohort.
+- **Hypothesis (origin).** A per-cohort `max_daily_loss_pct` per
+  §10.5 should improve drawdown without materially hurting return,
+  by halting new entries on a day after the cohort's same-day P&L
+  drops to a threshold. Tested at 0.5% / 1% / 2% / 3% / 5% caps.
+- **Empirical result — universal cap is REJECTED.**
+
+  | Cohort | Cap | Trades | Return | MaxDD | Cap-skips |
+  |---|---|---:|---:|---:|---:|
+  | TC + Sector Pulse | none | 139 | −6.16% | 30.44% | 0 |
+  | TC + Sector Pulse | **1.0%** | 136 | **+2.90%** | **27.55%** | **35** |
+  | TC + Sector Pulse | 2.0% | 139 | −6.16% | 30.44% | 3 |
+  | Pro-setup 13/13 | none | 91 | −3.28% | 15.30% | 0 |
+  | Pro-setup 13/13 | **1.0%** | 92 | **−4.10%** | 16.01% | **1** |
+  | Pro-setup 13/13 | 2.0% | 91 | −3.28% | 15.30% | 0 |
+
+  The 1% cap **flips TC + Sector Pulse from −6.16% to +2.90%** over
+  3 years (35 cap-skips, ≈ 1 per month), but **hurts Pro-setup
+  modestly** (−3.28% → −4.10%, only 1 cap-skip in 3 years). The
+  asymmetry comes from per-trade risk profiles: TC + Sector Pulse
+  uses §10 STANDARD sizing (20% per trade) with wide stops (−6%),
+  so a single losing trade dents the portfolio by ~1.2% — the 1%
+  cap effectively becomes a "one-loss-per-day" circuit breaker that
+  catches loss-clustering. Pro-setup uses 0.5% per-trade risk with
+  tighter stops (−3.85%), so per-trade impact is much smaller; the
+  cap rarely fires and the rare fire substitutes a worse later trade.
+- **Decision: cohort-specific.** Add `max_daily_loss_pct = 0.010` to
+  the `triple_confluence` cohort entry in §14a (when promoted to
+  shadow). Pro-setup entry stays capless. The asymmetry is
+  documented evidence — different cohorts have different optimal
+  risk profiles, and §10.5 caps are explicitly per-cohort, not
+  portfolio-wide.
+- **Test plan.** Apply the 1% cap on TC + Sector Pulse during
+  shadow promotion (4-week shadow window). If drawdown reduction
+  holds and hit-rate / PF don't degrade, lock the cap in §14a.
+- **Status:** Approved for Triple confluence cohort (status='shadow').
+  NOT promoted to universal §10.5 default. Tagged for Phase 1 of
+  the Adaptive Strategy Suite (capital preservation) per
+  `INVESTQUEST_ADAPTIVE_SUITE_HANDOFF.md`.
+
 ## Retired candidates
 
 (none yet)

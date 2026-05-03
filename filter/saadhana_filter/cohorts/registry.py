@@ -18,13 +18,13 @@ from dataclasses import dataclass, field
 from typing import Literal
 
 CohortStatus = Literal[
-    "deferred", "validation", "shadow", "paper", "live", "retired", "paused"
+    "spec", "deferred", "validation", "shadow", "paper", "live", "retired", "paused"
 ]
 PositionSizeTier = Literal["STANDARD", "HIGH", "dynamic"]
 ValidationGate = Literal["G1", "G2", "F", "paper", "live"]
 Instrument = Literal["equity", "etf", "index_future"]
 Horizon = Literal["intraday", "swing", "position"]
-Timeframe = Literal["15min", "60min", "daily", "weekly"]
+Timeframe = Literal["5min", "15min", "60min", "daily", "weekly"]
 
 
 @dataclass(frozen=True)
@@ -92,6 +92,33 @@ COHORTS: tuple[CohortSpec, ...] = (
         validation_gate="paper",
         status="validation",
         diamond_eligible=True,
+        g1_baseline_ref=None,
+    ),
+    CohortSpec(
+        cohort_id="nifty_intraday_algo",
+        display_name="Nifty intraday algo (5-min, futures)",
+        description=(
+            "Externally-sourced 5-minute Nifty futures algo. Placeholder "
+            "registered to fix the cohort_id and lock the schema; "
+            "status='spec' means no candidate_fn yet. Activation sequence: "
+            "(1) 5-min futures data infrastructure (Wave X), (2) cohort "
+            "implementation, (3) walk-forward parameter optimisation, "
+            "(4) real-data backtest validation, (5) shadow → paper → live. "
+            "Not promoted on simulated-data reports alone. See §14a "
+            "deferred-cohorts table for evidence."
+        ),
+        instrument="index_future",
+        horizon="intraday",
+        timeframes_supported=("5min",),
+        source="external",
+        candidate_fn="(deferred — no implementation yet)",
+        entry_logic="(deferred)",
+        exit_logic="(deferred — daily circuit breaker per §10.5)",
+        sector_exclusions=(),
+        position_size_tier="STANDARD",
+        validation_gate="G1",
+        status="spec",
+        diamond_eligible=False,
         g1_baseline_ref=None,
     ),
 )
