@@ -24,6 +24,7 @@ PositionSizeTier = Literal["STANDARD", "HIGH", "dynamic"]
 ValidationGate = Literal["G1", "G2", "F", "paper", "live"]
 Instrument = Literal["equity", "etf", "index_future"]
 Horizon = Literal["intraday", "swing", "position"]
+Timeframe = Literal["15min", "60min", "daily", "weekly"]
 
 
 @dataclass(frozen=True)
@@ -41,10 +42,12 @@ class CohortSpec:
     candidate_fn: str
     entry_logic: str
     exit_logic: str
+    timeframes_supported: tuple[Timeframe, ...] = ("daily",)
     sector_exclusions: tuple[str, ...] = field(default_factory=tuple)
     position_size_tier: PositionSizeTier = "STANDARD"
     validation_gate: ValidationGate = "G1"
     status: CohortStatus = "deferred"
+    diamond_eligible: bool = False
     g1_baseline_ref: str | None = None
 
 
@@ -58,6 +61,7 @@ COHORTS: tuple[CohortSpec, ...] = (
         ),
         instrument="equity",
         horizon="swing",
+        timeframes_supported=("daily",),
         source="Sec.5",
         candidate_fn="saadhana_filter.signals.candidate_pro_setup_13",
         entry_logic="all 13 BUY conditions True",
@@ -66,6 +70,7 @@ COHORTS: tuple[CohortSpec, ...] = (
         position_size_tier="STANDARD",
         validation_gate="G1",
         status="live",
+        diamond_eligible=False,
         g1_baseline_ref="spec/samples/backtest_report_g1_investquest_universe.md",
     ),
     CohortSpec(
@@ -77,6 +82,7 @@ COHORTS: tuple[CohortSpec, ...] = (
         ),
         instrument="equity",
         horizon="position",
+        timeframes_supported=("daily",),
         source="Sec.5.10",
         candidate_fn="saadhana_filter.signals.candidate_triple_confluence",
         entry_logic="≥ 2 components qualified bullish on same scan bar",
@@ -85,6 +91,7 @@ COHORTS: tuple[CohortSpec, ...] = (
         position_size_tier="dynamic",
         validation_gate="paper",
         status="validation",
+        diamond_eligible=True,
         g1_baseline_ref=None,
     ),
 )
@@ -101,7 +108,24 @@ def _enforce_unique_ids(cohorts: tuple[CohortSpec, ...]) -> None:
         seen.add(c.cohort_id)
 
 
+def _enforce_timeframes_declared(cohorts: tuple[CohortSpec, ...]) -> None:
+    """Reject empty ``timeframes_supported`` at import time per §14a.4.
+
+    A cohort with no declared timeframes has no validated bar
+    resolution to run on; signals it would emit have never been
+    backtested. Treat it the same as a duplicate cohort_id — daily
+    scan refuses to start.
+    """
+    for c in cohorts:
+        if not c.timeframes_supported:
+            raise ValueError(
+                f"cohort {c.cohort_id!r}: timeframes_supported is empty — "
+                "§14a.4 requires at least one declared bar resolution"
+            )
+
+
 _enforce_unique_ids(COHORTS)
+_enforce_timeframes_declared(COHORTS)
 
 
 def get_cohort(cohort_id: str) -> CohortSpec:

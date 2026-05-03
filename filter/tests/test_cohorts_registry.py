@@ -15,7 +15,10 @@ from saadhana_filter.cohorts import (
     get_cohort,
     iter_live_cohorts,
 )
-from saadhana_filter.cohorts.registry import _enforce_unique_ids
+from saadhana_filter.cohorts.registry import (
+    _enforce_timeframes_declared,
+    _enforce_unique_ids,
+)
 
 
 def test_v1_registry_ships_two_cohorts() -> None:
@@ -60,3 +63,44 @@ def test_duplicate_cohort_id_raises_at_registration() -> None:
     duplicate: tuple[CohortSpec, ...] = (pro, pro)
     with pytest.raises(ValueError, match="duplicate cohort_id"):
         _enforce_unique_ids(duplicate)
+
+
+# ──────────────────────────────────────────────────────────────────
+# §14a.4 timeframe suitability + §0.7.5 Diamond eligibility
+# ──────────────────────────────────────────────────────────────────
+def test_v1_cohorts_declare_daily_timeframe() -> None:
+    """v1 ships ``['daily']`` for both registered cohorts per §14a.4.
+    Anything else (or empty) is a §14a.4 violation."""
+    for c in COHORTS:
+        assert c.timeframes_supported == ("daily",), (
+            f"{c.cohort_id} timeframes_supported drifted from v1 lock"
+        )
+
+
+def test_diamond_eligibility_matches_spec_v1_lock() -> None:
+    """Per §0.7.5, only Triple confluence is diamond_eligible in v1 —
+    its 3-of-3 state naturally maps to the recipe's component-1.
+    Pro-setup 13/13 needs a per-cohort Diamond mapping spec'd before
+    flipping its flag."""
+    assert get_cohort("pro_setup_13").diamond_eligible is False
+    assert get_cohort("triple_confluence").diamond_eligible is True
+
+
+def test_empty_timeframes_supported_raises_at_import() -> None:
+    """Per §14a.4, an empty ``timeframes_supported`` list is rejected
+    at import time so the daily scan refuses to start."""
+    pro = get_cohort("pro_setup_13")
+    bad = CohortSpec(
+        cohort_id="pro_setup_13_no_tf",
+        display_name="(test)",
+        description="(test)",
+        instrument=pro.instrument,
+        horizon=pro.horizon,
+        timeframes_supported=(),
+        source=pro.source,
+        candidate_fn=pro.candidate_fn,
+        entry_logic=pro.entry_logic,
+        exit_logic=pro.exit_logic,
+    )
+    with pytest.raises(ValueError, match="timeframes_supported is empty"):
+        _enforce_timeframes_declared((bad,))

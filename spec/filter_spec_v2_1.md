@@ -180,6 +180,63 @@ rule with evidence, just like any other rule change — never a silent
 edit. Auto drift detection on a cohort can flag a pattern of losses
 concentrated in a sector, surfacing it as a Sec.19 candidate.
 
+### 0.7.5 Diamond tier — convergence-stacking target
+
+**Diamond tier** is the highest-conviction signal class the system
+emits. It is defined by an **outcome threshold** (≥3× random-baseline
+hit rate, ≥96% on N≥30 trades) and an **input recipe** (six independent
+gates that must all be active on the same scan bar). The Bronze /
+Silver / Gold tier definitions land in a follow-up amendment; Diamond
+is specced first because it is the convergence target the rest of the
+stack aims at — every cohort, gate, and catalyst earns its place by
+contributing to a Diamond candidate or being demonstrably orthogonal
+to one.
+
+**Definition.** A signal is Diamond-tier when it satisfies *all six*
+of the following on the same scan bar:
+
+1. **3-of-3 base cohort firing** — the emitting cohort's strongest
+   conviction state. For Triple confluence (Sec.5.10) this is
+   ``score == 3``; other cohorts declare their equivalent in §14a.
+2. **Tier 1 fundamental gate pass** — §4 quarterly fundamentals
+   gate currently green for the symbol.
+3. **Tier 2 quality score ≥ 4** — §14.1 quality booster at or
+   above the 4-of-6 threshold.
+4. **2+ catalysts active in the trailing 5 days** — §13 catalyst
+   engine returns ≥ 2 distinct catalyst rows whose ``effective_date``
+   is within 5 trading days of the scan bar.
+5. **FII flow positive 5+ consecutive days** — §13/§18 institutional-
+   flow telemetry shows net buying for at least 5 consecutive
+   sessions ending on the scan bar.
+6. **Macro-quiet regime** — sector breadth > 70% AND market regime
+   = Risk_On AND no macro tail-risk flag from §12 (no scheduled
+   policy event, no VIX spike > 22).
+
+**Outcome threshold.** A Diamond cohort posts ≥ 96% +5%-target hit
+rate on a rolling N≥30 closed trades; failure at this gate retires
+the recipe. The 3× random-baseline (32% in our universe ≈ random for
++5%-in-25-bars at the median ATR) sets the bar.
+
+**Expected firing frequency.** 5 to 15 Diamond candidates per cohort
+per year. The recipe is intentionally restrictive — Diamond rarely
+fires because most days lack at least one of the six. This matches
+the system's design philosophy: deserve to size up only when *every*
+independent confirmation lines up.
+
+**Position sizing.** Diamond candidates use the §10 HIGH tier
+(2.0% per trade), not a separate Diamond-only tier. The Diamond
+classification is descriptive (= "this is the strongest setup we
+emit") and operationally raises the §17 ledger's `conviction` field;
+sizing escalation beyond HIGH would require a Sec.19 candidate rule
+with backtest evidence that Diamond outcomes deserve >2.0% sizing.
+
+**Cohort applicability.** Each cohort's §14a row optionally declares
+``diamond_eligible: bool`` (default ``False``). v1 ships
+``diamond_eligible=True`` only for Triple confluence — the recipe's
+component-1 ("3-of-3 base cohort firing") naturally maps to TC's
+``score==3`` state, while other cohorts need a per-cohort Diamond
+mapping spec'd before they can claim Diamond candidates.
+
 ---
 
 ## 1. What this system promises (and does not)
@@ -1168,6 +1225,8 @@ Each registered cohort is a record with the following fields:
 | `validation_gate` | str | Phase identifier — `G1` (technical baseline), `G2` (catalyst layer), `F` (Phase F shadow), `paper` (paper trading), `live` |
 | `status` | str | `live` / `shadow` / `paper` / `validation` / `deferred` / `retired` |
 | `g1_baseline_ref` | str \| null | Path to the G1 baseline backtest report (`spec/samples/...md`); null until S1.3-equivalent rebaseline runs |
+| `timeframes_supported` | list[str] | Bar resolutions on which the cohort's candidate function is **declared safe to run**. v1 ships `['daily']` for both registered cohorts. See §14a.4. |
+| `diamond_eligible` | bool | Whether this cohort can produce Diamond-tier signals per §0.7.5 (default `False`). |
 
 ### v1 cohort registry
 
@@ -1176,10 +1235,10 @@ confluence vertical slice ships. The remaining 8 cohorts are reserved
 slots — listed below as `deferred` with their target sprint — and will
 be filled in their respective backtest tasks per §0.7.
 
-| `cohort_id` | `display_name` | `source` | `horizon` | `sector_exclusions` | `position_size_tier` | `status` | `g1_baseline_ref` |
-|---|---|---|---|---|---|---|---|
-| `pro_setup_13` | Pro-setup 13/13 | Sec.5 | swing | `['FINANCIAL_SERVICES','NBFC','BANK']` | `STANDARD` | `live` | `spec/samples/backtest_report_g1_investquest_universe.md` (industrial slice) |
-| `triple_confluence` | Triple confluence | Sec.5.10 | position | `[]` | `dynamic` (medium=STANDARD, high=HIGH) | `validation` | (pending S2.3 backtest) |
+| `cohort_id` | `display_name` | `source` | `horizon` | `timeframes_supported` | `sector_exclusions` | `position_size_tier` | `status` | `diamond_eligible` | `g1_baseline_ref` |
+|---|---|---|---|---|---|---|---|---|---|
+| `pro_setup_13` | Pro-setup 13/13 | Sec.5 | swing | `['daily']` | `['FINANCIAL_SERVICES','NBFC','BANK']` | `STANDARD` | `live` | `False` | `spec/samples/backtest_report_g1_investquest_universe.md` (industrial slice) |
+| `triple_confluence` | Triple confluence | Sec.5.10 | position | `['daily']` | `[]` | `dynamic` (medium=STANDARD, high=HIGH) | `validation` | `True` | (pending S2.3 backtest) |
 
 ### Reserved cohorts (deferred to later sprints)
 
@@ -1219,6 +1278,7 @@ COHORTS: list[CohortSpec] = [
                     "sector_exclusions migrate from §0.5 amendment.",
         instrument="equity",
         horizon="swing",
+        timeframes_supported=["daily"],
         source="Sec.5",
         candidate_fn="saadhana_filter.signals.candidate_pro_setup_13",
         entry_logic="all 13 BUY conditions True",
@@ -1227,6 +1287,7 @@ COHORTS: list[CohortSpec] = [
         position_size_tier="STANDARD",
         validation_gate="G1",
         status="live",
+        diamond_eligible=False,
         g1_baseline_ref="spec/samples/backtest_report_g1_investquest_universe.md",
     ),
     CohortSpec(
@@ -1236,6 +1297,7 @@ COHORTS: list[CohortSpec] = [
                     "Adaptive SuperTrend, Deviation Trend (Sec.5.10).",
         instrument="equity",
         horizon="position",
+        timeframes_supported=["daily"],
         source="Sec.5.10",
         candidate_fn="saadhana_filter.signals.candidate_triple_confluence",
         entry_logic="≥ 2 components qualified bullish on same scan bar",
@@ -1244,6 +1306,7 @@ COHORTS: list[CohortSpec] = [
         position_size_tier="dynamic",
         validation_gate="paper",
         status="validation",
+        diamond_eligible=True,
         g1_baseline_ref=None,
     ),
 ]
@@ -1285,9 +1348,49 @@ deferred → validation → shadow → paper → live
 | Operator hard-disables a cohort mid-day | `status: 'paused'` (transient) — no new signals; existing positions continue to be monitored by §25. Resume restores prior status. |
 | Two registry rows share `cohort_id` | Schema validation fails at `cohorts.py` import time; daily scan refuses to start. |
 
+### 14a.4 Timeframe suitability
+
+Every cohort declares a non-empty ``timeframes_supported: list[str]``
+listing the bar resolutions on which its candidate function is
+**declared safe to run**. v1 ships ``['daily']`` for both registered
+cohorts — the Triple confluence components (Sec.5.7/5.8/5.9) and the
+Pro-setup 13/13 conditions (Sec.5) are all calibrated for daily bars,
+and any other timeframe would require its own backtest baseline before
+shipping.
+
+Allowed values (v1):
+
+| Value | Semantics |
+|---|---|
+| ``"daily"`` | NSE EOD bars (one bar per trading day, Asia/Kolkata calendar). The default. |
+| ``"weekly"`` | Friday-close weekly bars resampled from daily. Reserved — no v1 cohort declares it. |
+| ``"15min"`` | Intraday 15-minute bars. Reserved for future intraday cohorts; v1 does not ship intraday data. |
+| ``"60min"`` | Intraday hourly bars. Reserved. |
+
+**Why this is required, not optional.** Indicator parameter defaults
+are tuned per-timeframe — a 14-bar ATR is one trading day on 60min,
+two weeks on daily, eight months on weekly. Running a cohort outside
+its declared timeframes produces signals that have never been backtested
+and *will* drift relative to the §11 acceptance numbers. The registry
+loader rejects empty ``timeframes_supported`` lists at import time
+(same import-time discipline as duplicate ``cohort_id`` rejection).
+
+**Operator contract.** If the daily scan invokes a cohort with a
+timeframe not in its ``timeframes_supported`` list, the candidate
+function returns ``{qualified: False, reason: 'timeframe_unsupported:{tf}'}``
+without running indicator math. Forensics counts these as
+``timeframe_mismatch`` events; persistent occurrence indicates a
+scheduler bug.
+
+**Adding a new timeframe to an existing cohort.** Treated as a Sec.19
+candidate rule with full backtest evidence on the new timeframe — same
+discipline as adding a new sector exclusion. Never a silent edit.
+
 ### Cross-references
 
 - §0.7: cohort-level sector exclusion principle (this section is the registry).
+- §0.7.5: Diamond tier — ``diamond_eligible`` field gates whether a
+  cohort can produce Diamond candidates per the six-layer recipe.
 - §17: every emitted signal records `cohort_id` + applied `sector_exclusions`.
 - §18 forensics: drift envelope is computed *per `cohort_id`*, not blended.
 - §19 rule promotion: new cohorts arrive here as `validation` after their CR ships.
