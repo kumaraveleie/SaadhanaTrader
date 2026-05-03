@@ -1,15 +1,29 @@
 """§5.9 — Deviation Trend (component of Triple confluence).
 
-Adapts BigBeluga's *Deviation Trend Profile* TradingView script. A
-linear-regression line fit on the trailing ``length`` bars (anchored
-at the most recent swing-low pivot) plus std-dev bands at ``dev_mult``
-sigma. Trend direction flips when close pierces a band; the cohort
-``qualified=True`` requires a bullish band cross AND positive slope —
-the slope filter is what kills sideways false positives.
+Faithful Python port of BigBeluga's *Deviation Trend Profile*
+TradingView script. The indicator name says "Deviation Trend" and the
+input group is labeled "Standart Deviation Levels", but the actual
+math is **ATR-based bands around an SMA centerline** — neither std-dev
+nor linear regression. Trend detection is a 5-bar SMA slope normalized
+over the trailing 500-bar maximum, with hysteresis at ±0.1 normalized-
+slope crossings.
 
-The volume-profile visualisation from BigBeluga's script is
-intentionally out of scope (chart-side, not a candidate-function
-input). This module only emits the trend-band signal.
+The Pine source lives at
+``pine/external_references/deviation_trend_bigbeluga.pine``. This
+module is a clean-room reimplementation of the math in that file.
+Volume-profile rendering from the source is intentionally out of
+scope (chart-side visual, not a candidate-function input).
+
+Faithful-port quirk: Pine's
+``ta.percentile_linear_interpolation(slope, 500, 100)`` returns the
+maximum of ``slope`` over the trailing 500 bars. When that maximum
+is ≤ 0 (rare — all slopes in window non-positive), the normalization
+produces nonsense ratios. We do **not** guard against this — the
+ratio passes through and any spurious flip is recorded. Forensics
+§18 catches such cases via drift detection.
+
+Note: ``signal_freshness_bars`` is a port-added cohort-qualification
+parameter, not present in BigBeluga's Pine source.
 """
 
 from __future__ import annotations
@@ -19,179 +33,155 @@ from typing import TypedDict
 import numpy as np
 import pandas as pd
 
+from saadhana_filter.indicators.primitives import atr as wilder_atr
+from saadhana_filter.indicators.primitives import sma
+
 
 class DeviationTrendResult(TypedDict, total=False):
     qualified: bool
-    direction: int  # +1 or -1
-    trend_line: float | None
-    upper: float | None
-    lower: float | None
-    slope: float | None
-    sigma: float | None
-    cross_bar: int | None
+    direction: int  # +1 bullish · -1 bearish · 0 not-yet-determined
+    avg: float | None
+    atr_value: float | None
+    upper_1: float | None
+    upper_2: float | None
+    upper_3: float | None
+    lower_1: float | None
+    lower_2: float | None
+    lower_3: float | None
+    slope_5: float | None
+    slope_norm: float | None
+    flip_bar: int | None
     reason: str
-
-
-def _find_swing_low_pivot(low: np.ndarray, *, lookback: int) -> int | None:
-    """Return the index of the most recent confirmed swing-low pivot,
-    or ``None`` if no pivot lives in the array.
-
-    A pivot at index ``i`` requires ``low[i]`` to be the minimum of
-    bars ``[i-lookback, i+lookback]`` — so the most recent confirmable
-    pivot is at most ``lookback`` bars from the end.
-    """
-    n = len(low)
-    for i in range(n - lookback - 1, lookback - 1, -1):
-        window = low[i - lookback : i + lookback + 1]
-        if low[i] == window.min():
-            return i
-    return None
-
-
-def _regression_line_and_sigma(close: np.ndarray) -> tuple[float, float, float, float]:
-    """Fit ``y = slope * x + intercept`` over the full ``close`` array.
-
-    Returns ``(slope, intercept, sigma, trend_value_at_last_bar)``.
-    ``sigma`` is the population std-dev (ddof=0) of residuals, matching
-    Pine's ``ta.stdev()`` default.
-    """
-    n = len(close)
-    x = np.arange(n, dtype=float)
-    slope, intercept = np.polyfit(x, close, 1)
-    fitted = slope * x + intercept
-    resid = close - fitted
-    sigma = float(np.std(resid, ddof=0))
-    trend_value = float(slope * (n - 1) + intercept)
-    return float(slope), float(intercept), sigma, trend_value
 
 
 def compute_deviation_trend(
     df: pd.DataFrame,
     *,
     on_bar: int | None = None,
-    length: int = 100,
-    dev_mult: float = 2.0,
-    pivot_lookback: int = 5,
+    sma_length: int = 50,
+    atr_length: int = 200,
+    slope_lag: int = 5,
+    percentile_window: int = 500,
+    slope_threshold: float = 0.1,
     signal_freshness_bars: int = 3,
-    min_init_bars: int = 100,
 ) -> DeviationTrendResult:
-    """Sec.5.9 candidate function.
+    """Sec.5.9 candidate function — faithful BigBeluga port.
 
-    Returns the result for ``on_bar`` (default = last bar of ``df``).
+    Trend transitions follow Pine's ``var trend`` hysteresis rule:
+    bullish on ``crossover(slope_norm, +slope_threshold)`` while not
+    already bullish; bearish on ``crossunder(slope_norm, -slope_threshold)``
+    while currently bullish. Until the first bullish crossover,
+    ``direction`` stays 0 (Pine's ``var trend = na`` initial state).
     """
     if on_bar is None:
         on_bar = len(df) - 1
 
-    n_bars = on_bar + 1
-    if n_bars < max(length, min_init_bars):
+    # ATR(atr_length) needs atr_length bars; the rolling-max over
+    # percentile_window of slope_lag-differences needs
+    # percentile_window + slope_lag bars.
+    min_bars_needed = max(atr_length, percentile_window + slope_lag) + 1
+    if on_bar + 1 < min_bars_needed:
         return DeviationTrendResult(
             qualified=False,
             direction=0,
-            trend_line=None,
-            upper=None,
-            lower=None,
-            slope=None,
-            sigma=None,
-            cross_bar=None,
+            avg=None,
+            atr_value=None,
+            upper_1=None, upper_2=None, upper_3=None,
+            lower_1=None, lower_2=None, lower_3=None,
+            slope_5=None,
+            slope_norm=None,
+            flip_bar=None,
             reason="insufficient_history",
         )
 
-    close_full = df["close"].iloc[: on_bar + 1].to_numpy(dtype=float)
-    high_full = df["high"].iloc[: on_bar + 1].to_numpy(dtype=float)
-    low_full = df["low"].iloc[: on_bar + 1].to_numpy(dtype=float)
+    sub = df.iloc[: on_bar + 1]
     if (
-        np.isnan(close_full[-length:]).any()
-        or np.isnan(high_full[-length:]).any()
-        or np.isnan(low_full[-length:]).any()
+        sub["close"].isna().any()
+        or sub["high"].isna().any()
+        or sub["low"].isna().any()
     ):
         return DeviationTrendResult(
             qualified=False,
             direction=0,
-            trend_line=None,
-            upper=None,
-            lower=None,
-            slope=None,
-            sigma=None,
-            cross_bar=None,
             reason="nan_input",
         )
 
-    # Pivot anchor — find most recent swing-low in the trailing length.
-    window_low = low_full[-length:]
-    pivot_offset = _find_swing_low_pivot(window_low, lookback=pivot_lookback)
-    no_pivot_anchor = pivot_offset is None
+    avg_series = sma(sub["close"], sma_length)
+    atr_series = wilder_atr(sub, atr_length)
 
-    # Anchor index in window-local coords. If no pivot, use bar 0
-    # (first bar of the window) per spec graceful fallback.
-    anchor = pivot_offset if pivot_offset is not None else 0
+    avg_now = float(avg_series.iloc[-1])
+    atr_now = float(atr_series.iloc[-1])
 
-    # Fit regression on the slice from anchor to end-of-window. The
-    # spec says the line is "anchored at the pivot" — taking the slice
-    # from anchor onwards realises that.
-    fit_window = window_low[anchor:]
-    fit_close = close_full[-length:][anchor:]
-    if fit_close.size < 5:
-        # Pivot near the very end — slice too small to fit; fall back
-        # to the full window with a reason flag.
-        fit_close = close_full[-length:]
-        no_pivot_anchor = True
-    slope, intercept, sigma, trend_now = _regression_line_and_sigma(fit_close)
+    # 5-bar SMA slope (avg - avg[5]) and its rolling-max normalisation.
+    slope_series = avg_series - avg_series.shift(slope_lag)
+    slope_max = slope_series.rolling(
+        percentile_window, min_periods=percentile_window
+    ).max()
 
-    upper_now = trend_now + dev_mult * sigma
-    lower_now = trend_now - dev_mult * sigma
+    # Suppress numpy's divide-by-zero warning when slope_max is 0 —
+    # the resulting NaN/inf is intentional and handled in the loop.
+    with np.errstate(divide="ignore", invalid="ignore"):
+        slope_norm_series = slope_series / slope_max
 
-    # Build the per-bar bands across the window so the cross detection
-    # has prior-bar values to compare against.
-    n_fit = fit_close.size
-    x = np.arange(n_fit, dtype=float)
-    fitted = slope * x + intercept
-    upper_arr = fitted + dev_mult * sigma
-    lower_arr = fitted - dev_mult * sigma
+    norm_arr = slope_norm_series.to_numpy(dtype=float)
+    direction_arr = np.zeros(len(norm_arr), dtype=int)
+    current_trend = 0
+    last_bullish_flip: int | None = None
 
-    # Direction state per bar within the fit window.
-    direction = np.zeros(n_fit, dtype=int)
-    direction[0] = +1 if fit_close[0] >= fitted[0] else -1
-    for i in range(1, n_fit):
-        if fit_close[i] > upper_arr[i - 1]:
-            direction[i] = +1
-        elif fit_close[i] < lower_arr[i - 1]:
-            direction[i] = -1
-        else:
-            direction[i] = direction[i - 1]
+    for i in range(1, len(norm_arr)):
+        n_now = norm_arr[i]
+        n_prev = norm_arr[i - 1]
+        # Treat NaN OR inf as "no measurement" — same as Pine's na.
+        if not np.isfinite(n_now) or not np.isfinite(n_prev):
+            direction_arr[i] = current_trend
+            continue
+        # Bullish flip: crossover(+slope_threshold) AND not currently +1.
+        if (
+            n_prev <= slope_threshold
+            and n_now > slope_threshold
+            and current_trend != +1
+        ):
+            current_trend = +1
+            last_bullish_flip = i
+        # Bearish flip: crossunder(-slope_threshold) AND currently +1.
+        elif (
+            n_prev >= -slope_threshold
+            and n_now < -slope_threshold
+            and current_trend == +1
+        ):
+            current_trend = -1
+        direction_arr[i] = current_trend
 
-    direction_now = int(direction[-1])
+    direction_now = int(direction_arr[on_bar])
 
-    # Find most recent bullish cross within signal_freshness_bars.
-    cross_bar: int | None = None
-    earliest = max(1, n_fit - signal_freshness_bars)
-    for i in range(n_fit - 1, earliest - 1, -1):
-        if direction[i - 1] != +1 and direction[i] == +1:
-            # Translate window-local index back to df-absolute index.
-            cross_bar = on_bar - (n_fit - 1 - i)
-            break
+    flip_bar: int | None = None
+    if (
+        last_bullish_flip is not None
+        and on_bar - last_bullish_flip < signal_freshness_bars
+    ):
+        flip_bar = last_bullish_flip
 
-    # Degenerate sigma (perfectly flat residuals) — treat any
-    # close ≠ trend as a cross. Forensics flag.
-    degenerate_sigma = sigma == 0.0
+    qualified = bool(flip_bar is not None and direction_now == +1)
 
-    qualified = bool(
-        cross_bar is not None
-        and direction_now == +1
-        and slope > 0.0
+    slope_now_val = float(slope_series.iloc[-1])
+    slope_norm_now = (
+        float(slope_norm_series.iloc[-1])
+        if np.isfinite(slope_norm_series.iloc[-1])
+        else None
     )
 
-    result = DeviationTrendResult(
+    return DeviationTrendResult(
         qualified=qualified,
         direction=direction_now,
-        trend_line=float(trend_now),
-        upper=float(upper_now),
-        lower=float(lower_now),
-        slope=float(slope),
-        sigma=float(sigma),
-        cross_bar=cross_bar,
+        avg=avg_now,
+        atr_value=atr_now,
+        upper_1=avg_now + atr_now * 1.0,
+        upper_2=avg_now + atr_now * 2.0,
+        upper_3=avg_now + atr_now * 3.0,
+        lower_1=avg_now - atr_now * 1.0,
+        lower_2=avg_now - atr_now * 2.0,
+        lower_3=avg_now - atr_now * 3.0,
+        slope_5=slope_now_val,
+        slope_norm=slope_norm_now,
+        flip_bar=flip_bar,
     )
-    if no_pivot_anchor:
-        result["reason"] = "no_pivot_anchor"
-    elif degenerate_sigma:
-        result["reason"] = "degenerate_sigma"
-    return result

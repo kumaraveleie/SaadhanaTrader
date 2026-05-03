@@ -213,15 +213,16 @@ def test_determinism_no_mocks() -> None:
 # ──────────────────────────────────────────────────────────────────
 def test_end_to_end_uptrend_does_not_crash() -> None:
     """Run the full TC pipeline on real component math for a strong
-    uptrend. We don't assert a specific score (component freshness
-    windows are tight) — only that the scoring layer survives the
-    end-to-end call without exceptions."""
+    uptrend. Bar count chosen to clear deviation_trend's 506-bar
+    minimum (atr_length=200, percentile_window=500, slope_lag=5).
+    We don't assert a specific score — only that the scoring layer
+    survives the end-to-end call without exceptions."""
     rng = np.random.default_rng(20260502)
     drift = 0.5
-    n = 220
+    n = 700
     base = 100.0 * np.cumprod(1 + drift / 100 + rng.normal(0, 0.005, size=n))
     df = _ohlcv(base)
-    result = candidate_triple_confluence(df, on_bar=219)
+    result = candidate_triple_confluence(df, on_bar=n - 1)
     assert result["score"] in (0, 1, 2, 3)
     assert result["conviction"] in ("none", "medium", "high")
     # All three component sub-dicts are present.

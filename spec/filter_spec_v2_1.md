@@ -625,60 +625,52 @@ Synthetic OHLCV fixtures committed to
 
 ## Sec.5.9 Deviation Trend (component of Triple confluence)
 
-Adapted from the public TradingView script *Deviation Trend Profile* by
-BigBeluga. The indicator builds a regression-anchored mean line and a
-**rolling standard-deviation band** around it; trend direction flips when
-price closes outside the upper / lower band. Compared to a Bollinger-style
-band, the line itself is a **linear-regression slope estimate** anchored
-to a pivot point, so the band tracks an inferred trendline rather than a
-moving average. Stand-alone candidate for the **Deviation trend cohort**
-(reserved, not in the v1 §14a registry) AND a component of **Triple
+Faithful Python port of BigBeluga's *Deviation Trend Profile*
+TradingView script. The indicator's name and input-group label
+("Standart Deviation Levels") are misleading — the actual math is
+**ATR-based bands around an SMA centerline**, NOT std-dev, NOT linear
+regression. Trend detection is a 5-bar SMA slope normalized over the
+trailing 500-bar maximum, with hysteresis at ±0.1 normalized-slope
+crossings. Stand-alone candidate for the **Deviation trend cohort**
+(deferred, not in the v1 §14a registry) AND a component of **Triple
 confluence** (Sec.5.10).
 
 ### Inputs / parameters
 
 | Parameter | Default | Description |
 |---|---|---|
-| `length` | 100 | regression / std-dev window in bars |
-| `dev_mult` | 2.0 | std-dev multiplier for upper/lower band |
-| `pivot_lookback` | 5 | bars on each side for swing-pivot anchor |
-| `signal_freshness_bars` | 3 | window during which a band-cross still qualifies |
-| `min_init_bars` | 100 | full `length` warm-up before signals fire |
+| `sma_length` | 50 | Centerline SMA window |
+| `atr_length` | 200 | ATR window for band width (Wilder's smoothing) |
+| `slope_lag` | 5 | Bars over which the SMA slope is measured |
+| `percentile_window` | 500 | Rolling-max window for the slope normalization |
+| `slope_threshold` | 0.1 | Normalized-slope threshold for trend flips |
+| `signal_freshness_bars` | 3 | Window during which a fresh bullish flip qualifies |
 
 ### Formula
 
-For OHLCV series with at least `length` bars available:
+For a bar at index `i` with at least `max(atr_length, percentile_window + slope_lag) + 1` bars available (default: 506):
 
-1. **Pivot anchor** — find the most recent confirmed swing-low pivot
-   using `pivot_lookback` bars on each side (`low[i]` is a pivot iff it
-   is the lowest of the surrounding `2*pivot_lookback + 1` bars).
-2. **Linear regression line** over the trailing `length` bars,
-   anchored at the pivot:
+1. **Centerline**: `avg_i = SMA(close, sma_length)` at bar i.
+2. **Band width**: `atr_i = ATR(atr_length)` at bar i (Wilder's).
+3. **Bands** (3 pairs at multipliers 1, 2, 3):
    ```
-   x = arange(length)
-   y = close[-length:]
-   slope, intercept = polyfit(x, y, deg=1)
-   trend_line_i = slope * (length - 1) + intercept    # value at bar i
+   upper_k = avg_i + atr_i * k        (k ∈ {1, 2, 3})
+   lower_k = avg_i - atr_i * k        (k ∈ {1, 2, 3})
    ```
-3. **Rolling std-dev** of `(close - trend_line_proj)` over the same
-   `length` window, where `trend_line_proj[k] = slope * k + intercept`.
+4. **5-bar slope**: `slope_5 = avg_i - avg_{i-slope_lag}`.
+5. **Normalization** (matches Pine's `ta.percentile_linear_interpolation(slope_5, 500, 100)` — the 100th percentile of slope_5 over 500 bars is its maximum):
    ```
-   resid = close[-length:] - (slope * x + intercept)
-   sigma = std(resid, ddof=0)
+   slope_max = max(slope_5 over the trailing percentile_window bars)
+   slope_norm = slope_5 / slope_max
    ```
-4. **Bands**:
+6. **Trend transitions** (hysteresis — Pine's `var trend` rule):
    ```
-   upper_i = trend_line_i + dev_mult * sigma
-   lower_i = trend_line_i - dev_mult * sigma
+   bullish flip: slope_norm crosses +slope_threshold from below
+                 AND current direction ≠ +1   →  direction := +1
+   bearish flip: slope_norm crosses -slope_threshold from above
+                 AND current direction == +1  →  direction := -1
    ```
-5. **Trend direction**:
-   ```
-   direction_i = +1   if close_i > upper_{i-1}    # bullish breakout
-                = -1   if close_i < lower_{i-1}    # bearish breakdown
-                = direction_{i-1}   otherwise     # inside the band — no flip
-   ```
-
-A **bullish band cross** at bar `i` is `direction_{i-1} ≠ +1 AND direction_i = +1`.
+   Until the first bullish flip, `direction` stays 0 (Pine's `var trend = na` initial state).
 
 ### Signal logic
 
@@ -686,63 +678,54 @@ The candidate function returns:
 
 ```
 {
-    qualified: bool,            # bullish band cross within signal_freshness_bars
-    direction: +1 | -1,
-    trend_line: float,
-    upper: float,
-    lower: float,
-    slope: float,               # regression slope (price units / bar)
-    sigma: float,               # current band-half-width / dev_mult
-    cross_bar: int | None,      # bar index of last bullish cross
+    qualified: bool,            # bullish flip within signal_freshness_bars
+    direction: +1 | -1 | 0,
+    avg: float,                 # SMA centerline
+    atr_value: float,           # ATR(200)
+    upper_1, upper_2, upper_3: float,
+    lower_1, lower_2, lower_3: float,
+    slope_5: float,             # raw 5-bar SMA slope
+    slope_norm: float | None,   # normalized slope (None if undefined)
+    flip_bar: int | None,
 }
 ```
 
-`qualified = True` requires `direction_i = +1` AND `slope > 0` AND a
-bullish cross within `signal_freshness_bars` — slope sign filters out
-band-touch noise during sideways regimes.
+`qualified = True` requires `direction == +1` AND a bullish flip within the trailing `signal_freshness_bars`. There is no separate slope-sign filter — the hysteresis on `slope_norm` handles whipsaw rejection.
 
 ### Edge cases
 
 | Case | Behaviour |
 |---|---|
-| Bars < `min_init_bars` | Skip — `qualified: False, reason: 'insufficient_history'`. |
-| No swing-low pivot in trailing `length` bars | Use first bar of the window as anchor; emit `reason: 'no_pivot_anchor'` for forensics. |
-| `sigma == 0` (perfectly flat residuals) | Bands collapse to `trend_line`; treat any close ≠ trend_line as a cross. Forensics flags as `reason: 'degenerate_sigma'`. |
-| Slope ≤ 0 with `direction = +1` (price above upper band but trendline declining) | `qualified = False` — sideways false positive. |
-| NaN inputs (close, high, low) | Skip — `qualified: False, reason: 'nan_input'`. |
+| Bars < `max(atr_length, percentile_window + slope_lag) + 1` (default 506) | Skip — `qualified: False, reason: 'insufficient_history'`. |
+| NaN in OHLCV | Skip — `qualified: False, reason: 'nan_input'`. |
+| Perfectly flat series (slope_5 ≡ 0) | `slope_max = 0` → division NaN → trend logic skips → `direction` stays 0. |
+| All-negative slopes for 500 bars (slope_max ≤ 0) | **Faithful Pine quirk preserved**: ratio passes through with possibly nonsensical sign. No in-port guard — forensics §18 catches via drift detection. |
+| Warmup completes mid-trend (slope_norm's first finite value already > +slope_threshold) | `direction` stays 0 — faithful Pine `ta.crossover` requires the previous bar to be at-or-below the threshold, so a "from-NaN-to-above" jump is not a crossover. The series needs at least one observable below-threshold bar before the crossing. On real data with thousands of bars this is a non-issue; tests must use fixtures whose warmup window is in a non-trending regime. |
+| Hysteresis: bullish trend, slope_norm dips into [-0.1, +0.1] | Direction stays `+1` (full crossunder of -slope_threshold required to flip back). |
 
 ### Golden-fixture test cases
 
-Synthetic OHLCV fixtures committed to
-`filter/tests/fixtures/deviation_trend/`:
+Synthetic OHLCV fixtures generated programmatically (matches project convention):
 
-1. **Clean uptrend** — 150 bars, +0.3% drift, σ=0.5%. Expect
-   `slope > 0`, `direction = +1` after the first band cross,
-   `qualified: True` once per band touch from below.
-2. **Clean downtrend mirror** — same shape, negative drift. Expect
-   `slope < 0`, no `qualified: True`.
-3. **Sideways** — 200 bars random walk with zero drift. Expect
-   `direction` flips on noise but `qualified: False` for each
-   bullish cross because `slope ≤ 0` filter rejects.
-4. **Insufficient history** — 99 bars (one short of `min_init_bars`).
-   Expect `qualified: False, reason: 'insufficient_history'`.
-5. **No pivot anchor** — 150-bar monotonically rising series with
-   no swing low. Expect graceful fallback (uses first-bar anchor)
-   plus `reason: 'no_pivot_anchor'` flag.
-6. **Determinism** — same fixture run twice, same outputs to 1e-9
-   tolerance (regression is deterministic; pivot detection is
-   deterministic; no random seed needed).
+1. **Insufficient history** — 400 bars (< 506 minimum). Expect `qualified: False, reason: 'insufficient_history'`.
+2. **Bear → bull transition** — 350 bars declining (120 → 95), 350 bars rising (95 → 140). Expect a bullish flip somewhere in the rising phase.
+3. **Hysteresis through small dip** — 600 bars rising, 150 bars flat. Once bullish flip fires, direction stays `+1` through the flat plateau (no crossunder of -0.1).
+4. **Sustained downtrend** — 700-bar linear decline. Expect zero `qualified: True` results.
+5. **Band ordering invariant** — `lower_3 ≤ lower_2 ≤ lower_1 ≤ avg ≤ upper_1 ≤ upper_2 ≤ upper_3` always holds.
+6. **Determinism** — same fixture run twice = byte-identical output.
+7. **Perfectly flat series** — 700 bars at constant close. Expect `direction == 0, qualified: False`.
 
 ### Cross-references
 
-- Pine source for parity: `pine/iq_deviation_trend.pine`
-  (to ship in S2.x; deep link from /stock detail page in K2.2
-  loads BigBeluga's published Deviation Trend Profile script).
+- Pine source: `pine/external_references/deviation_trend_bigbeluga.pine` (read-only authoritative reference; CC BY-NC-SA 4.0).
 - Used as a Triple confluence component at Sec.5.10.
-- BigBeluga's full Deviation Trend Profile script also draws
-  in-band volume profile bins; we deliberately implement only
-  the trend-band signal — the volume profile is a chart-side
-  visual, not a candidate-function input.
+- BigBeluga's full script also draws an in-band volume profile; we
+  deliberately implement only the trend-band signal — the volume
+  profile is a chart-side visual, not a candidate-function input.
+- Faithful-port note: the indicator name and input-group label
+  ("Standart Deviation Levels") are misleading. The algorithm uses
+  ATR bands + 5-bar SMA slope with rolling-500-max normalization
+  and ±0.1 hysteresis — no std-dev, no regression, no pivot anchor.
 
 ---
 
