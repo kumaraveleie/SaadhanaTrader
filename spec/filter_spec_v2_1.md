@@ -110,8 +110,8 @@ later — every cohort that lands later refers to these stable numbers.
 | Sec.5.8  | Adaptive SuperTrend (component of Triple confluence)       | In scope |
 | Sec.5.9  | Deviation Trend (component of Triple confluence)           | In scope |
 | Sec.5.10 | Triple confluence scoring                                  | In scope |
-| Sec.5.5  | RPI calculator                                             | Deferred to Wave 1 (cohort #2) |
-| Sec.5.6  | RPI spurt + crossover                                      | Deferred to Wave 1 (cohort #2) |
+| Sec.5.5  | RPI calculator                                             | **In scope (Track 2 W1.1)** |
+| Sec.5.6  | RPI spurt + crossover                                      | **In scope (Track 2 W1.1)** |
 | Sec.6.3  | Persistence + trend quality classifier                     | Deferred to Wave 2 |
 | Sec.14a  | Scanner cohort registry                                    | In scope |
 | Sec.25   | Position Monitor                                           | In scope |
@@ -427,6 +427,185 @@ candidate. Score 10–12 = WATCH (displayed but not actionable). <10 = WAIT.
 > sub-sections will be re-targeted to Sec.5.5a / Sec.5.5b (or §5.6
 > if §5.5 stays Pro-setup-specific) when Wave 1 ships. No change
 > needed in this slice.
+
+---
+
+## Sec.5.5a RPI calculator (Track 2 W1.1 — Wave 1 cohort #2)
+
+**Relative Price Index (RPI)** = stock's cumulative return / index's
+cumulative return over a lookback window. RPI > 1.0 means the stock
+is outperforming the benchmark; RPI < 1.0 means underperforming.
+
+Saadhana's RPI is a **Mansfield-style relative-strength** measure
+common in Indian momentum-cohort circles, NOT to be confused with
+RSI (Relative Strength Index, a momentum oscillator on a single
+symbol's own price). RPI is a **cross-symbol** comparison; RSI is
+**self-referential**.
+
+### Inputs / parameters
+
+| Parameter | Default | Description |
+|---|---|---|
+| `lookback` | 63 | Bars over which the relative-strength ratio is computed (~3 months on daily) |
+| `index_symbol` | `^NSEI` | Benchmark ticker; falls back to a universe-mean proxy when ^NSEI is unavailable |
+| `min_init_bars` | 100 | Minimum bars required before RPI is finite; before that returns NaN |
+
+### Formula
+
+For a stock series `s` and benchmark series `b` aligned on the same
+trading-date index, with lookback `n`:
+
+```
+ratio_t  = s_t / s_{t-n}
+ratio_b  = b_t / b_{t-n}
+RPI_t    = ratio_t / ratio_b
+```
+
+Equivalently: `RPI_t = (s_t / b_t) / (s_{t-n} / b_{t-n})` — the
+n-bar change in the price-to-benchmark ratio.
+
+For Mansfield normalisation (RPI > 0 = outperforming, RPI < 0 =
+underperforming, easier to interpret as "% above/below benchmark"):
+
+```
+mansfield_RPI_t = ((ratio_t / ratio_b) - 1) * 100
+```
+
+The default API returns the un-normalised RPI; a `mansfield=True`
+flag returns the normalised variant.
+
+### Edge cases
+
+| Case | Behaviour |
+|---|---|
+| `b_{t-n}` is NaN or zero | Skip the bar — RPI undefined |
+| Stock has shorter history than benchmark | Slice the benchmark to the stock's index range |
+| Benchmark missing (no `^NSEI` cache) | Build a universe-mean proxy from the top-50 InvestQuest names by mcap (already done in `bull_month_replay.py` and `orthogonality_budget_diagnostic.py`); document the fallback in the call return |
+| `lookback` exceeds available history | Skip — return NaN until enough bars accumulate |
+
+### Implementation contract
+
+- Module: `filter/saadhana_filter/indicators/rpi.py`
+- `compute_rpi(stock: pd.Series, benchmark: pd.Series, *, lookback: int = 63, mansfield: bool = False) -> pd.Series`
+- Returns a Series indexed on the stock's date index with NaN for
+  warm-up bars
+- Tests: `filter/tests/test_rpi.py` covering the formula, mansfield
+  normalisation, edge cases, and benchmark-fallback path
+
+### Cross-references
+
+- Used by Sec.5.5b (RPI spurt + crossover) to detect momentum events
+- The benchmark proxy fallback path mirrors what
+  `scripts/bull_month_replay.py` does for the Nifty proxy
+
+---
+
+## Sec.5.5b RPI spurt + crossover (Track 2 W1.1)
+
+Two complementary RPI-based signals used by the **RPI spurt cohort**
+(`rpi_spurt` in §14a). Both are class-4 momentum signals (per
+Sec.0.7.5 information-orthogonality), distinct from TC's class-1
+trend signals.
+
+### Signal 1 — RPI spurt
+
+A **spurt** is a sudden upward move in RPI: the stock's rate of
+relative outperformance accelerates. Detected as:
+
+```
+RPI_now  >  RPI_baseline + spurt_threshold
+```
+
+where `RPI_baseline` is the trailing N-bar median RPI and
+`spurt_threshold` is the configured % above baseline (default 5%
+in mansfield-normalised RPI terms).
+
+### Signal 2 — RPI crossover
+
+A **crossover** is the bar where RPI crosses above its own moving
+average — analogous to MA crossover but on the relative-strength
+series rather than price. Detected as:
+
+```
+RPI_{t-1} ≤ RPI_SMA_{t-1}  AND  RPI_t > RPI_SMA_t
+```
+
+with a typical SMA window of 21 bars (1 month).
+
+### Inputs / parameters
+
+| Parameter | Default | Description |
+|---|---|---|
+| `lookback` | 63 | RPI lookback (passes through to Sec.5.5a) |
+| `spurt_baseline_window` | 20 | Bars for the baseline median |
+| `spurt_threshold_pct` | 5.0 | Mansfield-RPI percentage above baseline that counts as a spurt |
+| `crossover_sma_window` | 21 | SMA window for the crossover signal |
+| `signal_freshness_bars` | 5 | Window during which a fresh spurt or crossover qualifies |
+
+### Signal logic
+
+The candidate function returns:
+
+```
+{
+    qualified: bool,                    # spurt OR crossover within freshness window
+    rpi_now: float | None,
+    rpi_baseline_now: float | None,
+    rpi_sma_now: float | None,
+    spurt_fired: bool,
+    spurt_bar: int | None,
+    crossover_fired: bool,
+    crossover_bar: int | None,
+    benchmark_source: str,              # '^NSEI' or 'universe_mean_proxy'
+}
+```
+
+`qualified=True` requires either a spurt or a crossover within the
+trailing `signal_freshness_bars`. The cohort registry's §14a row
+declares whether **both** must fire (strict-AND) or either suffices
+(default: either; relaxed).
+
+### Edge cases
+
+| Case | Behaviour |
+|---|---|
+| RPI series shorter than lookback + baseline_window + crossover_sma_window | `qualified: False, reason: 'insufficient_history'` |
+| Mansfield RPI flat for full baseline window (degenerate; rare) | Spurt threshold = 0 + 5%pp = +5%; flat RPI doesn't fire |
+| Benchmark fallback (universe-mean proxy) | Compute RPI normally; surface `benchmark_source = 'universe_mean_proxy'` so forensics can flag |
+| Crossover and spurt fire on different bars within the freshness window | `qualified=True` with both `spurt_fired` and `crossover_fired` set; cohort row decides whether to require both |
+
+### Golden-fixture test cases
+
+Synthetic stock + benchmark fixtures (matches project convention —
+generated programmatically in tests):
+
+1. **Stock outperforming benchmark in clean uptrend** — stock rises
+   20% over 3 months, benchmark rises 5%. Expect `RPI > 1` and
+   `mansfield_RPI > 0`; spurt fires when ratio acceleration crosses
+   threshold.
+2. **Stock underperforming** — stock flat, benchmark rises 10%.
+   Expect `RPI < 1, mansfield < 0`; no spurt.
+3. **Spurt fires** — stock has 60-bar boring rise (matches
+   benchmark), then a 5-bar acceleration to +10% over benchmark.
+   Expect `spurt_fired = True` on the acceleration bars.
+4. **Crossover** — RPI crosses above its 21-day SMA after a
+   pullback. Expect `crossover_fired = True, crossover_bar` set.
+5. **Insufficient history** — series shorter than required min.
+6. **Benchmark fallback** — pass a None benchmark; expect the
+   fallback path to engage and `benchmark_source` flag to read
+   `universe_mean_proxy`.
+
+### Cross-references
+
+- Pine source for parity: TBD — RPI is not a standard TradingView
+  primitive; the implementation is from-scratch per Mansfield's
+  Relative Performance Strength definition (1980s textbook).
+- §14a registry row: `rpi_spurt` (currently `deferred`; will flip
+  to `validation` in Track 2 W1.5 after the backtest baseline
+  lands).
+- Cohort declares strict-AND vs OR via a `require_both: bool`
+  field in its registry entry (Track 2 W1.4 will add this field
+  to `CohortSpec`).
 
 ---
 
