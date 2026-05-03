@@ -385,23 +385,30 @@ candidate. Score 10–12 = WATCH (displayed but not actionable). <10 = WAIT.
 
 ## Sec.5.7 MA crossover (component of Triple confluence)
 
-Adapted from the public TradingView script *Ultimate Moving Average*
-by ChrisMoody. Detects bullish trend onset via fast-MA-over-slow-MA
-crossover with a slope confirmation on the slow MA so we don't fire
-on flat-range whipsaws. Stand-alone candidate function for the
-**MA crossover cohort** AND a component of the **Triple confluence
+Faithful Python port of ChrisMoody's *Ultimate Moving Average*
+(``CM_Ultimate_MA_MTF``) TradingView script. The Pine script is
+purely visual — it plots one or two MAs with direction-coloured lines
+and optional cross-dots, but does NOT emit a "qualified" or "signal"
+boolean. The qualified-bullish-crossover semantics in this spec are
+**port-added** for cohort qualification: a bullish fast-over-slow
+crossover, slope filter on the slow MA, plus a direction-smoothing
+check on the fast MA (Pine's `smoothe` parameter, repurposed as a
+secondary filter alongside slope). Stand-alone candidate function for
+the **MA crossover cohort** AND a component of the **Triple confluence
 cohort** (Sec.5.10).
 
 ### Inputs / parameters
 
 | Parameter | Default | Description |
 |---|---|---|
-| `ma_type` | `TEMA` | one of {SMA, EMA, WMA, HullMA, VWMA, RMA, TEMA} |
-| `fast_period` | 20 | fast MA window |
-| `slow_period` | 50 | slow MA window |
-| `slope_window` | 3 | bars over which slow MA slope is measured |
-| `min_slope_pct` | 0.0 | minimum slow-MA slope (% of price) for trend confirmation |
-| `source` | `close` | input series; usually close, occasionally hl2 / ohlc4 |
+| `ma_type` | `TEMA` | one of {SMA, EMA, WMA, HullMA, VWMA, RMA, TEMA} (matches Pine's `atype`) |
+| `fast_period` | 20 | fast MA window (matches Pine's `len`) |
+| `slow_period` | 50 | slow MA window (matches Pine's `len2`; slow MA is locked to EMA per source script's `atype2=1` default) |
+| `slope_window` | 3 | bars over which slow-MA slope is measured (port-added) |
+| `min_slope_pct` | 0.0 | minimum slow-MA slope (% of price) for trend confirmation (port-added) |
+| `direction_smoothe_bars` | 2 | bars over which the fast MA must be rising (mirrors Pine's `smoothe` default; in Pine drives line colour, here a secondary anti-whipsaw filter) |
+| `signal_freshness_bars` | 5 | window during which a fresh bullish crossover qualifies (port-added; not in Pine) |
+| `source` | `close` | input series; usually close, occasionally hl2 / ohlc4 (matches Pine's `src`) |
 
 The default `(TEMA 20, EMA 50)` matches the ChrisMoody publication.
 The 7 MA-type catalogue exists because different parameter
@@ -427,12 +434,38 @@ the fast MA only — matches the source script's behaviour.)
 
 ```
 fast_{i-1} ≤ slow_{i-1}  AND  fast_i > slow_i  AND  slope_i ≥ min_slope_pct
+                                                AND  fast_i ≥ fast_{i - direction_smoothe_bars}
 ```
 
-A second-bar confirmation (require the cross to hold for one bar)
-is OPTIONAL via a `confirm_bars` parameter (default 0 = no
-confirmation; set to 1 in cohort spec if backtest shows
-whipsaw-prone behaviour).
+The fourth conjunct (the fast-MA smoothing check) mirrors Pine's
+``ma_up = out1 >= out1[smoothe]``. Without MTF, ``out1`` is just the
+fast MA, so the check reduces to "fast MA at or above its value
+``direction_smoothe_bars`` bars ago".
+
+### Multi-timeframe (MTF) deferral
+
+Pine's ``security(tickerid, res, out)`` lets the indicator read the
+fast/slow MAs from a higher or lower timeframe than the chart. v1
+**does NOT** support MTF — the §14a registry locks the MA crossover
+and Triple confluence cohorts to ``timeframes_supported=['daily']``
+per Sec.14a.4. MTF is a Wave 1+ extension and would require its own
+backtest baseline before shipping (same discipline as adding a new
+cohort or sector exclusion).
+
+### HullMA half-up rounding
+
+Pine's HullMA formula is
+``wma(2*wma(src, len/2) - wma(src, len), round(sqrt(len)))``. The
+final WMA's window length uses Pine's ``round()``, which is **half-up
+rounding** for positive values. Python's built-in ``round()`` is
+banker's rounding (half-to-even), which diverges from Pine for any
+``len`` whose ``sqrt(len)`` fractional part is exactly 0.5. The port
+uses ``int(sqrt(n) + 0.5)`` to match Pine's half-up semantics on
+positive sqrt values. For ``fast_period`` defaults like 20 (sqrt
+≈ 4.47), the rounding produces the same result as truncation; for
+24 (sqrt ≈ 4.90) it produces 5 (Pine) vs the previous port's 4 — the
+fix matters for any custom fast_period whose sqrt fractional part
+exceeds 0.5.
 
 ### Signal logic
 
@@ -488,12 +521,18 @@ Synthetic OHLCV fixtures committed to
 
 ### Cross-references
 
-- Pine source for parity: `pine/iq_ma_crossover.pine` (to ship
-  in S2.x; deep link from /stock detail page in K2.2).
+- Pine source: `pine/external_references/ultimate_ma_chrismoody.pine`
+  (read-only authoritative reference; ChrisMoody, no specific license
+  declared).
 - Used as a Triple confluence component at Sec.5.10.
-- Cohort registration: §14a row `ma_crossover` (deferred to a
-  later cohort sprint; this section specs the indicator itself,
-  not the cohort).
+- Cohort registration: §14a row `ma_crossover` (deferred to a later
+  cohort sprint; this section specs the indicator itself, not the
+  cohort).
+- Faithful-port note: HullMA rounding fixed to Pine half-up (was
+  truncation); ``direction_smoothe_bars`` added to mirror Pine's
+  ``smoothe`` (default 2); ``signal_freshness_bars`` is port-added
+  for cohort qualification, not present in Pine. MTF deferred per
+  §14a.4 (cohort runs on daily only).
 
 ---
 
